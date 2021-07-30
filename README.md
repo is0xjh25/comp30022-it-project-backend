@@ -1,5 +1,5 @@
 # comp30022-it-project-backend
 
-Hello Wolrd!
+Hello World!
 
 To be continued...
