@@ -1,8 +1,8 @@
 package tech.crm.crmserver.service.impl;
 
-import tech.crm.crmserver.dao.Event;
-import tech.crm.crmserver.mapper.EventMapper;
-import tech.crm.crmserver.service.EventService;
+import tech.crm.crmserver.dao.ToDoList;
+import tech.crm.crmserver.mapper.ToDoListMapper;
+import tech.crm.crmserver.service.ToDoListService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +15,6 @@ import org.springframework.stereotype.Service;
  * @since 2021-08-22
  */
 @Service
-public class EventServiceImpl extends ServiceImpl<EventMapper, Event> implements EventService {
+public class ToDoListServiceImpl extends ServiceImpl<ToDoListMapper, ToDoList> implements ToDoListService {
 
 }

@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
  * </p>
  *
  * @author Lingxiao
- * @since 2021-08-21
+ * @since 2021-08-22
  */
 @RestController
 @RequestMapping("/event")

@@ -1,6 +1,6 @@
 package tech.crm.crmserver.mapper;
 
-import tech.crm.crmserver.dao.Order;
+import tech.crm.crmserver.dao.ToDoList;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.springframework.stereotype.Repository;
 
@@ -13,6 +13,6 @@ import org.springframework.stereotype.Repository;
  * @since 2021-08-22
  */
 @Repository
-public interface OrderMapper extends BaseMapper<Order> {
+public interface ToDoListMapper extends BaseMapper<ToDoList> {
 
 }

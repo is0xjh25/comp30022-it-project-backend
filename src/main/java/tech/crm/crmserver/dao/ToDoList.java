@@ -22,8 +22,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-@TableName("event")
-public class Event implements Serializable {
+@TableName("to_do_list")
+public class ToDoList implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -32,9 +32,7 @@ public class Event implements Serializable {
 
     private Integer userId;
 
-    private LocalDateTime startTime;
-
-    private LocalDateTime finishTime;
+    private LocalDateTime dateTime;
 
     private String description;
 

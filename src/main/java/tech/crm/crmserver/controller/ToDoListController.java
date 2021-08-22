@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
  * @since 2021-08-22
  */
 @RestController
-@RequestMapping("/contact")
-public class ContactController {
+@RequestMapping("/toDoList")
+public class ToDoListController {
 
 }
 

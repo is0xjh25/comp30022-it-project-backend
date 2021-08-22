@@ -55,7 +55,7 @@ public class MPGenerator {
                 .setTablePrefix("")
                 .setEntityLombokModel(true)
                 .setRestControllerStyle(true)
-                .setInclude("department","organization","user","order","contact","event","belongTo","toDoList",
+                .setInclude("department","organization","user","order","contact","event","to_do_list",
                         "permission");
 
         //4.包名策略配置
