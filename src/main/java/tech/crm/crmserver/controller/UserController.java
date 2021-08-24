@@ -29,22 +29,5 @@ public class UserController {
         return "User";
     }
 
-    @RequestMapping("/loginSuccess")
-    @ResponseStatus(code = HttpStatus.OK, reason = "successful operation!")
-    public String loginSuccess(){
-        return "hello";
-    }
-
-    @RequestMapping("/loginFailure")
-    @ResponseStatus(code = HttpStatus.BAD_REQUEST, reason = "Invalid username/password supplied!")
-    public void loginFailure(){
-    }
-
-
-    @RequestMapping("/logoutSuccess")
-    @ResponseStatus(code = HttpStatus.OK, reason = "successful operation!")
-    public void logoutSuccess(){
-    }
-
 }
 

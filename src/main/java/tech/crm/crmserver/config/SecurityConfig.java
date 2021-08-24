@@ -10,6 +10,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
+import tech.crm.crmserver.handler.LoginAuthenticationFailureHandler;
+import tech.crm.crmserver.handler.LoginAuthenticationSuccessHandler;
+import tech.crm.crmserver.handler.MyLogoutSuccessHandler;
 import tech.crm.crmserver.service.impl.TokenRepositoryImpl;
 
 import javax.sql.DataSource;
@@ -43,13 +46,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.logout()
                 .logoutUrl("/user/logout")
                 .deleteCookies("JSESSIONID")
-                .logoutSuccessUrl("/user/logoutSuccess");
+                .logoutSuccessHandler(new MyLogoutSuccessHandler());
 
         //login
         http.formLogin()
                 .loginProcessingUrl("/user/login")
-                .successForwardUrl("/user/loginSuccess")
-                .failureForwardUrl("/user/loginFailure")
+                .successHandler(new LoginAuthenticationSuccessHandler())
+                .failureHandler(new LoginAuthenticationFailureHandler())
                 //login with email instead of username
                 .usernameParameter("email")
                 .and().authorizeRequests()
