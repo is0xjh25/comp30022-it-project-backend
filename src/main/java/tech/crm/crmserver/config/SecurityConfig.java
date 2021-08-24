@@ -52,9 +52,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and().authorizeRequests()
                 //permit without login
                 .antMatchers("/user/login").permitAll()
+                //permit all after login
                 .anyRequest().authenticated()
-                .and().rememberMe().tokenRepository(persistentTokenRepository())
-                //one month
+                //token
+                .and().rememberMe()
+                .alwaysRemember(true)
+                .tokenRepository(persistentTokenRepository())
+                //valid for one month
                 .tokenValiditySeconds(60*60*24*30)
                 .userDetailsService(userDetailsService);
 
