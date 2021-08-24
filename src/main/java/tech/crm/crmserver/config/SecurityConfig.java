@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -58,8 +59,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and().authorizeRequests()
                 //permit without login
                 .antMatchers("/user/login").permitAll()
+                //need token to get permission
                 //permit all after login
-                .anyRequest().authenticated()
+                .anyRequest().rememberMe()
                 //token
                 .and().rememberMe()
                 .alwaysRemember(true)
@@ -68,7 +70,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .tokenValiditySeconds(60*60*24*30)
                 .userDetailsService(userDetailsService);
 
-        http.csrf().disable();
+        //general
+        http.csrf().disable()
+                // Don't keep track of session
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+
     }
 
     @Bean
