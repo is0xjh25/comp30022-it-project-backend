@@ -1,11 +1,11 @@
 package tech.crm.crmserver.controller;
 
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
-import org.springframework.web.bind.annotation.RestController;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * <p>
@@ -27,6 +27,23 @@ public class UserController {
     @GetMapping
     public String getUserByToken(){
         return "User";
+    }
+
+    @RequestMapping("/loginSuccess")
+    @ResponseStatus(code = HttpStatus.OK, reason = "successful operation!")
+    public String loginSuccess(){
+        return "hello";
+    }
+
+    @RequestMapping("/loginFailure")
+    @ResponseStatus(code = HttpStatus.BAD_REQUEST, reason = "Invalid username/password supplied!")
+    public void loginFailure(){
+    }
+
+
+    @RequestMapping("/logoutSuccess")
+    @ResponseStatus(code = HttpStatus.OK, reason = "successful operation!")
+    public void logoutSuccess(){
     }
 
 }

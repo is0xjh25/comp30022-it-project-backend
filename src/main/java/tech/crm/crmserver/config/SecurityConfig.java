@@ -42,11 +42,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         //logout
         http.logout()
                 .logoutUrl("/user/logout")
-                .deleteCookies("JSESSIONID");
+                .deleteCookies("JSESSIONID")
+                .logoutSuccessUrl("/user/logoutSuccess");
 
         //login
         http.formLogin()
                 .loginProcessingUrl("/user/login")
+                .successForwardUrl("/user/loginSuccess")
+                .failureForwardUrl("/user/loginFailure")
                 //login with email instead of username
                 .usernameParameter("email")
                 .and().authorizeRequests()
