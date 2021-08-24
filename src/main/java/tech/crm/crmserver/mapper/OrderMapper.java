@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
  * </p>
  *
  * @author Lingxiao
- * @since 2021-08-22
+ * @since 2021-08-23
  */
 @Repository
 public interface OrderMapper extends BaseMapper<Order> {

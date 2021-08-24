@@ -9,9 +9,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class CrmServerApplication {
 
 	public static void main(String[] args) {
-		MPGenerator mpGenerator = new MPGenerator();
-		mpGenerator.testGenerator();
-		//SpringApplication.run(CrmServerApplication.class, args);
+		SpringApplication.run(CrmServerApplication.class, args);
 	}
 
 }
