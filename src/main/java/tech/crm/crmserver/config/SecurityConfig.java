@@ -10,11 +10,14 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.RememberMeServices;
+import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 import tech.crm.crmserver.handler.LoginAuthenticationFailureHandler;
 import tech.crm.crmserver.handler.LoginAuthenticationSuccessHandler;
 import tech.crm.crmserver.handler.MyLogoutSuccessHandler;
-import tech.crm.crmserver.service.impl.TokenRepositoryImpl;
+import tech.crm.crmserver.security.PersistentTokenBasedRememberMeServicesImpl;
+import tech.crm.crmserver.security.TokenRepositoryImpl;
 
 import javax.sql.DataSource;
 
@@ -27,11 +30,29 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private DataSource dataSource;
 
+    /**
+     *
+     * @return
+     */
+    @Bean
+    public PersistentTokenBasedRememberMeServicesImpl rememberMeServices() {
+        PersistentTokenBasedRememberMeServicesImpl rememberMeServices =
+                new PersistentTokenBasedRememberMeServicesImpl(userDetailsService,persistentTokenRepository());
+        rememberMeServices.setParameter("this_rememberMeParameter");
+        rememberMeServices.setCookieName("this_rememberMeParameter");
+        //valid for a week
+        rememberMeServices.setTokenValiditySeconds(60*60*24*7);
+        //rememberMeServices.setUseSecureCookie(this.useSecureCookie);
+        rememberMeServices.setAlwaysRemember(true);
+        rememberMeServices.afterPropertiesSet();
+        return rememberMeServices;
+    }
+
     @Bean
     public PersistentTokenRepository persistentTokenRepository(){
-        TokenRepositoryImpl TokenRepositoryImpl = new TokenRepositoryImpl();
-        TokenRepositoryImpl.setDataSource(dataSource);
-        return TokenRepositoryImpl;
+        JdbcTokenRepositoryImpl jdbcTokenRepositoryImpl = new TokenRepositoryImpl();
+        jdbcTokenRepositoryImpl.setDataSource(dataSource);
+        return jdbcTokenRepositoryImpl;
     }
 
 
@@ -47,6 +68,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.logout()
                 .logoutUrl("/user/logout")
                 .deleteCookies("JSESSIONID")
+                .addLogoutHandler(rememberMeServices())
                 .logoutSuccessHandler(new MyLogoutSuccessHandler());
 
         //login
@@ -64,15 +86,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().rememberMe()
                 //token
                 .and().rememberMe()
-                .alwaysRemember(true)
-                .tokenRepository(persistentTokenRepository())
-                //valid for one month
-                .tokenValiditySeconds(60*60*24*30)
-                .userDetailsService(userDetailsService);
+                .rememberMeServices(rememberMeServices());
 
         //general
         http.csrf().disable()
-                // Don't keep track of session
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
     }
