@@ -10,7 +10,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.RememberMeServices;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 import tech.crm.crmserver.handler.LoginAuthenticationFailureHandler;
@@ -20,6 +19,7 @@ import tech.crm.crmserver.security.PersistentTokenBasedRememberMeServicesImpl;
 import tech.crm.crmserver.security.TokenRepositoryImpl;
 
 import javax.sql.DataSource;
+import java.util.UUID;
 
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
@@ -36,8 +36,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
      */
     @Bean
     public PersistentTokenBasedRememberMeServicesImpl rememberMeServices() {
+        String key = UUID.randomUUID().toString();
         PersistentTokenBasedRememberMeServicesImpl rememberMeServices =
-                new PersistentTokenBasedRememberMeServicesImpl(userDetailsService,persistentTokenRepository());
+                new PersistentTokenBasedRememberMeServicesImpl(key, userDetailsService,persistentTokenRepository());
         rememberMeServices.setParameter("this_rememberMeParameter");
         rememberMeServices.setCookieName("this_rememberMeParameter");
         //valid for a week
