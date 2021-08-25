@@ -26,6 +26,9 @@ public class PersistentTokenBasedRememberMeServicesImpl extends PersistentTokenB
         this.tokenRepository = tokenRepository;
     }
 
+    public Integer getValidTime(){
+        return this.getTokenValiditySeconds();
+    }
     public User gotUserFromRequest(HttpServletRequest request){
         String rememberMeCookie = extractRememberMeCookie(request);
         if (rememberMeCookie == null) {
