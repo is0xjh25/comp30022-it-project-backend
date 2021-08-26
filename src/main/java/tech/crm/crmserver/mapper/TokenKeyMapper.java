@@ -1,6 +1,6 @@
 package tech.crm.crmserver.mapper;
 
-import tech.crm.crmserver.dao.PersistentLogins;
+import tech.crm.crmserver.dao.TokenKey;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.springframework.stereotype.Repository;
 
@@ -10,9 +10,9 @@ import org.springframework.stereotype.Repository;
  * </p>
  *
  * @author Lingxiao
- * @since 2021-08-25
+ * @since 2021-08-26
  */
 @Repository
-public interface PersistentLoginsMapper extends BaseMapper<PersistentLogins> {
+public interface TokenKeyMapper extends BaseMapper<TokenKey> {
 
 }

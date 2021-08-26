@@ -11,11 +11,11 @@ import org.springframework.web.bind.annotation.RestController;
  * </p>
  *
  * @author Lingxiao
- * @since 2021-08-25
+ * @since 2021-08-26
  */
 @RestController
-@RequestMapping("/persistentLogins")
-public class PersistentLoginsController {
+@RequestMapping("/tokenKey")
+public class TokenKeyController {
 
 }
 
