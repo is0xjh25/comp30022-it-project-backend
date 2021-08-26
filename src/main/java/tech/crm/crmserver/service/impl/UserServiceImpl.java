@@ -1,12 +1,16 @@
 package tech.crm.crmserver.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import tech.crm.crmserver.dao.User;
 import tech.crm.crmserver.mapper.UserMapper;
 import tech.crm.crmserver.service.UserService;
@@ -23,8 +27,15 @@ import java.util.List;
  * @author Lingxiao
  * @since 2021-08-23
  */
-@Service("userDetailsService")
-public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService, UserDetailsService {
+@Service
+public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService, UserDetailsService{
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    public boolean check(String currentPassword, String password) {
+        return this.passwordEncoder.matches(currentPassword, passwordEncoder.encode(password));
+    }
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
@@ -43,4 +54,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
                 new BCryptPasswordEncoder().encode(user.getPassword()),auths);
     }
 
+    public Integer getId(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.getPrincipal() != null) {
+            return (Integer)authentication.getPrincipal();
+        }
+        return null;
+    }
 }

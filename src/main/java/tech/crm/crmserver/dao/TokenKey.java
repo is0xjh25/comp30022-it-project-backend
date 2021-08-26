@@ -2,7 +2,6 @@ package tech.crm.crmserver.dao;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
-import java.time.LocalDateTime;
 import com.baomidou.mybatisplus.annotation.TableId;
 import java.io.Serializable;
 import lombok.AllArgsConstructor;
@@ -16,25 +15,23 @@ import lombok.NoArgsConstructor;
  * </p>
  *
  * @author Lingxiao
- * @since 2021-08-25
+ * @since 2021-08-26
  */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-@TableName("persistent_logins")
-public class PersistentLogins implements Serializable {
+@TableName("token_key")
+public class TokenKey implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-      @TableId(value = "series", type = IdType.AUTO)
-    private String series;
+      @TableId(value = "id", type = IdType.AUTO)
+    private Integer id;
 
-    private String username;
+    private Integer userId;
 
-    private String token;
-
-    private LocalDateTime lastUsed;
+    private String jwtKey;
 
 
 }
