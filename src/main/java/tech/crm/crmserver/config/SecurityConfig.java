@@ -3,96 +3,47 @@ package tech.crm.crmserver.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
-import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
-import tech.crm.crmserver.handler.LoginAuthenticationFailureHandler;
-import tech.crm.crmserver.handler.LoginAuthenticationSuccessHandler;
 import tech.crm.crmserver.handler.MyLogoutSuccessHandler;
-import tech.crm.crmserver.security.PersistentTokenBasedRememberMeServicesImpl;
-import tech.crm.crmserver.security.TokenRepositoryImpl;
-
-import javax.sql.DataSource;
-import java.util.UUID;
+import tech.crm.crmserver.security.JwtAccessDeniedHandler;
+import tech.crm.crmserver.security.JwtAuthenticationEntryPoint;
+import tech.crm.crmserver.security.JwtAuthorizationFilter;
+import tech.crm.crmserver.service.TokenKeyService;
+import tech.crm.crmserver.service.UserService;
 
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    private UserDetailsService userDetailsService;
-
-    @Autowired
-    private DataSource dataSource;
-
-    /**
-     *
-     * @return
-     */
-    @Bean
-    public PersistentTokenBasedRememberMeServicesImpl rememberMeServices() {
-        String key = UUID.randomUUID().toString();
-        PersistentTokenBasedRememberMeServicesImpl rememberMeServices =
-                new PersistentTokenBasedRememberMeServicesImpl(key, userDetailsService,persistentTokenRepository());
-        rememberMeServices.setParameter("this_rememberMeParameter");
-        rememberMeServices.setCookieName("this_rememberMeParameter");
-        //valid for a week
-        rememberMeServices.setTokenValiditySeconds(60*60*24*7);
-        //rememberMeServices.setUseSecureCookie(this.useSecureCookie);
-        rememberMeServices.setAlwaysRemember(true);
-        rememberMeServices.afterPropertiesSet();
-        return rememberMeServices;
-    }
-
-    @Bean
-    public PersistentTokenRepository persistentTokenRepository(){
-        JdbcTokenRepositoryImpl jdbcTokenRepositoryImpl = new TokenRepositoryImpl();
-        jdbcTokenRepositoryImpl.setDataSource(dataSource);
-        return jdbcTokenRepositoryImpl;
-    }
-
-
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService).passwordEncoder(password());
-    }
+    public TokenKeyService tokenKeyService;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
-        //logout
-        http.logout()
-                .logoutUrl("/user/logout")
-                .deleteCookies("JSESSIONID")
-                .logoutSuccessHandler(new MyLogoutSuccessHandler());
-
-        //login
-        http.formLogin()
-                .loginProcessingUrl("/user/login")
-                .successHandler(new LoginAuthenticationSuccessHandler())
-                .failureHandler(new LoginAuthenticationFailureHandler())
-                //login with email instead of username
-                .usernameParameter("email")
-                .and().authorizeRequests()
+        
+        http.cors().and().authorizeRequests()
                 //permit without login
                 .antMatchers("/user/login").permitAll()
                 //need token to get permission
                 //permit all after login
-                .anyRequest().rememberMe()
-                //token
-                .and().rememberMe()
-                .rememberMeServices(rememberMeServices());
+                .anyRequest().authenticated()
+                .and()
+                //JWT
+                .addFilter(new JwtAuthorizationFilter(authenticationManager(), tokenKeyService))
+                //exception handling
+                .exceptionHandling().authenticationEntryPoint(new JwtAuthenticationEntryPoint())
+                .accessDeniedHandler(new JwtAccessDeniedHandler());
 
         //general
         http.csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
     }
+
 
     @Bean
     PasswordEncoder password() {
