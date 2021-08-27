@@ -2,6 +2,7 @@ package tech.crm.crmserver.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -11,7 +12,10 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import tech.crm.crmserver.common.utils.NullAwareBeanUtilsBean;
 import tech.crm.crmserver.dao.User;
+import tech.crm.crmserver.dto.LoginRequest;
+import tech.crm.crmserver.dto.UserDTO;
 import tech.crm.crmserver.mapper.UserMapper;
 import tech.crm.crmserver.service.UserService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -33,8 +37,38 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    public User verify(LoginRequest loginRequest){
+        QueryWrapper<User> userQueryWrapper = new QueryWrapper<>();
+        userQueryWrapper.eq("email",loginRequest.getEmail());
+        User user = getOne(userQueryWrapper);
+        if (!check(loginRequest.getPassword(), user.getPassword())) {
+            throw new BadCredentialsException("The user name or password is not correct.");
+        }
+        return user;
+    }
+
+
+    public User register(User user){
+        QueryWrapper<User> wrapper = new QueryWrapper<User>();
+        wrapper.eq("email",user.getEmail());
+        User existUser = getBaseMapper().selectOne(wrapper);
+        if(existUser != null){
+            return null;
+        }
+        //encode password
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        save(user);
+        return user;
+    }
+
+    public User fromUserDTO(UserDTO userDTO){
+        User user = new User();
+        NullAwareBeanUtilsBean.copyProperties(userDTO, user);
+        return user;
+    }
+
     public boolean check(String currentPassword, String password) {
-        return this.passwordEncoder.matches(currentPassword, passwordEncoder.encode(password));
+        return this.passwordEncoder.matches(currentPassword, password);
     }
 
     @Override
@@ -50,8 +84,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         }
 
         List<GrantedAuthority> auths = AuthorityUtils.commaSeparatedStringToAuthorityList("user");
-        return new org.springframework.security.core.userdetails.User(user.getEmail(),
-                new BCryptPasswordEncoder().encode(user.getPassword()),auths);
+        return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(),auths);
     }
 
     public Integer getId(){
