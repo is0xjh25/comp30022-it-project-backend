@@ -5,12 +5,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import tech.crm.crmserver.common.constants.SecurityConstants;
 import tech.crm.crmserver.dao.User;
 import tech.crm.crmserver.dto.LoginRequest;
+import tech.crm.crmserver.dto.UserDTO;
 import tech.crm.crmserver.service.TokenKeyService;
 import tech.crm.crmserver.service.UserService;
 
@@ -35,7 +34,8 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<Void> login(@RequestBody LoginRequest loginRequest){
-        String token = tokenKeyService.createToken(loginRequest);
+        User user = userService.verify(loginRequest);
+        String token = tokenKeyService.createToken(user);
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.set(SecurityConstants.TOKEN_HEADER, token);
         return new ResponseEntity<>(httpHeaders, HttpStatus.OK);
@@ -48,8 +48,17 @@ public class UserController {
     }
 
     @PostMapping
-    public String register(){
-        return "register";
+    public ResponseEntity<Void> register(@RequestBody UserDTO userDTO){
+        User user = userService.fromUserDTO(userDTO);
+        //check whether there is same email already exist
+        if(userService.register(user) == null){
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        }
+        //return token
+        String token = tokenKeyService.createToken(user);
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.set(SecurityConstants.TOKEN_HEADER, token);
+        return new ResponseEntity<>(httpHeaders, HttpStatus.OK);
     }
 
     @GetMapping

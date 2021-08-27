@@ -3,6 +3,7 @@ package tech.crm.crmserver.service;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import tech.crm.crmserver.dao.TokenKey;
 import com.baomidou.mybatisplus.extension.service.IService;
+import tech.crm.crmserver.dao.User;
 import tech.crm.crmserver.dto.LoginRequest;
 
 /**
@@ -15,7 +16,7 @@ import tech.crm.crmserver.dto.LoginRequest;
  */
 public interface TokenKeyService extends IService<TokenKey> {
 
-    public String createToken(LoginRequest loginRequest);
+    public String createToken(User user);
 
     public void removeToken(String token);
 
