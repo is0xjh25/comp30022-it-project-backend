@@ -45,14 +45,8 @@ public class TokenKeyServiceImpl extends ServiceImpl<TokenKeyMapper, TokenKey> i
     @Autowired
     private JwtSigningKeyResolver jwtSigningKeyResolver;
 
-    public String createToken(LoginRequest loginRequest) {
-        //find user
-        QueryWrapper<User> userQueryWrapper = new QueryWrapper<>();
-        userQueryWrapper.eq("email",loginRequest.getEmail());
-        User user = userService.getOne(userQueryWrapper);
-        if (!userService.check(loginRequest.getPassword(), user.getPassword())) {
-            throw new BadCredentialsException("The user name or password is not correct.");
-        }
+    public String createToken(User user) {
+
         Integer user_id = user.getId();
         String email = user.getEmail();
 
