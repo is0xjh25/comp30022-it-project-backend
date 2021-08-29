@@ -6,7 +6,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
+import tech.crm.crmserver.dao.Organization;
+import tech.crm.crmserver.dto.OrganizationDTO;
+import tech.crm.crmserver.service.OrganizationService;
+import tech.crm.crmserver.service.UserService;
+
+import java.util.List;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import tech.crm.crmserver.dao.Department;
@@ -66,5 +74,27 @@ public class OrganizationController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    // Check out all organization this user belongs to
+    @GetMapping("/myOrganization")
+    public List<Organization> getAllOrganization() {
+        Integer userId = userService.getId();
+        return organizationService.getAllOrgUserOwnAndBelongTo(userId);
+    }
+
+    /**
+     * Get Organization based on organization Integer
+     * */
+    @GetMapping()
+    public Organization getOrganization(@RequestParam("organization_id") Integer organizationId) {
+        return organizationService.getById(organizationId);
+    }
+
+    /**
+     * Get Organization based on organization Integer
+     * */
+    @GetMapping("/name")
+    public Organization getOrganizationBasedOnName(@RequestParam String organizationName) {
+        return null;
+    }
 }
 

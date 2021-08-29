@@ -3,6 +3,8 @@ package tech.crm.crmserver.service;
 import tech.crm.crmserver.dao.Organization;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.util.List;
+
 /**
  * <p>
  *  service
@@ -13,4 +15,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface OrganizationService extends IService<Organization> {
 
+    // get all the organization the user own and belong to
+    public List<Organization> getAllOrgUserOwnAndBelongTo(Integer userId);
+
+    // public List<Organization> getOrgBasedOnName(String orgNameName);
 }
