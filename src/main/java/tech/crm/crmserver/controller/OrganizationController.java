@@ -39,7 +39,17 @@ public class OrganizationController {
     @PostMapping("/department")
     public ResponseEntity<Void> createDepartment(@RequestParam("organization_id") Integer org_id,
                                  @RequestParam("department_name") String name){
-        Organization organization = organizationService.getById(org_id);
+        Organization organization = null;
+        try{
+            organization = organizationService.getById(org_id);
+        }
+        catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        //organization not exist
+        if(organization == null){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
         //check the authority(creator should be the owner of the organization)
         if(organization.getOwner() != userService.getId()){
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
