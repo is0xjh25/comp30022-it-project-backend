@@ -93,8 +93,26 @@ public class OrganizationController {
      * Get Organization based on organization Integer
      * */
     @GetMapping("/name")
-    public Organization getOrganizationBasedOnName(@RequestParam String organizationName) {
-        return null;
+    public List<Organization> getOrganizationBasedOnName(@RequestParam String organizationName) {
+        List<Organization> organizations = organizationService.getOrgBasedOnName(organizationName);
+        return organizations;
+    }
+
+    /**
+     * Create new Organization
+     * */
+    @PostMapping()
+    public ResponseEntity<Void> createNewOrganization(@RequestParam String organizationName) {
+        Integer userID = userService.getId();
+        Organization newOrganization = new Organization();
+        newOrganization.setName(organizationName);
+        newOrganization.setId(userID);
+        try {
+            organizationService.save(newOrganization);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
 
