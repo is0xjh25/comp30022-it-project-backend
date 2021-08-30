@@ -49,15 +49,17 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
 
     public User register(User user){
-        QueryWrapper<User> wrapper = new QueryWrapper<User>();
-        wrapper.eq("email",user.getEmail());
-        User existUser = getBaseMapper().selectOne(wrapper);
-        if(existUser != null){
-            return null;
-        }
         //encode password
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        save(user);
+        try {
+            save(user);
+            QueryWrapper<User> userQueryWrapper = new QueryWrapper<>();
+            userQueryWrapper.eq("email",user.getEmail());
+            user = getOne(userQueryWrapper);
+        }
+        catch (Exception e){
+            return null;
+        }
         return user;
     }
 

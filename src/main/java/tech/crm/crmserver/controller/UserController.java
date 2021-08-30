@@ -65,7 +65,10 @@ public class UserController {
     public User getUser(){
         Integer id = userService.getId();
         if (id != null) {
-            return userService.getById(id);
+            User user = userService.getById(id);
+            //remove password
+            user.setPassword(null);
+            return user;
         }
         return null;
     }
