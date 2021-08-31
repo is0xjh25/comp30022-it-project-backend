@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import tech.crm.crmserver.common.response.ResponseResult;
 import tech.crm.crmserver.dao.Organization;
 import tech.crm.crmserver.dto.OrganizationDTO;
 import tech.crm.crmserver.service.OrganizationService;
@@ -45,22 +46,22 @@ public class OrganizationController {
     private UserService userService;
 
     @PostMapping("/department")
-    public ResponseEntity<Void> createDepartment(@RequestParam("organization_id") Integer org_id,
-                                 @RequestParam("department_name") String name){
+    public ResponseResult<Object> createDepartment(@RequestParam("organization_id") Integer org_id,
+                                           @RequestParam("department_name") String name){
         Organization organization = null;
         try{
             organization = organizationService.getById(org_id);
         }
         catch (Exception e){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return ResponseResult.fail("Fail to get organization from database(Maybe Organization do not exist)");
         }
         //organization not exist
         if(organization == null){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return ResponseResult.fail("Organization do not exist");
         }
         //check the authority(creator should be the owner of the organization)
         if(organization.getOwner() != userService.getId()){
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            return ResponseResult.fail("You don't have enough permission.",HttpStatus.UNAUTHORIZED);
         }
         Department department = new Department();
         department.setOrganizationId(org_id);
@@ -69,9 +70,9 @@ public class OrganizationController {
             departmentService.save(department);
         }
         catch (Exception e){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return ResponseResult.fail("Department already exist.(Or database error)");
         }
-        return new ResponseEntity<>(HttpStatus.OK);
+        return ResponseResult.suc("Successfully create department!");
     }
 
     // Check out all organization this user belongs to
