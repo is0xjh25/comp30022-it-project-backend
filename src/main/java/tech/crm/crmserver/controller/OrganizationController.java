@@ -77,26 +77,28 @@ public class OrganizationController {
 
     // Check out all organization this user belongs to
     @GetMapping("/myOrganization")
-    public List<Organization> getAllOrganization() {
+    public ResponseResult<Object> getAllOrganization() {
         Integer userId = userService.getId();
-        return organizationService.getAllOrgUserOwnAndBelongTo(userId);
+        List<Organization> organizations = organizationService.getAllOrgUserOwnAndBelongTo(userId);
+        return ResponseResult.suc("success", organizations);
     }
 
     /**
      * Get Organization based on organization Integer
      * */
     @GetMapping()
-    public Organization getOrganization(@RequestParam("organization_id") Integer organizationId) {
-        return organizationService.getById(organizationId);
+    public ResponseResult<Object> getOrganization(@RequestParam("organization_id") Integer organizationId) {
+        Organization organization = organizationService.getById(organizationId);
+        return ResponseResult.suc("success", organization);
     }
 
     /**
      * Get Organization based on organization Integer
      * */
     @GetMapping("/name")
-    public List<Organization> getOrganizationBasedOnName(@RequestParam String organizationName) {
+    public ResponseResult<Object> getOrganizationBasedOnName(@RequestParam String organizationName) {
         List<Organization> organizations = organizationService.getOrgBasedOnName(organizationName);
-        return organizations;
+        return ResponseResult.suc("success", organizations);
     }
 
     /**
