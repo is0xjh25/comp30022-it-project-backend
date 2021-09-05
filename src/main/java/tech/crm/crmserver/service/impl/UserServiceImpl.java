@@ -41,7 +41,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         QueryWrapper<User> userQueryWrapper = new QueryWrapper<>();
         userQueryWrapper.eq("email",loginRequest.getEmail());
         User user = getOne(userQueryWrapper);
-        if (!check(loginRequest.getPassword(), user.getPassword())) {
+        if (user == null || !check(loginRequest.getPassword(), user.getPassword())) {
             throw new BadCredentialsException("The user name or password is not correct.");
         }
         return user;
