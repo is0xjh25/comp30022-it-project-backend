@@ -37,7 +37,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public User verify(LoginRequest loginRequest){
+    public User verify(LoginRequest loginRequest) throws BadCredentialsException{
         QueryWrapper<User> userQueryWrapper = new QueryWrapper<>();
         userQueryWrapper.eq("email",loginRequest.getEmail());
         User user = getOne(userQueryWrapper);
