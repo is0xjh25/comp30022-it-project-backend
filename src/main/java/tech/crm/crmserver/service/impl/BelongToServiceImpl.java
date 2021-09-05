@@ -16,5 +16,15 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class BelongToServiceImpl extends ServiceImpl<BelongToMapper, BelongTo> implements BelongToService {
+    /**
+     * Insert new BelongTo relationship,
+     * UserId, OrganizationId
+     */
+    @Override
+    public boolean insertNewBelongTo(Integer organizationId, Integer userId) {
+        // First, make sure this user and this organization do not have recorded belong to relationship
+        // Then insert this belongTo relationship
 
+        return false;
+    }
 }

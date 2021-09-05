@@ -34,5 +34,7 @@ public class ContactController {
         Contact contact = contactService.getById(contactId);
         return ResponseResult.suc("success", contact);
     }
+
+
 }
 

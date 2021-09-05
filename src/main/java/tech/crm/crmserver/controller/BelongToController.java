@@ -1,9 +1,19 @@
 package tech.crm.crmserver.controller;
 
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import tech.crm.crmserver.dao.BelongTo;
+import tech.crm.crmserver.dao.Organization;
+import tech.crm.crmserver.service.BelongToService;
+import tech.crm.crmserver.service.OrganizationService;
+import tech.crm.crmserver.service.UserService;
 
 /**
  * <p>
@@ -17,5 +27,17 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/belongTo")
 public class BelongToController {
 
+    @Autowired
+    private BelongToService belongToService;
+
+    @Autowired
+    private UserService userService;
+
+    @PostMapping()
+    public ResponseEntity<Void> createNewOrganization(@RequestParam("organization_id") Integer organizationId) {
+        Integer userId = userService.getId();
+        belongToService.insertNewBelongTo(organizationId, userId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }
 
