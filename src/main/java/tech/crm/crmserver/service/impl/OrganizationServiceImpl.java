@@ -39,9 +39,11 @@ public class OrganizationServiceImpl extends ServiceImpl<OrganizationMapper, Org
     }
 
 
-/*    @Override
+    @Override
     public List<Organization> getOrgBasedOnName(String orgNameName) {
-        QueryWrapper<Object> queryWrapper = new QueryWrapper<>().like("name", orgNameName).likeLeft("name", orgNameName).likeRight("name", orgNameName);
-        return null;
-    }*/
+        QueryWrapper<Organization> queryWrapper = new QueryWrapper<>();
+        queryWrapper.like("name", orgNameName).likeLeft("name", orgNameName).likeRight("name", orgNameName);
+        List<Organization> organizations = organizationMapper.selectList(queryWrapper);
+        return organizations;
+    }
 }
