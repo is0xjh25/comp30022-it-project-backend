@@ -15,7 +15,7 @@ public class CrossOriginConfig implements WebMvcConfigurer{
                 .allowedOrigins("http://localhost:8080","https://comp30022-yyds.herokuapp.com/")
                 .allowCredentials(true)
                 .allowedMethods(ORIGINS)
-                .allowCredentials(false)
+                .allowedHeaders("*")
                 .maxAge(3600);
     }
 
