@@ -1,6 +1,7 @@
 package tech.crm.crmserver.controller;
 
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -73,6 +74,18 @@ public class OrganizationController {
             return ResponseResult.fail("Department already exist.(Or database error)");
         }
         return ResponseResult.suc("Successfully create department!");
+    }
+
+
+    /**
+     * Get departments based on organization id
+     * */
+    @GetMapping("/department")
+    public ResponseResult<Object> getDepartment(@RequestParam("organization_id") Integer organization_id){
+        QueryWrapper<Department> wrapper = new QueryWrapper<>();
+        wrapper.eq("organization_id",organization_id);
+        List<Department> departments = departmentService.list(wrapper);
+        return ResponseResult.suc("success", departments);
     }
 
     // Check out all organization this user belongs to
