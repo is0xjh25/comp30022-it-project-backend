@@ -77,25 +77,45 @@ public class OrganizationController {
 
     // Check out all organization this user belongs to
     @GetMapping("/myOrganization")
-    public List<Organization> getAllOrganization() {
+    public ResponseResult<Object> getAllOrganization() {
         Integer userId = userService.getId();
-        return organizationService.getAllOrgUserOwnAndBelongTo(userId);
+        List<Organization> organizations = organizationService.getAllOrgUserOwnAndBelongTo(userId);
+        return ResponseResult.suc("success", organizations);
     }
 
     /**
      * Get Organization based on organization Integer
      * */
     @GetMapping()
-    public Organization getOrganization(@RequestParam("organization_id") Integer organizationId) {
-        return organizationService.getById(organizationId);
+    public ResponseResult<Object> getOrganization(@RequestParam("organization_id") Integer organizationId) {
+        Organization organization = organizationService.getById(organizationId);
+        return ResponseResult.suc("success", organization);
     }
 
     /**
      * Get Organization based on organization Integer
      * */
     @GetMapping("/name")
-    public Organization getOrganizationBasedOnName(@RequestParam String organizationName) {
-        return null;
+    public ResponseResult<Object> getOrganizationBasedOnName(@RequestParam String organizationName) {
+        List<Organization> organizations = organizationService.getOrgBasedOnName(organizationName);
+        return ResponseResult.suc("success", organizations);
+    }
+
+    /**
+     * Create new Organization
+     * */
+    @PostMapping()
+    public ResponseEntity<Void> createNewOrganization(@RequestParam String organizationName) {
+        Integer userID = userService.getId();
+        Organization newOrganization = new Organization();
+        newOrganization.setName(organizationName);
+        newOrganization.setId(userID);
+        try {
+            organizationService.save(newOrganization);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
 
