@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import tech.crm.crmserver.common.enums.Status;
 
 /**
  * <p>
@@ -54,7 +55,7 @@ public class Contact implements Serializable {
 
     private String customerType;
 
-    private String status;
+    private Status status;
 
 
 }

@@ -5,4 +5,7 @@ spring:
     username: b1536f0a985144
     password: bc9f957b
 
+mybatis-plus:
+  typeEnumsPackage: tech.crm.crmserver.common.enums
+
 

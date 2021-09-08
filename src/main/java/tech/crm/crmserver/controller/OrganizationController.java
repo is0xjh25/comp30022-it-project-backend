@@ -10,18 +10,22 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import tech.crm.crmserver.common.enums.PermissionLevel;
+import tech.crm.crmserver.common.enums.Status;
 import tech.crm.crmserver.common.response.ResponseResult;
+import tech.crm.crmserver.common.utils.NullAwareBeanUtilsBean;
 import tech.crm.crmserver.dao.Organization;
+import tech.crm.crmserver.dao.Permission;
+import tech.crm.crmserver.dto.DepartmentDTO;
 import tech.crm.crmserver.dto.OrganizationDTO;
-import tech.crm.crmserver.service.OrganizationService;
-import tech.crm.crmserver.service.UserService;
+import tech.crm.crmserver.service.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import tech.crm.crmserver.dao.Department;
 import tech.crm.crmserver.dao.Organization;
-import tech.crm.crmserver.service.DepartmentService;
 import tech.crm.crmserver.service.OrganizationService;
 import tech.crm.crmserver.service.UserService;
 
@@ -46,6 +50,15 @@ public class OrganizationController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private PermissionService permissionService;
+
+    /**
+     * create a department
+     * @param org_id
+     * @param name
+     * @return
+     */
     @PostMapping("/department")
     public ResponseResult<Object> createDepartment(@RequestParam("organization_id") Integer org_id,
                                            @RequestParam("department_name") String name){
@@ -67,12 +80,28 @@ public class OrganizationController {
         Department department = new Department();
         department.setOrganizationId(org_id);
         department.setName(name);
+        //check whether there already exist a department with same name
+        QueryWrapper<Department> wrapper = new QueryWrapper<>();
+        wrapper.eq("organization_id",department.getOrganizationId());
+        wrapper.eq("name", department.getName());
         try {
+            //department already exist in this organization
+            if(departmentService.getOne(wrapper) != null){
+                throw new Exception();
+            }
             departmentService.save(department);
         }
         catch (Exception e){
             return ResponseResult.fail("Department already exist.(Or database error)");
         }
+        //give the owner the owner permission
+        department = departmentService.getOne(wrapper);
+        Permission permission = new Permission();
+        permission.setUserId(userService.getId());
+        permission.setDepartmentId(department.getId());
+        permission.setAuthorityLevel(PermissionLevel.OWNER);
+        permissionService.save(permission);
+
         return ResponseResult.suc("Successfully create department!");
     }
 
@@ -80,12 +109,22 @@ public class OrganizationController {
     /**
      * Get departments based on organization id
      * */
-    @GetMapping("/department")
+    @GetMapping("/departments")
     public ResponseResult<Object> getDepartment(@RequestParam("organization_id") Integer organization_id){
         QueryWrapper<Department> wrapper = new QueryWrapper<>();
         wrapper.eq("organization_id",organization_id);
+        //the department should not be deleted
+        wrapper.ne("status", Status.DELETED);
         List<Department> departments = departmentService.list(wrapper);
-        return ResponseResult.suc("success", departments);
+        //change to departmentDTO
+        List<DepartmentDTO> response = new ArrayList<>();
+        for (Department department : departments){
+            department.setStatus(null);
+            DepartmentDTO departmentDTO = new DepartmentDTO();
+            NullAwareBeanUtilsBean.copyProperties(department,departmentDTO);
+            response.add(departmentDTO);
+        }
+        return ResponseResult.suc("success", response);
     }
 
     // Check out all organization this user belongs to
