@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import tech.crm.crmserver.common.enums.Status;
 
 /**
  * <p>
@@ -33,7 +34,7 @@ public class BelongTo implements Serializable {
 
     private Integer organizationId;
 
-    private String status;
+    private Status status;
 
 
 }

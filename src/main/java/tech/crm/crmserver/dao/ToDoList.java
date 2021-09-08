@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import tech.crm.crmserver.common.enums.Status;
 
 /**
  * <p>
@@ -36,7 +37,7 @@ public class ToDoList implements Serializable {
 
     private String description;
 
-    private String status;
+    private Status status;
 
 
 }

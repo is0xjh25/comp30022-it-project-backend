@@ -12,11 +12,10 @@ public class CrossOriginConfig implements WebMvcConfigurer{
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("http://localhost:8080","https://comp30022-yyds.herokuapp.com/")
+                //.allowedOrigins("http://localhost:8080/")
                 .allowCredentials(true)
-                .allowedMethods(ORIGINS)
                 .allowedHeaders("*")
-                .maxAge(3600);
+                .allowedMethods(ORIGINS).maxAge(3600);
     }
 
 }
