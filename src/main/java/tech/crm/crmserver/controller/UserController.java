@@ -77,17 +77,14 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseResult<Object> getUser(){
+    public ResponseResult<Object> getUser() {
         Integer id = userService.getId();
         if (id != null) {
             User user = userService.getById(id);
             user.setPassword(null);
-            return ResponseResult.suc("successfully get user",user);
+            return ResponseResult.suc("successfully get user", user);
         }
         return ResponseResult.fail("Error");
     }
-
-
-
 }
 
