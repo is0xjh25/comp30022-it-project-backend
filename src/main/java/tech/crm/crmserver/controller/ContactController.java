@@ -2,6 +2,8 @@ package tech.crm.crmserver.controller;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -9,6 +11,7 @@ import tech.crm.crmserver.common.response.ResponseResult;
 import tech.crm.crmserver.dao.Contact;
 import tech.crm.crmserver.service.ContactService;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -38,11 +41,19 @@ public class ContactController {
 
     /**
      * search contacts by some details
-     * @param map
+     * @param
      * @return
      */
     @GetMapping("/search")
-    public ResponseResult<Object> searchContact(@RequestBody Map<String,String> map) {
+    public ResponseResult<Object> searchContact(@RequestParam(value = "firstName",required = false) String firstName,
+                                                @RequestParam(value = "lastName",required = false) String lastName,
+                                                @RequestParam(value = "gender",required = false) String gender,
+                                                @RequestParam(value = "organization",required = false) String organization){
+        Map<String,String> map = new HashMap<>();
+        map.put("first_name",firstName);
+        map.put("last_name",lastName);
+        map.put("gender",gender);
+        map.put("organization",organization);
         QueryWrapper<Contact> wrapper = new QueryWrapper<>();
         for(Map.Entry<String,String> entry : map.entrySet()){
             if(entry.getValue() == null){
