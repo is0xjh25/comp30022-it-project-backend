@@ -157,17 +157,23 @@ public class OrganizationController {
      * Create new Organization
      * */
     @PostMapping()
-    public ResponseEntity<Void> createNewOrganization(@RequestParam String organizationName) {
+    public ResponseResult<Object> createNewOrganization(@RequestParam String organizationName) {
+        // todo
         Integer userID = userService.getId();
+        List<Organization> organizationListWithSameName = organizationService.getOrgBasedOnExactName(organizationName);
+
+        if (organizationListWithSameName.size() > 0) {
+            return ResponseResult.fail("Organization with same name exists");
+        }
         Organization newOrganization = new Organization();
         newOrganization.setName(organizationName);
         newOrganization.setId(userID);
         try {
             organizationService.save(newOrganization);
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return ResponseResult.fail("Fail to create organization");
         }
-        return new ResponseEntity<>(HttpStatus.OK);
+        return ResponseResult.suc("success");
     }
 }
 
