@@ -9,12 +9,10 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import tech.crm.crmserver.handler.MyLogoutSuccessHandler;
 import tech.crm.crmserver.security.JwtAccessDeniedHandler;
 import tech.crm.crmserver.security.JwtAuthenticationEntryPoint;
 import tech.crm.crmserver.security.JwtAuthorizationFilter;
 import tech.crm.crmserver.service.TokenKeyService;
-import tech.crm.crmserver.service.UserService;
 
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
