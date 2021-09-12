@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import tech.crm.crmserver.common.response.ResponseResult;
 import tech.crm.crmserver.dao.BelongTo;
 import tech.crm.crmserver.dao.Organization;
 import tech.crm.crmserver.service.BelongToService;
@@ -33,11 +34,20 @@ public class BelongToController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private OrganizationService organizationService;
+
     @PostMapping()
-    public ResponseEntity<Void> createNewOrganization(@RequestParam("organization_id") Integer organizationId) {
+    public ResponseResult createNewOrganization(@RequestParam("organization_id") Integer organizationId) {
         Integer userId = userService.getId();
-        belongToService.insertNewBelongTo(organizationId, userId);
-        return new ResponseEntity<>(HttpStatus.OK);
+        Organization organization = organizationService.getById(organizationId);
+        boolean insertSucc = true;
+        if (organization != null) {
+            belongToService.insertNewBelongTo(organizationId, userId);
+        } else {
+            ResponseResult.fail("Invalid organization Id");
+        }
+        return ResponseResult.suc("success");
     }
 }
 

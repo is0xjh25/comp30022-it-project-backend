@@ -18,5 +18,8 @@ public interface OrganizationService extends IService<Organization> {
     // get all the organization the user own and belong to
     public List<Organization> getAllOrgUserOwnAndBelongTo(Integer userId);
 
-    public List<Organization> getOrgBasedOnName(String orgNameName);
+    public List<Organization> getOrgBasedOnName(String organizationName);
+
+    public List<Organization> getOrgBasedOnExactName(String organizationName);
+
 }
