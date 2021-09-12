@@ -3,11 +3,8 @@ package tech.crm.crmserver.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 import tech.crm.crmserver.common.enums.PermissionLevel;
 import tech.crm.crmserver.common.response.ResponseResult;
 import tech.crm.crmserver.dao.Permission;
@@ -37,17 +34,17 @@ public class PermissionController {
      * @return
      */
     @DeleteMapping
-    public ResponseResult<Object> deleteMember(@RequestParam("user_id") Integer user_id,
-                                               @RequestParam("department_id") Integer department_id){
+    public ResponseResult<Object> deleteMember(@RequestParam("user_id") Integer userId,
+                                               @RequestParam("department_id") Integer departmentId){
         QueryWrapper<Permission> wrapper = new QueryWrapper<>();
         //executor for delete action
         wrapper.eq("user_id",userService.getId());
-        wrapper.eq("department_id",department_id);
+        wrapper.eq("department_id",departmentId);
         Permission executor = permissionService.getOne(wrapper);
         //executed person for delete action
         wrapper = new QueryWrapper<>();
-        wrapper.eq("user_id",user_id);
-        wrapper.eq("department_id",department_id);
+        wrapper.eq("user_id",userId);
+        wrapper.eq("department_id",departmentId);
         Permission executed = permissionService.getOne(wrapper);
 
         //check the authority
@@ -58,6 +55,16 @@ public class PermissionController {
         return ResponseResult.suc("Successfully delete the member!");
     }
 
+    /**
+     * member apply for joining a department
+     * @param departmentId
+     * @return
+     */
+    @PostMapping("/pending")
+    public ResponseResult<Object> joinDepartment(@RequestParam("department_id") Integer departmentId){
+        permissionService.applyPendingPermission(departmentId, userService.getId());
+        return ResponseResult.suc("Successfully apply for permission!");
+    }
 
 }
 

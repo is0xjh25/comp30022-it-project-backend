@@ -60,11 +60,11 @@ public class OrganizationController {
      * @return
      */
     @PostMapping("/department")
-    public ResponseResult<Object> createDepartment(@RequestParam("organization_id") Integer org_id,
+    public ResponseResult<Object> createDepartment(@RequestParam("organization_id") Integer orgId,
                                            @RequestParam("department_name") String name){
         Organization organization = null;
         try{
-            organization = organizationService.getById(org_id);
+            organization = organizationService.getById(orgId);
         }
         catch (Exception e){
             return ResponseResult.fail("Fail to get organization from database(Maybe Organization do not exist)");
@@ -78,7 +78,7 @@ public class OrganizationController {
             return ResponseResult.fail("You don't have enough permission.",HttpStatus.UNAUTHORIZED);
         }
         Department department = new Department();
-        department.setOrganizationId(org_id);
+        department.setOrganizationId(orgId);
         department.setName(name);
         //check whether there already exist a department with same name
         QueryWrapper<Department> wrapper = new QueryWrapper<>();
@@ -110,9 +110,9 @@ public class OrganizationController {
      * Get departments based on organization id
      * */
     @GetMapping("/departments")
-    public ResponseResult<Object> getDepartment(@RequestParam("organization_id") Integer organization_id){
+    public ResponseResult<Object> getDepartment(@RequestParam("organization_id") Integer organizationId){
         QueryWrapper<Department> wrapper = new QueryWrapper<>();
-        wrapper.eq("organization_id",organization_id);
+        wrapper.eq("organization_id",organizationId);
         //the department should not be deleted
         wrapper.ne("status", Status.DELETED);
         List<Department> departments = departmentService.list(wrapper);
