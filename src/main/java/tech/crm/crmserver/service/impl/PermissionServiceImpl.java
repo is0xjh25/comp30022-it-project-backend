@@ -25,7 +25,7 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
     private PermissionMapper permissionMapper;
 
     @Override
-    public boolean applyPendingPermission(Integer departmentId, Integer userId) {
+    public boolean createPermission(Integer departmentId, Integer userId, Integer permissionLevel) {
         //check whether this user in the department
         QueryWrapper<Permission> wrapper = new QueryWrapper<>();
         wrapper.eq("department_id",departmentId);
@@ -36,7 +36,7 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
         Permission permission = new Permission();
         permission.setDepartmentId(departmentId);
         permission.setUserId(userId);
-        permission.setAuthorityLevel(PermissionLevel.PENDING);
+        permission.setAuthorityLevel(PermissionLevel.getPermissionLevel(permissionLevel));
         permissionMapper.insert(permission);
         return true;
     }

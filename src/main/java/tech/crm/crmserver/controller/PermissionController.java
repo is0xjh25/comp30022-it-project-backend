@@ -3,6 +3,7 @@ package tech.crm.crmserver.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import tech.crm.crmserver.common.enums.PermissionLevel;
@@ -56,14 +57,19 @@ public class PermissionController {
     }
 
     /**
-     * member apply for joining a department
+     * create permission(default permission level is PENDING)
      * @param departmentId
      * @return
      */
-    @PostMapping("/pending")
-    public ResponseResult<Object> joinDepartment(@RequestParam("department_id") Integer departmentId){
-        permissionService.applyPendingPermission(departmentId, userService.getId());
-        return ResponseResult.suc("Successfully apply for permission!");
+    @PostMapping
+    public ResponseResult<Object> createPermission(@RequestParam("department_id") Integer departmentId,
+                                                 @RequestParam(value = "permission_level",required = false,
+                                                         defaultValue = "0") Integer permissionLevel){
+        if(permissionLevel != 0){
+            return ResponseResult.fail("You don't have enough permission!", HttpStatus.UNAUTHORIZED);
+        }
+        permissionService.createPermission(departmentId, userService.getId(),permissionLevel);
+        return ResponseResult.suc("Successfully create permission!");
     }
 
 }
