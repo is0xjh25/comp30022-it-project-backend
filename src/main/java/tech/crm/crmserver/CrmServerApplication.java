@@ -7,7 +7,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
 @EnableScheduling
-@MapperScan("tech.crm.crmserver.mapper")
 public class CrmServerApplication {
 
 	public static void main(String[] args) {
