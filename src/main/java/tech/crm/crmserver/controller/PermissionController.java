@@ -3,11 +3,8 @@ package tech.crm.crmserver.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 import tech.crm.crmserver.common.enums.PermissionLevel;
 import tech.crm.crmserver.common.response.ResponseResult;
 import tech.crm.crmserver.dao.Permission;
@@ -58,6 +55,13 @@ public class PermissionController {
         return ResponseResult.suc("Successfully delete the member!");
     }
 
+    @GetMapping("/pending")
+    public ResponseResult<Object> getIfOrgDepartmentHasPendingRequest(@RequestParam(value = "organization_id") Integer organizationId, @RequestParam(value = "department_id") Integer departmentId) {
+        if (permissionService.checkPendingPermission(organizationId, departmentId)) {
+            return ResponseResult.suc("Have pending");
+        }
+        return ResponseResult.suc("No pending");
+    }
 
 }
 
