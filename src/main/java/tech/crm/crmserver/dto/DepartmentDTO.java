@@ -1,14 +1,13 @@
-package tech.crm.crmserver.dao;
+package tech.crm.crmserver.dto;
 
-import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
-import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import tech.crm.crmserver.common.enums.Status;
+
+import java.io.Serializable;
 
 /**
  * <p>
@@ -16,25 +15,21 @@ import tech.crm.crmserver.common.enums.Status;
  * </p>
  *
  * @author Lingxiao
- * @since 2021-08-23
+ * @since 2021-09-08
  */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-@TableName("organization")
-public class Organization implements Serializable {
+public class DepartmentDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-      @TableId(value = "id", type = IdType.AUTO)
+    @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
     private String name;
 
-    private Integer owner;
-
-    private Status status;
-
+    private Integer organizationId;
 
 }

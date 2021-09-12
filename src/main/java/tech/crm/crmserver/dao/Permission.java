@@ -8,6 +8,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import tech.crm.crmserver.common.enums.PermissionLevel;
+import tech.crm.crmserver.common.enums.Status;
 
 /**
  * <p>
@@ -33,9 +35,9 @@ public class Permission implements Serializable {
 
     private Integer departmentId;
 
-    private Integer authorityLevel;
+    private PermissionLevel authorityLevel;
 
-    private String status;
+    private Status status;
 
 
 }
