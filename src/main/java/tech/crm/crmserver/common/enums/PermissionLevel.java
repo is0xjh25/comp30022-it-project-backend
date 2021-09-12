@@ -21,6 +21,17 @@ public enum PermissionLevel {
     @JsonValue
     private final Integer level;
 
+
+    public static PermissionLevel getPermissionLevel(Integer value){
+        for (PermissionLevel e:PermissionLevel.values()) {
+            if(e.getLevel().equals(value))
+                return e;
+        }
+        //not found
+        return null;
+    }
+
+
     PermissionLevel(String permission, Integer level) {
         this.permission = permission;
         this.level = level;
@@ -33,6 +44,8 @@ public enum PermissionLevel {
     public Integer getLevel() {
         return level;
     }
+
+
 
     @Override
     public String toString() {

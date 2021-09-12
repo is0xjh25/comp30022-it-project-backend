@@ -1,9 +1,8 @@
 package tech.crm.crmserver.service;
 
-import tech.crm.crmserver.EnumClass.BelongToStatus;
+import tech.crm.crmserver.common.enums.BelongToStatus;
 import tech.crm.crmserver.dao.BelongTo;
 import com.baomidou.mybatisplus.extension.service.IService;
-import tech.crm.crmserver.dao.Organization;
 
 import java.util.List;
 

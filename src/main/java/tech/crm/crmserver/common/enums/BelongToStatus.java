@@ -1,4 +1,4 @@
-package tech.crm.crmserver.EnumClass;
+package tech.crm.crmserver.common.enums;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

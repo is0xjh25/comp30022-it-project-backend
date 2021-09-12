@@ -2,9 +2,8 @@ package tech.crm.crmserver.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import tech.crm.crmserver.EnumClass.BelongToStatus;
+import tech.crm.crmserver.common.enums.BelongToStatus;
 import tech.crm.crmserver.dao.BelongTo;
-import tech.crm.crmserver.dao.Organization;
 import tech.crm.crmserver.mapper.BelongToMapper;
 import tech.crm.crmserver.service.BelongToService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
