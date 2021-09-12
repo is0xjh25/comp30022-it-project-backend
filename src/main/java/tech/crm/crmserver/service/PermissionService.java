@@ -22,4 +22,9 @@ public interface PermissionService extends IService<Permission> {
      */
     public boolean createPermission(Integer departmentId, Integer userId,Integer permissionLevel);
 
+
+    public boolean updateOrCreatePermission(Integer departmentId, Integer executor,Integer executed, Integer permissionLevel);
+
+
+    public Permission findPermission(Integer departmentId, Integer userId);
 }

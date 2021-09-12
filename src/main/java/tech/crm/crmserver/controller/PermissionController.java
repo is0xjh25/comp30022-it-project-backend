@@ -63,13 +63,23 @@ public class PermissionController {
      */
     @PostMapping
     public ResponseResult<Object> createPermission(@RequestParam("department_id") Integer departmentId,
-                                                 @RequestParam(value = "permission_level",required = false,
+                                                 @RequestParam(value = "permission_level",
                                                          defaultValue = "0") Integer permissionLevel){
         if(permissionLevel != 0){
             return ResponseResult.fail("You don't have enough permission!", HttpStatus.UNAUTHORIZED);
         }
         permissionService.createPermission(departmentId, userService.getId(),permissionLevel);
         return ResponseResult.suc("Successfully create permission!");
+    }
+
+    @PutMapping
+    public ResponseResult<Object> updatePermission(@RequestParam("department_id") Integer departmentID,
+                                                   @RequestParam("member id") Integer memberId,
+                                                   @RequestParam(value = "permission_level")Integer permissionLevel){
+        if(permissionService.updateOrCreatePermission(departmentID,userService.getId(),memberId,permissionLevel)){
+            return ResponseResult.suc("Successfully update permission!");
+        }
+        return ResponseResult.fail("You don't have enough permission!", HttpStatus.UNAUTHORIZED);
     }
 
 }
