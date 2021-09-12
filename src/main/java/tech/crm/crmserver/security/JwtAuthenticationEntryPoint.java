@@ -9,7 +9,7 @@ import java.io.IOException;
 
 /**
  * @author shuang.kou
- * @description AuthenticationEntryPoint 用来解决匿名用户访问需要权限才能访问的资源时的异常
+ * @description AuthenticationEntryPoint
  */
 public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
     /**
