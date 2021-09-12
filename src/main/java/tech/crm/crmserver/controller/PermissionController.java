@@ -39,13 +39,13 @@ public class PermissionController {
                                                @RequestParam("department_id") Integer departmentId){
         QueryWrapper<Permission> wrapper = new QueryWrapper<>();
         //executor for delete action
-        wrapper.eq("user_id",userService.getId());
-        wrapper.eq("department_id",departmentId);
+        wrapper.eq("user_id",userService.getId())
+                .eq("department_id",departmentId);
         Permission executor = permissionService.getOne(wrapper);
         //executed person for delete action
         wrapper = new QueryWrapper<>();
-        wrapper.eq("user_id",userId);
-        wrapper.eq("department_id",departmentId);
+        wrapper.eq("user_id",userId)
+                .eq("department_id",departmentId);
         Permission executed = permissionService.getOne(wrapper);
 
         //check the authority

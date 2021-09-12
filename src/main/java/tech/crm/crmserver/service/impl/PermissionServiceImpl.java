@@ -75,8 +75,8 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
     @Override
     public Permission findPermission(Integer departmentId, Integer userId) {
         QueryWrapper<Permission> wrapper = new QueryWrapper<>();
-        wrapper.eq("department_id",departmentId);
-        wrapper.eq("user_id",userId);
+        wrapper.eq("department_id",departmentId)
+                .eq("user_id",userId);
         Permission permission = permissionMapper.selectOne(wrapper);
         return permission;
     }
