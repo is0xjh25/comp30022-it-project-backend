@@ -2,10 +2,10 @@ package tech.crm.crmserver.controller;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
 
 import tech.crm.crmserver.common.enums.PermissionLevel;
 import tech.crm.crmserver.common.response.ResponseResult;
@@ -83,11 +83,18 @@ public class PermissionController {
         return ResponseResult.fail("You don't have enough permission!", HttpStatus.UNAUTHORIZED);
     }
     @GetMapping("/pending")
-    public ResponseResult<Object> getIfOrgDepartmentHasPendingRequest(@RequestParam(value = "organization_id") Integer organizationId, @RequestParam(value = "department_id") Integer departmentId) {
+    public ResponseResult<Object> getIfOrgDepartmentHasPendingRequest(@RequestParam(value = "organization_id") Integer organizationId,
+                                                                      @RequestParam(value = "department_id") Integer departmentId) {
         if (permissionService.checkPendingPermission(organizationId, departmentId)) {
             return ResponseResult.suc("Have pending");
         }
         return ResponseResult.suc("No pending");
+    }
+
+    @PostMapping("/test")
+    public ResponseResult<Object> test(@RequestParam("department_id") Integer departmentId){
+        Page<Permission> p = permissionService.getAllPermissionInDepartmentOrdered(new Page<>(2, 2), departmentId);
+        return ResponseResult.suc("Success",p);
     }
 
 }

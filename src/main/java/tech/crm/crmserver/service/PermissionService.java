@@ -1,5 +1,6 @@
 package tech.crm.crmserver.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import tech.crm.crmserver.dao.Permission;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -22,14 +23,13 @@ public interface PermissionService extends IService<Permission> {
      */
     public boolean createPermission(Integer departmentId, Integer userId,Integer permissionLevel);
 
-
     public boolean updateOrCreatePermission(Integer departmentId, Integer executor,Integer executed, Integer permissionLevel);
 
-
     public Permission findPermission(Integer departmentId, Integer userId);
+
     public boolean checkPendingPermission(Integer organizationId, Integer departmentId);
 
     public boolean checkPendingPermission(Integer departmentId);
 
-    public boolean getAllPermissionInDepartmentOrdered(Integer departmentId);
+    public Page<Permission> getAllPermissionInDepartmentOrdered(Page<Permission> page, Integer departmentId);
 }

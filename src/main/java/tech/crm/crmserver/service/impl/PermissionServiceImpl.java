@@ -1,6 +1,7 @@
 package tech.crm.crmserver.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import tech.crm.crmserver.common.enums.PermissionLevel;
 import tech.crm.crmserver.dao.BelongTo;
@@ -122,32 +123,7 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
     }
 
     @Override
-    public boolean getAllPermissionInDepartmentOrdered(Integer departmentId) {
-        // figure out all pending permission
-        QueryWrapper<Permission> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("department_id", departmentId).eq("authority_level", PermissionLevel.PENDING.getLevel());
-
-
-        // figure out all other
-
-
-
-        return false;
+    public Page<Permission> getAllPermissionInDepartmentOrdered(Page<Permission> page, Integer departmentId) {
+        return this.baseMapper.getPermissionInDepartmentOrdered(page,departmentId);
     }
-
-//    @Override
-//    public boolean getAllPermissionInDepartmentOrdered(Integer departmentId, Integer page, Integer total) {
-//        // figure out all pending permission
-//        QueryWrapper<Permission> queryWrapper = new QueryWrapper<>();
-//        queryWrapper.eq("department_id", departmentId).eq("authority_level", PermissionLevel.PENDING.getLevel());
-//
-//
-//        // figure out all other
-//
-//
-//
-//
-//
-//        return false;
-//    }
 }
