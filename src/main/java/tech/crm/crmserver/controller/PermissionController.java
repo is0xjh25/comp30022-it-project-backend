@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import tech.crm.crmserver.common.enums.PermissionLevel;
 import tech.crm.crmserver.common.response.ResponseResult;
 import tech.crm.crmserver.dao.Permission;
+import tech.crm.crmserver.dto.UserPermissionDTO;
 import tech.crm.crmserver.service.PermissionService;
 import tech.crm.crmserver.service.UserService;
 
@@ -91,11 +92,7 @@ public class PermissionController {
         return ResponseResult.suc("No pending");
     }
 
-    @PostMapping("/test")
-    public ResponseResult<Object> test(@RequestParam("department_id") Integer departmentId){
-        Page<Permission> p = permissionService.getAllPermissionInDepartmentOrdered(new Page<>(2, 2), departmentId);
-        return ResponseResult.suc("Success",p);
-    }
+
 
 }
 

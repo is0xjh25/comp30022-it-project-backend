@@ -9,6 +9,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import tech.crm.crmserver.common.enums.PermissionLevel;
 import tech.crm.crmserver.dao.Permission;
+import tech.crm.crmserver.dto.UserPermissionDTO;
 import tech.crm.crmserver.mapper.OrganizationMapper;
 import tech.crm.crmserver.mapper.PermissionMapper;
 import tech.crm.crmserver.service.DepartmentService;
@@ -123,7 +124,7 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
     }
 
     @Override
-    public Page<Permission> getAllPermissionInDepartmentOrdered(Page<Permission> page, Integer departmentId) {
+    public Page<UserPermissionDTO> getAllPermissionInDepartmentOrdered(Page<UserPermissionDTO> page, Integer departmentId) {
         return this.baseMapper.getPermissionInDepartmentOrdered(page,departmentId);
     }
 }
