@@ -67,7 +67,7 @@ public class PermissionController {
                                                  @RequestParam(value = "permission_level",
                                                          defaultValue = "0") Integer permissionLevel){
         if(permissionLevel != 0){
-            return ResponseResult.fail("You don't have enough permission!", HttpStatus.UNAUTHORIZED);
+            return ResponseResult.fail("You don't have enough permission!", HttpStatus.FORBIDDEN);
         }
         permissionService.createPermission(departmentId, userService.getId(),permissionLevel);
         return ResponseResult.suc("Successfully create permission!");
@@ -80,7 +80,7 @@ public class PermissionController {
         if(permissionService.updateOrCreatePermission(departmentID,userService.getId(),memberId,permissionLevel)){
             return ResponseResult.suc("Successfully update permission!");
         }
-        return ResponseResult.fail("You don't have enough permission!", HttpStatus.UNAUTHORIZED);
+        return ResponseResult.fail("You don't have enough permission!", HttpStatus.FORBIDDEN);
     }
     @GetMapping("/pending")
     public ResponseResult<Object> getIfOrgDepartmentHasPendingRequest(@RequestParam(value = "organization_id", required = false) Integer organizationId,
