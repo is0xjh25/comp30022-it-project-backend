@@ -43,5 +43,21 @@ public class DepartmentController {
         return ResponseResult.suc("Success",p);
     }
 
+    /**
+     * create permission(default permission level is PENDING)
+     * @param departmentId
+     * @return
+     */
+    @PostMapping("/join")
+    public ResponseResult<Object> createPermission(@RequestParam("department_id") Integer departmentId,
+                                                   @RequestParam(value = "permission_level",
+                                                           defaultValue = "0") Integer permissionLevel){
+        if(permissionLevel != 0){
+            return ResponseResult.fail("You don't have enough permission!", HttpStatus.FORBIDDEN);
+        }
+        permissionService.createPermission(departmentId, userService.getId(),permissionLevel);
+        return ResponseResult.suc("Successfully create permission!");
+    }
+
 }
 
