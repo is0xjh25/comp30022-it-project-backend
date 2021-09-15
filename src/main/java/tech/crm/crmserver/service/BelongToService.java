@@ -1,8 +1,8 @@
 package tech.crm.crmserver.service;
 
+import tech.crm.crmserver.common.enums.BelongToStatus;
 import tech.crm.crmserver.dao.BelongTo;
 import com.baomidou.mybatisplus.extension.service.IService;
-import tech.crm.crmserver.dao.Organization;
 
 import java.util.List;
 
@@ -17,5 +17,7 @@ import java.util.List;
 public interface BelongToService extends IService<BelongTo> {
 
     public boolean insertNewBelongTo(Integer organizationId, Integer userId);
+
+    public List<BelongTo> queryBelongToRelation(Integer id, Integer userId, Integer organizationId, BelongToStatus belongToStatus);
 
 }

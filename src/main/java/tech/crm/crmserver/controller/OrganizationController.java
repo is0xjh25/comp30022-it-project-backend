@@ -60,11 +60,11 @@ public class OrganizationController {
      * @return
      */
     @PostMapping("/department")
-    public ResponseResult<Object> createDepartment(@RequestParam("organization_id") Integer org_id,
+    public ResponseResult<Object> createDepartment(@RequestParam("organization_id") Integer orgId,
                                            @RequestParam("department_name") String name){
         Organization organization = null;
         try{
-            organization = organizationService.getById(org_id);
+            organization = organizationService.getById(orgId);
         }
         catch (Exception e){
             return ResponseResult.fail("Fail to get organization from database(Maybe Organization do not exist)");
@@ -75,10 +75,10 @@ public class OrganizationController {
         }
         //check the authority(creator should be the owner of the organization)
         if(organization.getOwner() != userService.getId()){
-            return ResponseResult.fail("You don't have enough permission.",HttpStatus.UNAUTHORIZED);
+            return ResponseResult.fail("You don't have enough permission.",HttpStatus.FORBIDDEN);
         }
         Department department = new Department();
-        department.setOrganizationId(org_id);
+        department.setOrganizationId(orgId);
         department.setName(name);
         //check whether there already exist a department with same name
         QueryWrapper<Department> wrapper = new QueryWrapper<>();
@@ -110,9 +110,9 @@ public class OrganizationController {
      * Get departments based on organization id
      * */
     @GetMapping("/departments")
-    public ResponseResult<Object> getDepartment(@RequestParam("organization_id") Integer organization_id){
+    public ResponseResult<Object> getDepartment(@RequestParam("organization_id") Integer organizationId){
         QueryWrapper<Department> wrapper = new QueryWrapper<>();
-        wrapper.eq("organization_id",organization_id);
+        wrapper.eq("organization_id",organizationId);
         //the department should not be deleted
         wrapper.ne("status", Status.DELETED);
         List<Department> departments = departmentService.list(wrapper);
@@ -157,17 +157,23 @@ public class OrganizationController {
      * Create new Organization
      * */
     @PostMapping()
-    public ResponseEntity<Void> createNewOrganization(@RequestParam String organizationName) {
+    public ResponseResult<Object> createNewOrganization(@RequestParam String organizationName) {
+        // todo
         Integer userID = userService.getId();
+        List<Organization> organizationListWithSameName = organizationService.getOrgBasedOnExactName(organizationName);
+
+        if (organizationListWithSameName.size() > 0) {
+            return ResponseResult.fail("Organization with same name exists");
+        }
         Organization newOrganization = new Organization();
         newOrganization.setName(organizationName);
         newOrganization.setId(userID);
         try {
             organizationService.save(newOrganization);
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return ResponseResult.fail("Fail to create organization");
         }
-        return new ResponseEntity<>(HttpStatus.OK);
+        return ResponseResult.suc("success");
     }
 }
 
