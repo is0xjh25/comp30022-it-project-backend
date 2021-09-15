@@ -157,7 +157,7 @@ public class OrganizationController {
      * Create new Organization
      * */
     @PostMapping()
-    public ResponseResult<Object> createNewOrganization(@RequestParam String organizationName) {
+    public ResponseResult<Object> createNewOrganization(@RequestParam("organization_name") String organizationName) {
         // todo
         Integer userID = userService.getId();
         List<Organization> organizationListWithSameName = organizationService.getOrgBasedOnExactName(organizationName);
@@ -167,7 +167,7 @@ public class OrganizationController {
         }
         Organization newOrganization = new Organization();
         newOrganization.setName(organizationName);
-        newOrganization.setId(userID);
+        newOrganization.setOwner(userID);
         try {
             organizationService.save(newOrganization);
         } catch (Exception e) {
