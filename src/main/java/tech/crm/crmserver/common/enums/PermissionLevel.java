@@ -11,8 +11,7 @@ public enum PermissionLevel {
     UPDATE("insert and update",2),
     DELETE("delete",3),
     MANAGE("manage",4),
-    OWNER("owner",5)
-    ;
+    OWNER("owner",5);
 
 
     private final String permission;

@@ -128,4 +128,12 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
     public Page<UserPermissionDTO> getAllPermissionInDepartmentOrdered(Page<UserPermissionDTO> page, Integer departmentId) {
         return this.baseMapper.getPermissionInDepartmentOrdered(page,departmentId);
     }
+
+    @Override
+    public List<Permission> getPermissionByUserId(Integer userId) {
+        QueryWrapper<Permission> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("user_id", userId);
+        List<Permission> permissionList = permissionMapper.selectList(queryWrapper);
+        return permissionList;
+    }
 }

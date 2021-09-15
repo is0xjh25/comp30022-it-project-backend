@@ -5,6 +5,8 @@ import tech.crm.crmserver.dao.Permission;
 import com.baomidou.mybatisplus.extension.service.IService;
 import tech.crm.crmserver.dto.UserPermissionDTO;
 
+import java.util.List;
+
 /**
  * <p>
  *  service
@@ -31,4 +33,6 @@ public interface PermissionService extends IService<Permission> {
     public boolean checkPendingPermission(Integer organizationId, Integer departmentId, Integer userId);
 
     public Page<UserPermissionDTO> getAllPermissionInDepartmentOrdered(Page<UserPermissionDTO> page, Integer departmentId);
+
+    public List<Permission> getPermissionByUserId(Integer userId);
 }
