@@ -77,7 +77,7 @@ public class OrganizationController {
             return ResponseResult.fail("Organization do not exist");
         }
         //check the authority(creator should be the owner of the organization)
-        if(organization.getOwner() != userService.getId()){
+        if(!organization.getOwner().equals(userService.getId())){
             return ResponseResult.fail("You don't have enough permission.",HttpStatus.FORBIDDEN);
         }
         Department department = new Department();
