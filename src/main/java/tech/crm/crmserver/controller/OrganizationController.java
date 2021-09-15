@@ -70,7 +70,7 @@ public class OrganizationController {
             organization = organizationService.getById(orgId);
         }
         catch (Exception e){
-            return ResponseResult.fail("Fail to get organization from database(Maybe Organization do not exist)");
+            return ResponseResult.fail("Fail to get organization from database(Maybe Organization does not exist)");
         }
         //organization not exist
         if(organization == null){
@@ -180,7 +180,7 @@ public class OrganizationController {
     }
 
     @PostMapping("/join")
-    public ResponseResult<Object> createNewOrganization(@RequestParam("organization_id") Integer organizationId) {
+    public ResponseResult<Object> joinOrganization(@RequestParam("organization_id") Integer organizationId) {
         Integer userId = userService.getId();
         Organization organization = organizationService.getById(organizationId);
         if (organization != null) {

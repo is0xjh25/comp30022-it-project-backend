@@ -16,5 +16,5 @@ import java.util.List;
 public interface DepartmentService extends IService<Department> {
 
     List<Integer> getDepartmentIdByOrganization(Integer organizationId);
-
+    Integer getDepartIdByExactName(String departmentName);
 }

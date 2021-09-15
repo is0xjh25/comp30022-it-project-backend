@@ -47,7 +47,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         return user;
     }
 
-
     public User register(User user){
         //encode password
         user.setPassword(passwordEncoder.encode(user.getPassword()));

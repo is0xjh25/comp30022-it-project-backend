@@ -3,12 +3,13 @@ package tech.crm.crmserver.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.*;
 
+import tech.crm.crmserver.common.constants.SecurityConstants;
 import tech.crm.crmserver.common.response.ResponseResult;
-import tech.crm.crmserver.dao.Contact;
-import tech.crm.crmserver.service.ContactService;
-import tech.crm.crmserver.service.UserService;
+import tech.crm.crmserver.dao.*;
+import tech.crm.crmserver.service.*;
 
 import java.util.HashMap;
 import java.util.List;
@@ -32,6 +33,15 @@ public class ContactController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private OrganizationService organizationService;
+
+    @Autowired
+    private DepartmentService departmentService;
+
+    @Autowired
+    private PermissionService permissionService;
+
     /**
      * Search a contact's details
      * */
@@ -41,9 +51,9 @@ public class ContactController {
         return ResponseResult.suc("success", contact);
     }
 
-
     @GetMapping()
-    public ResponseResult<Object> getContactByOrganizationIdAndDepartmentId(@RequestParam("organization_id") Integer organizationId, @RequestParam("department_id") Integer departmentId) {
+    public ResponseResult<Object> getContactByOrganizationIdAndDepartmentId(@RequestParam("organization_id") Integer organizationId,
+                                                                            @RequestParam("department_id") Integer departmentId) {
         Integer userId = userService.getId();
         if (organizationId == null) {
             return ResponseResult.fail("missing organizationId");
@@ -54,6 +64,44 @@ public class ContactController {
             return ResponseResult.suc("No contacts");
         }
         return ResponseResult.suc("success", contacts);
+    }
+
+    @PostMapping()
+    public ResponseResult<Object> createNewCustomer(@RequestBody ContactDTO contactDTO) {
+        // read in the customer details
+        Contact newContact = contactService.fromContactDTO(contactDTO);
+        // check if the organization/department exists
+
+        // let organization name
+        String orgName = "OrgName";
+        List<Organization> organizationAddTo = organizationService.getOrgBasedOnExactName(orgName);
+        if (organizationAddTo.size() == 0) {
+            return ResponseResult.fail("Organization does not exist");
+        }
+
+        // mock up department name
+        String departName = "DepartName";
+        Integer departmentAddTo = departmentService.getDepartIdByExactName(departName);
+        if (departmentAddTo == null) {
+            return ResponseResult.fail("Department does not exist");
+        }
+
+        // check the user's permission level
+        Integer userID = userService.getId();
+        Permission myPermission = permissionService.findPermission(departmentAddTo, userID);
+        if (myPermission.getAuthorityLevel().getLevel() < 2) {
+            return ResponseResult.fail("Do not have authority to add new contact");
+        }
+//        User user = userService.fromUserDTO(userDTO);
+//        //check whether there is same email already exist
+//        if(userService.register(user) == null){
+//            return ResponseResult.fail("Same email already exist!");
+//        }
+//        //return token
+//        String token = tokenKeyService.createToken(user);
+//        HttpHeaders httpHeaders = new HttpHeaders();
+//        httpHeaders.set(SecurityConstants.TOKEN_HEADER, token);
+//        return ResponseResult.suc("successfully sign up!","",httpHeaders);
     }
 
     /**

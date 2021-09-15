@@ -2,8 +2,11 @@ package tech.crm.crmserver.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import tech.crm.crmserver.common.utils.NullAwareBeanUtilsBean;
 import tech.crm.crmserver.dao.Contact;
 import tech.crm.crmserver.dao.Permission;
+import tech.crm.crmserver.dao.User;
+import tech.crm.crmserver.dto.UserDTO;
 import tech.crm.crmserver.mapper.ContactMapper;
 import tech.crm.crmserver.mapper.OrganizationMapper;
 import tech.crm.crmserver.service.ContactService;
@@ -70,5 +73,12 @@ public class ContactServiceImpl extends ServiceImpl<ContactMapper, Contact> impl
         }
 
         return contacts;
+    }
+
+    @Override
+    public Contact fromContactDTO(ContactDTO contactDTO) {
+        Contact contact = new Contact();
+        NullAwareBeanUtilsBean.copyProperties(contactDTO, contact);
+        return contact;
     }
 }

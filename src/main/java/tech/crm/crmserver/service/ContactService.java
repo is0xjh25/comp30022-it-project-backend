@@ -1,7 +1,10 @@
 package tech.crm.crmserver.service;
 
+import tech.crm.crmserver.common.utils.NullAwareBeanUtilsBean;
 import tech.crm.crmserver.dao.Contact;
 import com.baomidou.mybatisplus.extension.service.IService;
+import tech.crm.crmserver.dao.User;
+import tech.crm.crmserver.dto.UserDTO;
 
 import java.util.List;
 
@@ -15,4 +18,5 @@ import java.util.List;
  */
 public interface ContactService extends IService<Contact> {
     public List<Contact> getContactByOrgIdAndDepartmentId(Integer organizationId, Integer departmentId, Integer userId);
+    public Contact fromContactDTO(ContactDTO contactDTO);
 }

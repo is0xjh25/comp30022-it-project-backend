@@ -3,6 +3,7 @@ package tech.crm.crmserver.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import tech.crm.crmserver.dao.Department;
+import tech.crm.crmserver.dao.Organization;
 import tech.crm.crmserver.mapper.DepartmentMapper;
 import tech.crm.crmserver.mapper.OrganizationMapper;
 import tech.crm.crmserver.service.DepartmentService;
@@ -38,4 +39,14 @@ public class DepartmentServiceImpl extends ServiceImpl<DepartmentMapper, Departm
         }
         return departmentIdList;
     }
+
+    @Override
+    public Integer getDepartIdByExactName(String departmentName) {
+        QueryWrapper<Department> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("name", departmentName);
+        List<Department> departments = departmentMapper.selectList(queryWrapper);
+        Integer departmentId = departments.get(0).getId();
+        return departmentId;
+    }
+
 }
