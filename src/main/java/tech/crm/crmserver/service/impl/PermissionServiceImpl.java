@@ -102,6 +102,9 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
         QueryWrapper<Permission> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("department_id", departmentId);
         queryWrapper.eq("authority_level", PermissionLevel.PENDING);
+        if (permissionMapper.selectList(queryWrapper).size() > 0) {
+            return true;
+        }
         return false;
     }
 
