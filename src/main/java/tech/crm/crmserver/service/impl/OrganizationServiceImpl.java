@@ -38,6 +38,13 @@ public class OrganizationServiceImpl extends ServiceImpl<OrganizationMapper, Org
         return orgOwnByUser;
     }
 
+    @Override
+    public List<Organization> getAllOrgUserOwn(Integer userId) {
+        Map<String, Object> selectMap = new HashMap<>();
+        selectMap.put("owner", userId);
+        List<Organization> orgOwnByUser = organizationMapper.selectByMap(selectMap);
+        return orgOwnByUser;
+    }
 
     @Override
     public List<Organization> getOrgBasedOnName(String orgNameName) {

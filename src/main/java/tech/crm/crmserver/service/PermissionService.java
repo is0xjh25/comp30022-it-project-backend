@@ -28,9 +28,7 @@ public interface PermissionService extends IService<Permission> {
 
     public Permission findPermission(Integer departmentId, Integer userId);
 
-    public boolean checkPendingPermission(Integer organizationId, Integer departmentId);
-
-    public boolean checkPendingPermission(Integer departmentId);
+    public boolean checkPendingPermission(Integer organizationId, Integer departmentId, Integer userId);
 
     public Page<UserPermissionDTO> getAllPermissionInDepartmentOrdered(Page<UserPermissionDTO> page, Integer departmentId);
 }

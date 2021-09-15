@@ -9,10 +9,14 @@ import org.springframework.http.HttpStatus;
 
 import tech.crm.crmserver.common.enums.PermissionLevel;
 import tech.crm.crmserver.common.response.ResponseResult;
+import tech.crm.crmserver.dao.Organization;
 import tech.crm.crmserver.dao.Permission;
 import tech.crm.crmserver.dto.UserPermissionDTO;
+import tech.crm.crmserver.service.OrganizationService;
 import tech.crm.crmserver.service.PermissionService;
 import tech.crm.crmserver.service.UserService;
+
+import java.util.List;
 
 /**
  * <p>
@@ -31,6 +35,9 @@ public class PermissionController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private OrganizationService organizationService;
 
     /**
      * delete a member from a department
@@ -72,13 +79,24 @@ public class PermissionController {
     public ResponseResult<Object> getIfOrgDepartmentHasPendingRequest
             (@RequestParam(value = "organization_id", required = false) Integer organizationId,
              @RequestParam(value = "department_id", required = false) Integer departmentId) {
-        if (permissionService.checkPendingPermission(organizationId, departmentId)) {
-            return ResponseResult.suc("Have pending");
+        Integer userId = userService.getId();
+        List<Organization> organizationList = organizationService.getAllOrgUserOwn(userId);
+        boolean isOwnOrganization = false;
+
+        for (Organization organization : organizationList) {
+            if (organization.getId().equals(organizationId)) {
+                isOwnOrganization = true;
+                break;
+            }
+        }
+
+        if (isOwnOrganization) {
+            if (permissionService.checkPendingPermission(organizationId, departmentId, userId)) {
+                return ResponseResult.suc("Have pending");
+            }
         }
         return ResponseResult.suc("No pending");
     }
-
-
 
 }
 
