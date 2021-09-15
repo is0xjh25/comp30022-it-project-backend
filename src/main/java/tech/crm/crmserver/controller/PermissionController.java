@@ -83,9 +83,11 @@ public class PermissionController {
         }
         return ResponseResult.fail("You don't have enough permission!", HttpStatus.FORBIDDEN);
     }
+
     @GetMapping("/pending")
-    public ResponseResult<Object> getIfOrgDepartmentHasPendingRequest(@RequestParam(value = "organization_id", required = false) Integer organizationId,
-                                                                      @RequestParam(value = "department_id", required = false) Integer departmentId) {
+    public ResponseResult<Object> getIfOrgDepartmentHasPendingRequest
+            (@RequestParam(value = "organization_id", required = false) Integer organizationId,
+             @RequestParam(value = "department_id", required = false) Integer departmentId) {
         if (permissionService.checkPendingPermission(organizationId, departmentId)) {
             return ResponseResult.suc("Have pending");
         }
