@@ -180,10 +180,9 @@ public class OrganizationController {
     }
 
     @PostMapping("/join")
-    public ResponseResult createNewOrganization(@RequestParam("organization_id") Integer organizationId) {
+    public ResponseResult<Object> createNewOrganization(@RequestParam("organization_id") Integer organizationId) {
         Integer userId = userService.getId();
         Organization organization = organizationService.getById(organizationId);
-        boolean insertSucc = true;
         if (organization != null) {
             belongToService.insertNewBelongTo(organizationId, userId);
         } else {
