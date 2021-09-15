@@ -28,26 +28,5 @@ import tech.crm.crmserver.service.UserService;
 @RequestMapping("/belongTo")
 public class BelongToController {
 
-    @Autowired
-    private BelongToService belongToService;
-
-    @Autowired
-    private UserService userService;
-
-    @Autowired
-    private OrganizationService organizationService;
-
-    @PostMapping()
-    public ResponseResult createNewOrganization(@RequestParam("organization_id") Integer organizationId) {
-        Integer userId = userService.getId();
-        Organization organization = organizationService.getById(organizationId);
-        boolean insertSucc = true;
-        if (organization != null) {
-            belongToService.insertNewBelongTo(organizationId, userId);
-        } else {
-            ResponseResult.fail("Invalid organization Id");
-        }
-        return ResponseResult.suc("success");
-    }
 }
 

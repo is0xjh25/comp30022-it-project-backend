@@ -53,6 +53,9 @@ public class OrganizationController {
     @Autowired
     private PermissionService permissionService;
 
+    @Autowired
+    private BelongToService belongToService;
+
     /**
      * create a department
      * @param org_id
@@ -172,6 +175,19 @@ public class OrganizationController {
             organizationService.save(newOrganization);
         } catch (Exception e) {
             return ResponseResult.fail("Fail to create organization");
+        }
+        return ResponseResult.suc("success");
+    }
+
+    @PostMapping("/join")
+    public ResponseResult createNewOrganization(@RequestParam("organization_id") Integer organizationId) {
+        Integer userId = userService.getId();
+        Organization organization = organizationService.getById(organizationId);
+        boolean insertSucc = true;
+        if (organization != null) {
+            belongToService.insertNewBelongTo(organizationId, userId);
+        } else {
+            ResponseResult.fail("Invalid organization Id");
         }
         return ResponseResult.suc("success");
     }
