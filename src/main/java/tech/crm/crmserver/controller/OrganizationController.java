@@ -151,8 +151,11 @@ public class OrganizationController {
      * Get Organization based on organization Integer
      * */
     @GetMapping("/name")
-    public ResponseResult<Object> getOrganizationBasedOnName(@RequestParam String organizationName) {
+    public ResponseResult<Object> getOrganizationBasedOnName(@RequestParam("organization_name") String organizationName) {
         List<Organization> organizations = organizationService.getOrgBasedOnName(organizationName);
+        if (organizations.size() == 0) {
+            ResponseResult.suc("No match organization");
+        }
         return ResponseResult.suc("success", organizations);
     }
 
