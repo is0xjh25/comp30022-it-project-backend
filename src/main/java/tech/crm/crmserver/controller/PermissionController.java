@@ -58,14 +58,14 @@ public class PermissionController {
         return ResponseResult.suc("Successfully delete the member!");
     }
 
-    @PutMapping
-    public ResponseResult<Object> updatePermission(@RequestParam("department_id") Integer departmentID,
-                                                   @RequestParam("member id") Integer memberId,
-                                                   @RequestParam(value = "permission_level")Integer permissionLevel){
+    @GetMapping
+    public ResponseResult<Object> updatePermission(@RequestParam("department") Integer departmentID,
+                                                   @RequestParam("member") Integer memberId,
+                                                   @RequestParam(value = "permission")Integer permissionLevel){
         if(permissionService.updateOrCreatePermission(departmentID,userService.getId(),memberId,permissionLevel)){
             return ResponseResult.suc("Successfully update permission!");
         }
-        return ResponseResult.fail("You don't have enough permission!", HttpStatus.FORBIDDEN);
+        return ResponseResult.fail("You don't have enough permission!");
     }
 
     @GetMapping("/pending")
