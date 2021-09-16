@@ -72,7 +72,7 @@ public class PermissionController {
         if(permissionService.updateOrCreatePermission(departmentID,userService.getId(),memberId,permissionLevel)){
             return ResponseResult.suc("Successfully update permission!");
         }
-        return ResponseResult.fail("You don't have enough permission!");
+        return ResponseResult.fail("You don't have enough permission!", HttpStatus.FORBIDDEN);
     }
 
     @GetMapping("/pending")
