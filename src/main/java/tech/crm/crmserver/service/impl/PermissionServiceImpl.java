@@ -8,6 +8,7 @@ import tech.crm.crmserver.dao.BelongTo;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import tech.crm.crmserver.common.enums.PermissionLevel;
+import tech.crm.crmserver.dao.Organization;
 import tech.crm.crmserver.dao.Permission;
 import tech.crm.crmserver.dto.UserPermissionDTO;
 import tech.crm.crmserver.mapper.OrganizationMapper;
@@ -38,6 +39,9 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
 
     @Autowired
     public DepartmentService departmentService;
+
+    @Autowired
+    public OrganizationService organizationService;
 
     @Override
     public boolean createPermission(Integer departmentId, Integer userId, Integer permissionLevel) {
@@ -96,20 +100,8 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
         return permission;
     }
 
-
     @Override
-    public boolean checkPendingPermission(Integer departmentId) {
-        QueryWrapper<Permission> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("department_id", departmentId);
-        queryWrapper.eq("authority_level", PermissionLevel.PENDING);
-        if (permissionMapper.selectList(queryWrapper).size() > 0) {
-            return true;
-        }
-        return false;
-    }
-
-    @Override
-    public boolean checkPendingPermission(Integer organizationId, Integer departmentId) {
+    public boolean checkPendingPermission(Integer organizationId, Integer departmentId, Integer userId) {
         QueryWrapper<Permission> queryWrapper = new QueryWrapper<>();
 
         List<Integer> departmentIdList = new ArrayList<>();
@@ -117,13 +109,19 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
             departmentIdList.add(departmentId);
         } else if (organizationId != null) {
             departmentIdList.addAll(departmentService.getDepartmentIdByOrganization(organizationId));
+        } else {
+            List<Organization> organizationList = organizationService.getAllOrgUserOwn(userId);
+            for (Organization organization : organizationList) {
+                departmentIdList.addAll(departmentService.getDepartmentIdByOrganization(organization.getId()));
+            }
         }
+
+
         for (Integer department : departmentIdList) {
-            if(checkPendingPermission(department)) {
-                return true;
-            };
+            queryWrapper.or().eq("department_id", department);
         }
-        return false;
+        queryWrapper.eq("authority_level", PermissionLevel.PENDING);
+        return permissionMapper.selectList(queryWrapper).size() > 0;
     }
 
     @Override
