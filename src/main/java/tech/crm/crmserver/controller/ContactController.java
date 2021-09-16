@@ -37,9 +37,6 @@ public class ContactController {
     private UserService userService;
 
     @Autowired
-    private OrganizationService organizationService;
-
-    @Autowired
     private DepartmentService departmentService;
 
     @Autowired
@@ -76,20 +73,10 @@ public class ContactController {
     public ResponseResult<Object> createNewCustomer(@RequestBody ContactDTO contactDTO) {
         // read in the customer details
         Contact newContact = contactService.fromContactDTO(contactDTO);
-        // check if the organization/department exists
-
-        // let organization name
-        // String orgName = "OrgName";
-        // List<Organization> organizationAddTo = organizationService.getOrgBasedOnExactName(orgName);
-        // if (organizationAddTo.size() == 0) {
-        //     return ResponseResult.fail("Organization does not exist");
-        // }
         // 1. check if departmentID is valid
         // 2. check if the user has permission to insert a new customer
-        // 3. after all checkout, user ContactService to insert
+        // 3. after all checkout, use ContactService to insert
 
-        // mock up department name
-        String departName = "DepartName";
         Integer departmentId = newContact.getDepartmentId();
         Department department = departmentService.getById(departmentId);
         Integer departmentAddTo = department.getId();
@@ -100,10 +87,11 @@ public class ContactController {
         // check the user's permission level
         Integer userID = userService.getId();
         Permission myPermission = permissionService.findPermission(departmentAddTo, userID);
-        if (myPermission != null && myPermission.getAuthorityLevel().getLevel() < 2) {
+        if (myPermission != null && myPermission.getAuthorityLevel().getLevel() < PermissionLevel.UPDATE.getLevel()) {
             return ResponseResult.fail("Do not have authority to add new contact");
         }
 
+        // check if the same contact already exists
         List<Contact> contacts = contactService.getContactBasedOnSomeConditionFromDB(null,newContact.getEmail(), null, null, null, null, null, null, null);
         if (contacts.size() > 0) {
             return ResponseResult.fail("Contact with same email already exist!");
@@ -201,7 +189,7 @@ public class ContactController {
         if(contacts.isEmpty()){
             return ResponseResult.fail("no match result is found");
         }
-        return ResponseResult.suc("success",contacts);
+        return ResponseResult.suc("success", contacts);
     }
 }
 
