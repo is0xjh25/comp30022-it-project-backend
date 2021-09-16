@@ -45,7 +45,7 @@ public class PermissionController {
      */
     @DeleteMapping
     public ResponseResult<Object> deleteMember(@RequestParam("user_id") Integer userId,
-                                               @RequestParam("department_id") Integer departmentId){
+                                               @RequestParam("department_id") Integer departmentId) {
         QueryWrapper<Permission> wrapper = new QueryWrapper<>();
         //executor for delete action
         wrapper.eq("user_id",userService.getId())

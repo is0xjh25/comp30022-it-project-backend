@@ -135,7 +135,17 @@ public class OrganizationController {
     public ResponseResult<Object> getAllOrganization() {
         Integer userId = userService.getId();
         List<Organization> organizations = organizationService.getAllOrgUserOwnAndBelongTo(userId);
-        return ResponseResult.suc("success", organizations);
+        //change to organizationDTO
+        List<OrganizationDTO> organizationDTOS = new ArrayList<>();
+        for (Organization organization : organizations) {
+            OrganizationDTO organizationDto = new OrganizationDTO();
+            NullAwareBeanUtilsBean.copyProperties(organization,organizationDto);
+            if (organization.getOwner().equals(userId)) {
+                organizationDto.setOwning(true);
+            }
+            organizationDTOS.add(organizationDto);
+        }
+        return ResponseResult.suc("success", organizationDTOS);
     }
 
     /**

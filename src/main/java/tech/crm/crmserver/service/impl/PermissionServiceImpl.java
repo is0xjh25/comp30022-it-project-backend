@@ -116,7 +116,6 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
             }
         }
 
-
         for (Integer department : departmentIdList) {
             queryWrapper.or().eq("department_id", department);
         }
@@ -130,9 +129,10 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
     }
 
     @Override
-    public List<Permission> getPermissionByUserId(Integer userId) {
+    public List<Permission> getPermissionByUserId(Integer userId, PermissionLevel permissionLevel) {
         QueryWrapper<Permission> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("user_id", userId);
+        queryWrapper.ge("authority_level", permissionLevel.getLevel());
         List<Permission> permissionList = permissionMapper.selectList(queryWrapper);
         return permissionList;
     }

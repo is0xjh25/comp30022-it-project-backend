@@ -37,7 +37,7 @@ public class DepartmentController {
                                        @RequestParam("size") Integer size,
                                        @RequestParam("current") Integer current){
         Permission userPermission = permissionService.findPermission(departmentId, userService.getId());
-        if(userPermission == null || userPermission.getAuthorityLevel().equal(PermissionLevel.PENDING)){
+        if(userPermission == null || userPermission.getAuthorityLevel().equal(PermissionLevel.PENDING)) {
             return ResponseResult.fail("You are not a member of this department", HttpStatus.FORBIDDEN);
         }
         Page<UserPermissionDTO> p = permissionService.getAllPermissionInDepartmentOrdered(new Page<>(current, size), departmentId);
