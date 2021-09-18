@@ -7,7 +7,7 @@ import tech.crm.crmserver.dto.UserDTO;
 
 /**
  * <p>
- *  service
+ *  service for User
  * </p>
  *
  * @author Lingxiao
@@ -15,14 +15,40 @@ import tech.crm.crmserver.dto.UserDTO;
  */
 public interface UserService extends IService<User> {
 
+    /**
+     * verify whether the email and password is correct
+     * @param loginRequest login form for login request
+     * @return login user
+     */
     public User verify(LoginRequest loginRequest);
 
+    /**
+     * register the user
+     * @param user user need for register
+     * @return null if fail, return user when successfully register
+     */
     public User register(User user);
 
+    /**
+     * transfer a userDTO to user class
+     * @param userDTO userDTO class
+     * @return user class
+     */
     public User fromUserDTO(UserDTO userDTO);
 
+    /**
+     * check whether the encoded of current Password matches the password
+     * @param currentPassword raw Password
+     * @param password encodedPassword
+     * @return whether the password matches
+     */
     public boolean check(String currentPassword, String password);
 
+    /**
+     * get user Id from SecurityContextHolder
+     * the Id was stored in the SecurityContextHolder at tech/crm/crmserver/security/JwtAuthorizationFilter.java
+     * @return user id
+     */
     public Integer getId();
 
 }

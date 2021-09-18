@@ -4,6 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NonNull;
 
+/**
+ * <p>
+ *  DTO for Login form
+ * </p>
+ *
+ * @author Lingxiao
+ * @since 2021-09-18
+ */
 @Data
 @AllArgsConstructor
 public class LoginRequest {

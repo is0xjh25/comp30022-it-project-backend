@@ -8,8 +8,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
+ * AuthenticationEntryPoint
  * @author shuang.kou
- * @description AuthenticationEntryPoint
  */
 public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
     /**

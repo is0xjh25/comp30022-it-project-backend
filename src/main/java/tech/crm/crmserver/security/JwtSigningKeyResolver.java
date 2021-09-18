@@ -11,6 +11,11 @@ import tech.crm.crmserver.service.TokenKeyService;
 import javax.xml.bind.DatatypeConverter;
 import java.security.Key;
 
+/**
+ * My Jwt Signing Key Resolver
+ * the resolver will try to find the key in the database
+ * @author Lingxiao Li
+ */
 @Component
 public class JwtSigningKeyResolver extends SigningKeyResolverAdapter {
 

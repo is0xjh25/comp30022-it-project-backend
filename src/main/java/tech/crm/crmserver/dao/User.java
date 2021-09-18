@@ -12,7 +12,7 @@ import tech.crm.crmserver.common.enums.Status;
 
 /**
  * <p>
- *  entity
+ *  entity for data transfer with database
  * </p>
  *
  * @author Lingxiao
