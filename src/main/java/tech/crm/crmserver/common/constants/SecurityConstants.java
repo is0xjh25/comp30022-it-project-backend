@@ -1,13 +1,10 @@
 package tech.crm.crmserver.common.constants;
 
 /**
- * @author
- * @description Spring Security constants
+ * Spring Security constants
+ * @author Lingxiao Li
  */
 public final class SecurityConstants {
-
-
-    public static final String ROLE_CLAIMS = "rol";
 
     // JWT token defaults
     public static final String TOKEN_HEADER = "Authorization";
