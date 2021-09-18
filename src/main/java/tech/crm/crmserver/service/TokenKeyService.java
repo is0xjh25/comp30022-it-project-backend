@@ -16,10 +16,25 @@ import tech.crm.crmserver.dto.LoginRequest;
  */
 public interface TokenKeyService extends IService<TokenKey> {
 
+    /**
+     * create Token for user to auto login
+     * will save the key in the database
+     * @param user user who own this token
+     * @return the token
+     */
     public String createToken(User user);
 
+    /**
+     * remove the Token key in the database
+     * @param token the token need to be removed
+     */
     public void removeToken(String token);
 
+    /**
+     * get Authentication from the Token
+     * @param token the token user owned
+     * @return the Authentication
+     */
     public UsernamePasswordAuthenticationToken getAuthentication(String token);
 
 }
