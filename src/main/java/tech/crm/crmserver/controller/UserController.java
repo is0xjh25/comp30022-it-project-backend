@@ -63,7 +63,7 @@ public class UserController {
 
     /**
      * using the token to logout, will remove the token from the database
-     * @param token
+     * @param token the token need to removed
      * @return return successfully logout
      */
     @PostMapping("/logout")
