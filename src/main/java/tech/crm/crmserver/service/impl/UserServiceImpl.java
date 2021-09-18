@@ -16,6 +16,7 @@ import tech.crm.crmserver.dao.User;
 import tech.crm.crmserver.dto.LoginRequest;
 import tech.crm.crmserver.dto.UserDTO;
 import tech.crm.crmserver.exception.LoginBadCredentialsException;
+import tech.crm.crmserver.exception.UserAlreadyExistException;
 import tech.crm.crmserver.mapper.UserMapper;
 import tech.crm.crmserver.service.UserService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -68,7 +69,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             user = getOne(userQueryWrapper);
         }
         catch (Exception e){
-            return null;
+            throw new UserAlreadyExistException();
         }
         return user;
     }

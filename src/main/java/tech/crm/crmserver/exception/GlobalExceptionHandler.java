@@ -1,6 +1,7 @@
 package tech.crm.crmserver.exception;
 
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import tech.crm.crmserver.common.response.ResponseResult;
@@ -15,14 +16,14 @@ import tech.crm.crmserver.common.response.ResponseResult;
  * @since 2021-09-18
  */
 @RestControllerAdvice
-@Slf4j
 public class GlobalExceptionHandler {
 
+    private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+
     @ExceptionHandler(value =BaseException.class)
-    public ResponseResult<Object> handleException(Exception ex) {
-        log.warn(ex.getMessage(), ex);
-        BaseException baseException = (BaseException) ex;
-        return baseException.getResponseResult();
+    public ResponseResult<Object> handleException(BaseException ex) {
+        logger.warn("Exception Reason: " + ex.getResponseResult().getBody().getMsg());
+        return ex.getResponseResult();
     }
 
 }
