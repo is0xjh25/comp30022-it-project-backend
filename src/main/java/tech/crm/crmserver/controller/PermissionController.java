@@ -66,9 +66,9 @@ public class PermissionController {
     }
 
     @PutMapping
-    public ResponseResult<Object> updatePermission(@RequestParam("department") Integer departmentID,
-                                                   @RequestParam("member") Integer memberId,
-                                                   @RequestParam(value = "permission")Integer permissionLevel){
+    public ResponseResult<Object> updatePermission(@RequestParam("department_id") Integer departmentID,
+                                                   @RequestParam("user_id") Integer memberId,
+                                                   @RequestParam(value = "permission_level")Integer permissionLevel){
         if(permissionService.updateOrCreatePermission(departmentID,userService.getId(),memberId,permissionLevel)){
             return ResponseResult.suc("Successfully update permission!");
         }
@@ -90,6 +90,10 @@ public class PermissionController {
             }
         }
 
+        if (organizationId == null)  {
+            isOwnOrganization = true;
+        }
+
         if (isOwnOrganization) {
             if (permissionService.checkPendingPermission(organizationId, departmentId, userId)) {
                 return ResponseResult.suc("Have pending");
@@ -97,6 +101,5 @@ public class PermissionController {
         }
         return ResponseResult.suc("No pending");
     }
-
 }
 
