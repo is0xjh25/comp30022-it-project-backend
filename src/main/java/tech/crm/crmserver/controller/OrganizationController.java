@@ -58,9 +58,10 @@ public class OrganizationController {
 
     /**
      * create a department
-     * @param org_id
-     * @param name
-     * @return
+     * the user need to be the owner of the department
+     * @param orgId which organization this department belong to
+     * @param name the name of the department
+     * @return the ResponseResult with msg
      */
     @PostMapping("/department")
     public ResponseResult<Object> createDepartment(@RequestParam("organization_id") Integer orgId,
@@ -110,8 +111,10 @@ public class OrganizationController {
 
 
     /**
-     * Get departments based on organization id
-     * */
+     * find all the departments in the organization
+     * @param organizationId the id of organization user want to search
+     * @return all the departments in the organization
+     */
     @GetMapping("/departments")
     public ResponseResult<Object> getDepartment(@RequestParam("organization_id") Integer organizationId){
         QueryWrapper<Department> wrapper = new QueryWrapper<>();
@@ -130,7 +133,10 @@ public class OrganizationController {
         return ResponseResult.suc("success", response);
     }
 
-    // Check out all organization this user belongs to
+    /**
+     * Check out all organization this user belongs to
+     * @return all organization this user belongs to
+     */
     @GetMapping("/myOrganization")
     public ResponseResult<Object> getAllOrganization() {
         Integer userId = userService.getId();
@@ -140,7 +146,9 @@ public class OrganizationController {
 
     /**
      * Get Organization based on organization Integer
-     * */
+     * @param organizationId the id of organization user want to search
+     * @return Organization
+     */
     @GetMapping()
     public ResponseResult<Object> getOrganization(@RequestParam("organization_id") Integer organizationId) {
         Organization organization = organizationService.getById(organizationId);
@@ -149,7 +157,9 @@ public class OrganizationController {
 
     /**
      * Get Organization based on organization Integer
-     * */
+     * @param organizationName the exact name of organization user want to search
+     * @return Organization
+     */
     @GetMapping("/name")
     public ResponseResult<Object> getOrganizationBasedOnName(@RequestParam("organization_name") String organizationName) {
         List<Organization> organizations = organizationService.getOrgBasedOnName(organizationName);
@@ -161,7 +171,9 @@ public class OrganizationController {
 
     /**
      * Create new Organization
-     * */
+     * @param organizationName the name of organization user want to create
+     * @return ResponseResult with mag
+     */
     @PostMapping()
     public ResponseResult<Object> createNewOrganization(@RequestParam("organization_name") String organizationName) {
         // todo
@@ -182,6 +194,11 @@ public class OrganizationController {
         return ResponseResult.suc("success");
     }
 
+    /**
+     * join a organization
+     * @param organizationId the id of organization user want to join
+     * @return ResponseResult with mag
+     */
     @PostMapping("/join")
     public ResponseResult<Object> createNewOrganization(@RequestParam("organization_id") Integer organizationId) {
         Integer userId = userService.getId();
