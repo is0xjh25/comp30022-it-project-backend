@@ -14,6 +14,8 @@ import tech.crm.crmserver.common.response.Result;
 import tech.crm.crmserver.dao.User;
 import tech.crm.crmserver.dto.LoginRequest;
 import tech.crm.crmserver.dto.UserDTO;
+import tech.crm.crmserver.exception.LoginBadCredentialsException;
+import tech.crm.crmserver.exception.UserAlreadyExistException;
 import tech.crm.crmserver.service.TokenKeyService;
 import tech.crm.crmserver.service.UserService;
 
@@ -44,15 +46,9 @@ public class UserController {
     @PostMapping("/login")
     public ResponseResult<Object> login(@RequestBody LoginRequest loginRequest){
         //verify the user
-        User user = null;
-        try{
-            user = userService.verify(loginRequest);
-        }
-        catch (BadCredentialsException e){
-            return ResponseResult.fail("The user name or password is not correct.");
-        }
+        User user = userService.verify(loginRequest);
         if(user == null){
-            return ResponseResult.fail("The user name or password is not correct.");
+            throw new LoginBadCredentialsException();
         }
         //return the token
         String token = tokenKeyService.createToken(user);
@@ -82,7 +78,7 @@ public class UserController {
         User user = userService.fromUserDTO(userDTO);
         //check whether there is same email already exist
         if(userService.register(user) == null){
-            return ResponseResult.fail("Same email already exist!");
+            throw new UserAlreadyExistException();
         }
         //return token
         String token = tokenKeyService.createToken(user);

@@ -15,6 +15,7 @@ import tech.crm.crmserver.common.utils.NullAwareBeanUtilsBean;
 import tech.crm.crmserver.dao.User;
 import tech.crm.crmserver.dto.LoginRequest;
 import tech.crm.crmserver.dto.UserDTO;
+import tech.crm.crmserver.exception.LoginBadCredentialsException;
 import tech.crm.crmserver.mapper.UserMapper;
 import tech.crm.crmserver.service.UserService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -41,12 +42,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      * @param loginRequest login form for login request
      * @return login user
      */
-    public User verify(LoginRequest loginRequest) throws BadCredentialsException{
+    public User verify(LoginRequest loginRequest){
         QueryWrapper<User> userQueryWrapper = new QueryWrapper<>();
         userQueryWrapper.eq("email",loginRequest.getEmail());
         User user = getOne(userQueryWrapper);
         if (user == null || !check(loginRequest.getPassword(), user.getPassword())) {
-            throw new BadCredentialsException("The user name or password is not correct.");
+            throw new LoginBadCredentialsException();
         }
         return user;
     }
