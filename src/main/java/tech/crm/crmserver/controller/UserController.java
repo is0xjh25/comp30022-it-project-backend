@@ -47,9 +47,6 @@ public class UserController {
     public ResponseResult<Object> login(@RequestBody LoginRequest loginRequest){
         //verify the user
         User user = userService.verify(loginRequest);
-        if(user == null){
-            throw new LoginBadCredentialsException();
-        }
         //return the token
         String token = tokenKeyService.createToken(user);
         HttpHeaders httpHeaders = new HttpHeaders();
