@@ -1,8 +1,6 @@
 package tech.crm.crmserver.security;
 
-import io.jsonwebtoken.JwtException;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -17,8 +15,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * @author
- * @description
+ * Jwt filter for verify the Token when do auto login. modified from JwtAuthorizationFilter created by shuang.kou
+ * @author Lingxiao Li
  */
 @Slf4j
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
@@ -26,11 +24,20 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
     private final TokenKeyService tokenKeyService;
 
+    /**
+     * Constructor.
+     */
     public JwtAuthorizationFilter(AuthenticationManager authenticationManager, TokenKeyService tokenKeyService) {
         super(authenticationManager);
         this.tokenKeyService = tokenKeyService;
     }
 
+    /**
+     * verify the token and auto login. Give the user correspond permission
+     * @param request the Http Servlet Request
+     * @param response the Http Servlet Response
+     * @param chain the filter chain
+     */
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
