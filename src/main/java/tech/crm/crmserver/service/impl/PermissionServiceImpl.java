@@ -77,7 +77,7 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
         }
         if(executorPermission.getAuthorityLevel().getLevel() < PermissionLevel.MANAGE.getLevel()
         || executorPermission.getAuthorityLevel().getLevel() <= permissionLevel
-        || executorPermission.getAuthorityLevel().getLevel() > executedPermission.getAuthorityLevel().getLevel()){
+        || executorPermission.getAuthorityLevel().getLevel() < executedPermission.getAuthorityLevel().getLevel()){
             log.warn("Do not have enough permission!");
             return false;
         }
