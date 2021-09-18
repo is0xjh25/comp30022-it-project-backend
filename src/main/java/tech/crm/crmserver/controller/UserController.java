@@ -36,6 +36,11 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    /**
+     * the login  API
+     * @param loginRequest the form for login
+     * @return return 200 when login successfully, return 400 and reason in the msg
+     */
     @PostMapping("/login")
     public ResponseResult<Object> login(@RequestBody LoginRequest loginRequest){
         //verify the user
@@ -56,12 +61,22 @@ public class UserController {
         return ResponseResult.suc("successfully login!","",httpHeaders);
     }
 
+    /**
+     * using the token to logout, will remove the token from the database
+     * @param token
+     * @return return successfully logout
+     */
     @PostMapping("/logout")
     public ResponseResult<Object> logout(@RequestHeader("Authorization") String token) {
         tokenKeyService.removeToken(token);
         return ResponseResult.suc("successfully logout!");
     }
 
+    /**
+     * register API
+     * @param userDTO the form for register, contain all the information required for User
+     * @return 200 when successfully register and set Authorization in response header
+     */
     @PostMapping
     public ResponseResult<Object> register(@RequestBody UserDTO userDTO){
         User user = userService.fromUserDTO(userDTO);
@@ -76,6 +91,12 @@ public class UserController {
         return ResponseResult.suc("successfully sign up!","",httpHeaders);
     }
 
+    /**
+     * Will set password to null
+     * Since the Token contains the User id, thus, we can use this to get the id in the Token and
+     * return the user
+     * @return the user, if something go wrong, return Error
+     */
     @GetMapping
     public ResponseResult<Object> getUser() {
         Integer id = userService.getId();
