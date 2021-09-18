@@ -5,6 +5,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import tech.crm.crmserver.common.enums.PermissionLevel;
 
+/**
+ * <p>
+ *  DTO for User Permission
+ * </p>
+ *
+ * @author Lingxiao
+ * @since 2021-09-18
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

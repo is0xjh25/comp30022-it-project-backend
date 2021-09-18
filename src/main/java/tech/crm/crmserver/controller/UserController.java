@@ -20,7 +20,7 @@ import tech.crm.crmserver.service.UserService;
 
 /**
  * <p>
- *  controller
+ *  controller for user API
  * </p>
  *
  * @author Lingxiao

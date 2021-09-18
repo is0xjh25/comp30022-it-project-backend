@@ -5,6 +5,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
+/**
+ * <p>
+ *  DTO for User for register
+ * </p>
+ *
+ * @author Lingxiao
+ * @since 2021-09-18
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
