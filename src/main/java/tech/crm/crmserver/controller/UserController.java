@@ -74,9 +74,7 @@ public class UserController {
     public ResponseResult<Object> register(@RequestBody UserDTO userDTO){
         User user = userService.fromUserDTO(userDTO);
         //check whether there is same email already exist
-        if(userService.register(user) == null){
-            throw new UserAlreadyExistException();
-        }
+        userService.register(user);
         //return token
         String token = tokenKeyService.createToken(user);
         HttpHeaders httpHeaders = new HttpHeaders();

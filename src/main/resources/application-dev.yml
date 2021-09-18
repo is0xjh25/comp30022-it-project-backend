@@ -4,6 +4,8 @@ spring:
     url: jdbc:mysql://localhost:3306/mydb
     username: root
     password: 415623
+  mvc:
+    log-resolved-exception: true
 debug: true
 mybatis-plus:
   typeEnumsPackage: tech.crm.crmserver.common.enums

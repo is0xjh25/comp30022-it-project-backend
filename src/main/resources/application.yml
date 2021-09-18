@@ -4,6 +4,10 @@ spring:
     url: jdbc:mysql://us-cdbr-east-04.cleardb.com/heroku_78fc462e8ed094f?reconnect=true
     username: b1536f0a985144
     password: bc9f957b
+  mvc:
+    log-resolved-exception: true
+
+
 
 mybatis-plus:
   typeEnumsPackage: tech.crm.crmserver.common.enums
