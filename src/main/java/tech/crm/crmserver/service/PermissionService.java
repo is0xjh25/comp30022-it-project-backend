@@ -3,7 +3,10 @@ package tech.crm.crmserver.service;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import tech.crm.crmserver.dao.Permission;
 import com.baomidou.mybatisplus.extension.service.IService;
+import tech.crm.crmserver.dto.DepartmentDTO;
 import tech.crm.crmserver.dto.UserPermissionDTO;
+
+import java.util.List;
 
 /**
  * <p>
@@ -31,4 +34,8 @@ public interface PermissionService extends IService<Permission> {
     public boolean checkPendingPermission(Integer organizationId, Integer departmentId, Integer userId);
 
     public Page<UserPermissionDTO> getAllPermissionInDepartmentOrdered(Page<UserPermissionDTO> page, Integer departmentId);
+
+    public List<Permission> getPermissionByUserId(Integer userId);
+
+    public DepartmentDTO.Status getDepartmentOwnerShipStatus(List<Permission> permissionList, Integer departmentId);
 }
