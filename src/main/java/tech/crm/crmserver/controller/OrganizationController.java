@@ -141,7 +141,20 @@ public class OrganizationController {
     public ResponseResult<Object> getAllOrganization() {
         Integer userId = userService.getId();
         List<Organization> organizations = organizationService.getAllOrgUserOwnAndBelongTo(userId);
-        return ResponseResult.suc("success", organizations);
+        List<OrganizationDTO> organizationDTOS = new ArrayList<>();
+        for (Organization organization: organizations) {
+            OrganizationDTO organizationDTO = new OrganizationDTO();
+            organizationDTO.setId(organization.getId());
+            organizationDTO.setOwnerId(organization.getOwner());
+            organizationDTO.setName(organization.getName());
+            if (organization.getOwner().equals(userId)) {
+                organizationDTO.setOwner(true);
+            } else {
+                organizationDTO.setOwner(false);
+            }
+            organizationDTOS.add(organizationDTO);
+        }
+        return ResponseResult.suc("success", organizationDTOS);
     }
 
     /**

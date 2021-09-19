@@ -17,8 +17,8 @@ public class OrganizationDTO {
     private String name;
 
     @NonNull
-    private Integer owner;
+    private Integer ownerId;
 
-    private String ownerName;
+    private boolean isOwner;
 
 }
