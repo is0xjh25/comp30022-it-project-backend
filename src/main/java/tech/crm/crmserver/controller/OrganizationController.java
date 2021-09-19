@@ -117,6 +117,7 @@ public class OrganizationController {
      */
     @GetMapping("/departments")
     public ResponseResult<Object> getDepartment(@RequestParam("organization_id") Integer organizationId){
+        Integer userId = userService.getId();
         QueryWrapper<Department> wrapper = new QueryWrapper<>();
         wrapper.eq("organization_id",organizationId);
         //the department should not be deleted
@@ -124,10 +125,12 @@ public class OrganizationController {
         List<Department> departments = departmentService.list(wrapper);
         //change to departmentDTO
         List<DepartmentDTO> response = new ArrayList<>();
+        List<Permission> permissionByUserId = permissionService.getPermissionByUserId(userId);
         for (Department department : departments){
             department.setStatus(null);
             DepartmentDTO departmentDTO = new DepartmentDTO();
             NullAwareBeanUtilsBean.copyProperties(department,departmentDTO);
+            departmentDTO.setStatus(permissionService.getDepartmentOwnerShipStatus(permissionByUserId, department.getId()).getName());
             response.add(departmentDTO);
         }
         return ResponseResult.suc("success", response);

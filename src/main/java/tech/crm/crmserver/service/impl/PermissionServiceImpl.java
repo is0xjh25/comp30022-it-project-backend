@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import tech.crm.crmserver.common.enums.PermissionLevel;
 import tech.crm.crmserver.dao.Organization;
 import tech.crm.crmserver.dao.Permission;
+import tech.crm.crmserver.dto.DepartmentDTO;
 import tech.crm.crmserver.dto.UserPermissionDTO;
 import tech.crm.crmserver.mapper.OrganizationMapper;
 import tech.crm.crmserver.mapper.PermissionMapper;
@@ -127,5 +128,31 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
     @Override
     public Page<UserPermissionDTO> getAllPermissionInDepartmentOrdered(Page<UserPermissionDTO> page, Integer departmentId) {
         return this.baseMapper.getPermissionInDepartmentOrdered(page,departmentId);
+    }
+
+    @Override
+    public List<Permission> getPermissionByUserId(Integer userId) {
+        QueryWrapper<Permission> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("user_id", userId);
+        List<Permission> permissionList = permissionMapper.selectList(queryWrapper);
+        return permissionList;
+    }
+
+    @Override
+    public DepartmentDTO.Status getDepartmentOwnerShipStatus(List<Permission> permissionList, Integer departmentId) {
+        for (Permission permission : permissionList) {
+            if (permission.getDepartmentId().equals(departmentId)) {
+                if (permission.getAuthorityLevel().equal(PermissionLevel.OWNER)) {
+                    return DepartmentDTO.Status.OWNER;
+                } else if (permission.getAuthorityLevel().equal(PermissionLevel.DISPLAY) ||
+                        permission.getAuthorityLevel().equal(PermissionLevel.UPDATE) ||
+                        permission.getAuthorityLevel().equal(PermissionLevel.DELETE) ||
+                        permission.getAuthorityLevel().equal(PermissionLevel.MANAGE)) {
+
+                    return DepartmentDTO.Status.MEMBER;
+                }
+            }
+        }
+        return DepartmentDTO.Status.NOT_JOIN;
     }
 }
