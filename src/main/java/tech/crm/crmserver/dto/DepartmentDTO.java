@@ -23,6 +23,26 @@ import java.io.Serializable;
 @EqualsAndHashCode(callSuper = false)
 public class DepartmentDTO implements Serializable {
 
+
+    public enum Status {
+        OWNER("owner"),
+        MEMBER("member"),
+        NOT_JOIN("notJoin");
+
+        Status(String name) {
+            this.name = name;
+        }
+
+        private String name;
+
+        public String getName() {
+            return this.name;
+        }
+        public void setName(String name) {
+            this.name = name;
+        }
+    }
+
     private static final long serialVersionUID = 1L;
 
     @TableId(value = "id", type = IdType.AUTO)
@@ -31,5 +51,7 @@ public class DepartmentDTO implements Serializable {
     private String name;
 
     private Integer organizationId;
+
+    private String status;
 
 }
