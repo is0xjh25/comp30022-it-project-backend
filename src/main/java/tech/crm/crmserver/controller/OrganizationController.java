@@ -216,13 +216,13 @@ public class OrganizationController {
      * @return ResponseResult with mag
      */
     @PostMapping("/join")
-    public ResponseResult<Object> createNewOrganization(@RequestParam("organization_id") Integer organizationId) {
+    public ResponseResult<Object> joinOrganization(@RequestParam("organization_id") Integer organizationId) {
         Integer userId = userService.getId();
         Organization organization = organizationService.getById(organizationId);
         if (organization != null) {
             belongToService.insertNewBelongTo(organizationId, userId);
         } else {
-            ResponseResult.fail("Invalid organization Id");
+            return ResponseResult.fail("Invalid organization Id");
         }
         return ResponseResult.suc("success");
     }
