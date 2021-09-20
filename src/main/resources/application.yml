@@ -1,9 +1,9 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://us-cdbr-east-04.cleardb.com/heroku_78fc462e8ed094f?reconnect=true
-    username: b1536f0a985144
-    password: bc9f957b
+    url: jdbc:mysql://mydb.mysql.database.azure.com:3306/mydb?reconnect=true
+    username: yyds
+    password: comp30022-
   mvc:
     log-resolved-exception: true
 
