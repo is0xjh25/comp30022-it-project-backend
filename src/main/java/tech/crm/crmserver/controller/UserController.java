@@ -2,15 +2,11 @@ package tech.crm.crmserver.controller;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import tech.crm.crmserver.common.constants.SecurityConstants;
 import tech.crm.crmserver.common.response.ResponseResult;
-import tech.crm.crmserver.common.response.Result;
 import tech.crm.crmserver.dao.User;
 import tech.crm.crmserver.dto.LoginRequest;
 import tech.crm.crmserver.dto.UserDTO;
@@ -44,7 +40,7 @@ public class UserController {
      * @return return 200 when login successfully, return 400 and reason in the msg
      */
     @PostMapping("/login")
-    public ResponseResult<Object> login(@RequestBody LoginRequest loginRequest){
+    public ResponseResult<Object> login(@Validated @RequestBody LoginRequest loginRequest){
         //verify the user
         User user = userService.verify(loginRequest);
         //return the token
@@ -71,7 +67,7 @@ public class UserController {
      * @return 200 when successfully register and set Authorization in response header
      */
     @PostMapping
-    public ResponseResult<Object> register(@RequestBody UserDTO userDTO){
+    public ResponseResult<Object> register(@Validated @RequestBody UserDTO userDTO){
         User user = userService.fromUserDTO(userDTO);
         //check whether there is same email already exist
         userService.register(user);

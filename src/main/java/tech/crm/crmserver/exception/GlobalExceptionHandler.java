@@ -2,6 +2,7 @@ package tech.crm.crmserver.exception;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import tech.crm.crmserver.common.response.ResponseResult;
@@ -24,6 +25,18 @@ public class GlobalExceptionHandler {
     public ResponseResult<Object> handleException(BaseException ex) {
         logger.warn("Exception Reason: " + ex.getResponseResult().getBody().getMsg());
         return ex.getResponseResult();
+    }
+
+    /**
+     * catch all MethodArgumentNotValidException when the input dto is invalid
+     * @param ex MethodArgumentNotValidException
+     * @return fail with msg
+     */
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseResult<Object> handleInvalidDTOException(MethodArgumentNotValidException ex) {
+        String msg = ex.getBindingResult().getAllErrors().get(0).getDefaultMessage();
+        logger.warn("Exception Reason: " + msg);
+        return ResponseResult.fail(msg);
     }
 
 }
