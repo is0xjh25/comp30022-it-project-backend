@@ -6,6 +6,12 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import tech.crm.crmserver.common.constants.SecurityConstants;
 
+/**
+ * Configuration for CORS
+ * define the CORS configuration
+ * @author Lingxiao
+ * @since 2021-09-18
+ */
 @Configuration
 public class CrossOriginConfig implements WebMvcConfigurer{
 

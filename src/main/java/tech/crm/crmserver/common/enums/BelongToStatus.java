@@ -4,6 +4,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
+/**
+ * Status Enum for Belong To
+ * @author Yongfeng
+ * @since 2021-09-18
+ */
 @AllArgsConstructor
 @NoArgsConstructor
 public enum BelongToStatus {

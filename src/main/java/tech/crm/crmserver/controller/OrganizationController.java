@@ -58,9 +58,10 @@ public class OrganizationController {
 
     /**
      * create a department
-     * @param org_id
-     * @param name
-     * @return
+     * the user need to be the owner of the department
+     * @param orgId which organization this department belong to
+     * @param name the name of the department
+     * @return the ResponseResult with msg
      */
     @PostMapping("/department")
     public ResponseResult<Object> createDepartment(@RequestParam("organization_id") Integer orgId,
@@ -77,7 +78,7 @@ public class OrganizationController {
             return ResponseResult.fail("Organization do not exist");
         }
         //check the authority(creator should be the owner of the organization)
-        if(organization.getOwner() != userService.getId()){
+        if(!organization.getOwner().equals(userService.getId())){
             return ResponseResult.fail("You don't have enough permission.",HttpStatus.FORBIDDEN);
         }
         Department department = new Department();
@@ -110,10 +111,13 @@ public class OrganizationController {
 
 
     /**
-     * Get departments based on organization id
-     * */
+     * find all the departments in the organization
+     * @param organizationId the id of organization user want to search
+     * @return all the departments in the organization
+     */
     @GetMapping("/departments")
     public ResponseResult<Object> getDepartment(@RequestParam("organization_id") Integer organizationId){
+        Integer userId = userService.getId();
         QueryWrapper<Department> wrapper = new QueryWrapper<>();
         wrapper.eq("organization_id",organizationId);
         //the department should not be deleted
@@ -121,26 +125,46 @@ public class OrganizationController {
         List<Department> departments = departmentService.list(wrapper);
         //change to departmentDTO
         List<DepartmentDTO> response = new ArrayList<>();
+        List<Permission> permissionByUserId = permissionService.getPermissionByUserId(userId);
         for (Department department : departments){
             department.setStatus(null);
             DepartmentDTO departmentDTO = new DepartmentDTO();
             NullAwareBeanUtilsBean.copyProperties(department,departmentDTO);
+            departmentDTO.setStatus(permissionService.getDepartmentOwnerShipStatus(permissionByUserId, department.getId()).getName());
             response.add(departmentDTO);
         }
         return ResponseResult.suc("success", response);
     }
 
-    // Check out all organization this user belongs to
+    /**
+     * Check out all organization this user belongs to
+     * @return all organization this user belongs to
+     */
     @GetMapping("/myOrganization")
     public ResponseResult<Object> getAllOrganization() {
         Integer userId = userService.getId();
         List<Organization> organizations = organizationService.getAllOrgUserOwnAndBelongTo(userId);
-        return ResponseResult.suc("success", organizations);
+        List<OrganizationDTO> organizationDTOS = new ArrayList<>();
+        for (Organization organization: organizations) {
+            OrganizationDTO organizationDTO = new OrganizationDTO();
+            organizationDTO.setId(organization.getId());
+            organizationDTO.setOwnerId(organization.getOwner());
+            organizationDTO.setName(organization.getName());
+            if (organization.getOwner().equals(userId)) {
+                organizationDTO.setOwner(true);
+            } else {
+                organizationDTO.setOwner(false);
+            }
+            organizationDTOS.add(organizationDTO);
+        }
+        return ResponseResult.suc("success", organizationDTOS);
     }
 
     /**
      * Get Organization based on organization Integer
-     * */
+     * @param organizationId the id of organization user want to search
+     * @return Organization
+     */
     @GetMapping()
     public ResponseResult<Object> getOrganization(@RequestParam("organization_id") Integer organizationId) {
         Organization organization = organizationService.getById(organizationId);
@@ -149,18 +173,25 @@ public class OrganizationController {
 
     /**
      * Get Organization based on organization Integer
-     * */
+     * @param organizationName the exact name of organization user want to search
+     * @return Organization
+     */
     @GetMapping("/name")
-    public ResponseResult<Object> getOrganizationBasedOnName(@RequestParam String organizationName) {
+    public ResponseResult<Object> getOrganizationBasedOnName(@RequestParam("organization_name") String organizationName) {
         List<Organization> organizations = organizationService.getOrgBasedOnName(organizationName);
+        if (organizations.size() == 0) {
+            ResponseResult.suc("No match organization");
+        }
         return ResponseResult.suc("success", organizations);
     }
 
     /**
      * Create new Organization
-     * */
+     * @param organizationName the name of organization user want to create
+     * @return ResponseResult with mag
+     */
     @PostMapping()
-    public ResponseResult<Object> createNewOrganization(@RequestParam String organizationName) {
+    public ResponseResult<Object> createNewOrganization(@RequestParam("organization_name") String organizationName) {
         // todo
         Integer userID = userService.getId();
         List<Organization> organizationListWithSameName = organizationService.getOrgBasedOnExactName(organizationName);
@@ -170,7 +201,7 @@ public class OrganizationController {
         }
         Organization newOrganization = new Organization();
         newOrganization.setName(organizationName);
-        newOrganization.setId(userID);
+        newOrganization.setOwner(userID);
         try {
             organizationService.save(newOrganization);
         } catch (Exception e) {
@@ -179,11 +210,15 @@ public class OrganizationController {
         return ResponseResult.suc("success");
     }
 
+    /**
+     * join a organization
+     * @param organizationId the id of organization user want to join
+     * @return ResponseResult with mag
+     */
     @PostMapping("/join")
-    public ResponseResult createNewOrganization(@RequestParam("organization_id") Integer organizationId) {
+    public ResponseResult<Object> createNewOrganization(@RequestParam("organization_id") Integer organizationId) {
         Integer userId = userService.getId();
         Organization organization = organizationService.getById(organizationId);
-        boolean insertSucc = true;
         if (organization != null) {
             belongToService.insertNewBelongTo(organizationId, userId);
         } else {

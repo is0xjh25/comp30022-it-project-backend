@@ -8,7 +8,9 @@ import tech.crm.crmserver.dao.BelongTo;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import tech.crm.crmserver.common.enums.PermissionLevel;
+import tech.crm.crmserver.dao.Organization;
 import tech.crm.crmserver.dao.Permission;
+import tech.crm.crmserver.dto.DepartmentDTO;
 import tech.crm.crmserver.dto.UserPermissionDTO;
 import tech.crm.crmserver.mapper.OrganizationMapper;
 import tech.crm.crmserver.mapper.PermissionMapper;
@@ -38,6 +40,9 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
 
     @Autowired
     public DepartmentService departmentService;
+
+    @Autowired
+    public OrganizationService organizationService;
 
     @Override
     public boolean createPermission(Integer departmentId, Integer userId, Integer permissionLevel) {
@@ -73,7 +78,7 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
         }
         if(executorPermission.getAuthorityLevel().getLevel() < PermissionLevel.MANAGE.getLevel()
         || executorPermission.getAuthorityLevel().getLevel() <= permissionLevel
-        || executorPermission.getAuthorityLevel().getLevel() > executedPermission.getAuthorityLevel().getLevel()){
+        || executorPermission.getAuthorityLevel().getLevel() < executedPermission.getAuthorityLevel().getLevel()){
             log.warn("Do not have enough permission!");
             return false;
         }
@@ -96,17 +101,8 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
         return permission;
     }
 
-
     @Override
-    public boolean checkPendingPermission(Integer departmentId) {
-        QueryWrapper<Permission> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("department_id", departmentId);
-        queryWrapper.eq("authority_level", PermissionLevel.PENDING);
-        return false;
-    }
-
-    @Override
-    public boolean checkPendingPermission(Integer organizationId, Integer departmentId) {
+    public boolean checkPendingPermission(Integer organizationId, Integer departmentId, Integer userId) {
         QueryWrapper<Permission> queryWrapper = new QueryWrapper<>();
 
         List<Integer> departmentIdList = new ArrayList<>();
@@ -114,17 +110,49 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
             departmentIdList.add(departmentId);
         } else if (organizationId != null) {
             departmentIdList.addAll(departmentService.getDepartmentIdByOrganization(organizationId));
+        } else {
+            List<Organization> organizationList = organizationService.getAllOrgUserOwn(userId);
+            for (Organization organization : organizationList) {
+                departmentIdList.addAll(departmentService.getDepartmentIdByOrganization(organization.getId()));
+            }
         }
+
+
         for (Integer department : departmentIdList) {
-            if(checkPendingPermission(department)) {
-                return true;
-            };
+            queryWrapper.or().eq("department_id", department);
         }
-        return false;
+        queryWrapper.eq("authority_level", PermissionLevel.PENDING);
+        return permissionMapper.selectList(queryWrapper).size() > 0;
     }
 
     @Override
     public Page<UserPermissionDTO> getAllPermissionInDepartmentOrdered(Page<UserPermissionDTO> page, Integer departmentId) {
         return this.baseMapper.getPermissionInDepartmentOrdered(page,departmentId);
+    }
+
+    @Override
+    public List<Permission> getPermissionByUserId(Integer userId) {
+        QueryWrapper<Permission> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("user_id", userId);
+        List<Permission> permissionList = permissionMapper.selectList(queryWrapper);
+        return permissionList;
+    }
+
+    @Override
+    public DepartmentDTO.Status getDepartmentOwnerShipStatus(List<Permission> permissionList, Integer departmentId) {
+        for (Permission permission : permissionList) {
+            if (permission.getDepartmentId().equals(departmentId)) {
+                if (permission.getAuthorityLevel().equal(PermissionLevel.OWNER)) {
+                    return DepartmentDTO.Status.OWNER;
+                } else if (permission.getAuthorityLevel().equal(PermissionLevel.DISPLAY) ||
+                        permission.getAuthorityLevel().equal(PermissionLevel.UPDATE) ||
+                        permission.getAuthorityLevel().equal(PermissionLevel.DELETE) ||
+                        permission.getAuthorityLevel().equal(PermissionLevel.MANAGE)) {
+
+                    return DepartmentDTO.Status.MEMBER;
+                }
+            }
+        }
+        return DepartmentDTO.Status.NOT_JOIN;
     }
 }

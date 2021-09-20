@@ -45,6 +45,15 @@ public enum PermissionLevel {
         return level;
     }
 
+    public Boolean equal(PermissionLevel o){
+        if(o == null){
+            return false;
+        }
+        if(this.getLevel().equals(o.getLevel())){
+            return true;
+        }
+        return false;
+    }
 
 
     @Override

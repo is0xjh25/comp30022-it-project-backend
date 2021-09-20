@@ -14,6 +14,14 @@ import tech.crm.crmserver.security.JwtAuthenticationEntryPoint;
 import tech.crm.crmserver.security.JwtAuthorizationFilter;
 import tech.crm.crmserver.service.TokenKeyService;
 
+/**
+ * <p>
+ * the Configuration for Spring Security
+ * </p>
+ *
+ * @author Lingxiao
+ * @since 2021-08-23
+ */
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 

@@ -25,6 +25,7 @@ import tech.crm.crmserver.service.UserService;
 
 import javax.crypto.SecretKey;
 import javax.xml.bind.DatatypeConverter;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -45,6 +46,12 @@ public class TokenKeyServiceImpl extends ServiceImpl<TokenKeyMapper, TokenKey> i
     @Autowired
     private JwtSigningKeyResolver jwtSigningKeyResolver;
 
+    /**
+     * create Token for user to auto login
+     * will save the key in the database
+     * @param user user who own this token
+     * @return the token
+     */
     public String createToken(User user) {
 
         Integer user_id = user.getId();
@@ -61,6 +68,7 @@ public class TokenKeyServiceImpl extends ServiceImpl<TokenKeyMapper, TokenKey> i
         TokenKey tokenKey = new TokenKey();
         tokenKey.setJwtKey(key);
         tokenKey.setUserId(user_id);
+        tokenKey.setExpiredTime(LocalDateTime.now().plusSeconds(expiration));
         this.save(tokenKey);
         QueryWrapper<TokenKey> wrapper = new QueryWrapper<>();
         wrapper.eq("jwt_key",key);
@@ -79,12 +87,21 @@ public class TokenKeyServiceImpl extends ServiceImpl<TokenKeyMapper, TokenKey> i
         return SecurityConstants.TOKEN_PREFIX + tokenPrefix; // add "Bearer ";
     }
 
+    /**
+     * remove the Token key in the database
+     * @param token the token need to be removed
+     */
     public void removeToken(String token){
         String tokenValue = token.replace(SecurityConstants.TOKEN_PREFIX, "");
         Integer id = Integer.parseInt(getClaims(tokenValue).getId());
         removeById(id);
     }
 
+    /**
+     * get Authentication from the Token
+     * @param token the token user owned
+     * @return the Authentication
+     */
     public UsernamePasswordAuthenticationToken getAuthentication(String token) {
         Claims claims = getClaims(token);
         List<GrantedAuthority> authorities = AuthorityUtils.commaSeparatedStringToAuthorityList("user");
@@ -92,6 +109,23 @@ public class TokenKeyServiceImpl extends ServiceImpl<TokenKeyMapper, TokenKey> i
         return new UsernamePasswordAuthenticationToken(userId, token, authorities);
     }
 
+    /**
+     * delete the invalid token key in the database
+     */
+    public void deleteInvalidToken(){
+        LocalDateTime current = LocalDateTime.now();
+        QueryWrapper<TokenKey> wrapper = new QueryWrapper<>();
+        wrapper.le("expired_time",current);
+        remove(wrapper);
+    }
+
+
+    /**
+     * get the Claims of the token
+     * will use jwtSigningKeyResolver to get the key in the database
+     * @param token the token user owned
+     * @return Claims in the token
+     */
     private Claims getClaims(String token) {
         return Jwts.parserBuilder()
                 .setSigningKeyResolver(jwtSigningKeyResolver).build()

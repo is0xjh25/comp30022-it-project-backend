@@ -8,8 +8,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * @author
- * @description JwtAccessDeniedHandler
+ * JwtAccessDeniedHandler
+ * @author shuang.kou
  */
 public class JwtAccessDeniedHandler implements AccessDeniedHandler {
     /**
