@@ -64,4 +64,17 @@ public class BelongToServiceImpl extends ServiceImpl<BelongToMapper, BelongTo> i
         }
         return belongToMapper.selectList(queryWrapper);
     }
+
+    /**
+     * delete the belongTo by organizationId<br/>
+     * will not check the permission
+     *
+     * @param organizationId the organization id of organization need to be deleted
+     */
+    @Override
+    public void deleteBelongToByOrganizationId(Integer organizationId) {
+        QueryWrapper<BelongTo> wrapper = new QueryWrapper<>();
+        wrapper.eq("organization_id",organizationId);
+        baseMapper.delete(wrapper);
+    }
 }

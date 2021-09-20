@@ -20,4 +20,11 @@ public interface BelongToService extends IService<BelongTo> {
 
     public List<BelongTo> queryBelongToRelation(Integer id, Integer userId, Integer organizationId, BelongToStatus belongToStatus);
 
+    /**
+     * delete the belongTo by organizationId<br/>
+     * will not check the permission
+     * @param organizationId the organization id of organization need to be deleted
+     */
+    public void deleteBelongToByOrganizationId(Integer organizationId);
+
 }

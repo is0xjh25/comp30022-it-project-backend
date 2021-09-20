@@ -3,10 +3,15 @@ package tech.crm.crmserver.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import tech.crm.crmserver.dao.Organization;
+import tech.crm.crmserver.exception.NotEnoughPermissionException;
+import tech.crm.crmserver.exception.OrganizationNotExistException;
 import tech.crm.crmserver.mapper.OrganizationMapper;
+import tech.crm.crmserver.service.BelongToService;
+import tech.crm.crmserver.service.DepartmentService;
 import tech.crm.crmserver.service.OrganizationService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
+import tech.crm.crmserver.service.UserService;
 
 import java.util.HashMap;
 import java.util.List;
@@ -25,6 +30,15 @@ public class OrganizationServiceImpl extends ServiceImpl<OrganizationMapper, Org
 
     @Autowired
     public OrganizationMapper organizationMapper;
+
+    @Autowired
+    public DepartmentService departmentService;
+
+    @Autowired
+    public UserService userService;
+
+    @Autowired
+    public BelongToService belongToService;
 
     @Override
     public List<Organization> getAllOrgUserOwnAndBelongTo(Integer userId) {
@@ -60,5 +74,27 @@ public class OrganizationServiceImpl extends ServiceImpl<OrganizationMapper, Org
         queryWrapper.eq("name", organizationName);
         List<Organization> organizations = organizationMapper.selectList(queryWrapper);
         return organizations;
+    }
+
+    /**
+     * delete the organization, belongTo, departments, permission in it<br/>
+     * will check the permission
+     *
+     * @param organizationId the organization id of organization need to be deleted
+     */
+    @Override
+    public void deleteOrganization(Integer organizationId) {
+        Organization organization = baseMapper.selectById(organizationId);
+        if(organization == null){
+            throw new OrganizationNotExistException();
+        }
+        //check permission
+        if(!organization.getOwner().equals(userService.getId())){
+            throw new NotEnoughPermissionException();
+        }
+        //delete
+        belongToService.deleteBelongToByOrganizationId(organizationId);
+        departmentService.deleteDepartmentByOrganizationId(organizationId);
+        baseMapper.deleteById(organizationId);
     }
 }
