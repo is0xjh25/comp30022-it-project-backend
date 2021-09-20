@@ -3,7 +3,9 @@ package tech.crm.crmserver.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
+
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
 
 /**
  * <p>
@@ -18,21 +20,22 @@ import lombok.NonNull;
 @NoArgsConstructor
 public class UserDTO {
 
-    @NonNull
+    @NotNull(message = "email cannot be null")
+    @Email(message = "invalid email")
     private String email;
 
-    @NonNull
+    @NotNull(message = "password cannot be null")
     private String password;
 
-    @NonNull
+    @NotNull(message = "firstName cannot be null")
     private String firstName;
 
     private String middleName;
 
-    @NonNull
+    @NotNull(message = "lastName cannot be null")
     private String lastName;
 
-    @NonNull
+    @NotNull(message = "phone cannot be null")
     private String phone;
 
     private String website;
