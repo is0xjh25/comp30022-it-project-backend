@@ -10,6 +10,7 @@ public final class SecurityConstants {
     public static final String TOKEN_HEADER = "Authorization";
     public static final String TOKEN_PREFIX = "Bearer ";
     public static final String TOKEN_TYPE = "JWT";
+    // 7 days(in seconds)
     public static final long EXPIRATION = 60 * 60 * 24 * 7L;
 
     private SecurityConstants() {

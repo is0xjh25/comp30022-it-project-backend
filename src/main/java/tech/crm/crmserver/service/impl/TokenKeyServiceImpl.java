@@ -25,6 +25,7 @@ import tech.crm.crmserver.service.UserService;
 
 import javax.crypto.SecretKey;
 import javax.xml.bind.DatatypeConverter;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -67,6 +68,7 @@ public class TokenKeyServiceImpl extends ServiceImpl<TokenKeyMapper, TokenKey> i
         TokenKey tokenKey = new TokenKey();
         tokenKey.setJwtKey(key);
         tokenKey.setUserId(user_id);
+        tokenKey.setExpiredTime(LocalDateTime.now().plusSeconds(expiration));
         this.save(tokenKey);
         QueryWrapper<TokenKey> wrapper = new QueryWrapper<>();
         wrapper.eq("jwt_key",key);
@@ -106,6 +108,17 @@ public class TokenKeyServiceImpl extends ServiceImpl<TokenKeyMapper, TokenKey> i
         Integer userId = (int)(double)claims.get("user_id");
         return new UsernamePasswordAuthenticationToken(userId, token, authorities);
     }
+
+    /**
+     * delete the invalid token key in the database
+     */
+    public void deleteInvalidToken(){
+        LocalDateTime current = LocalDateTime.now();
+        QueryWrapper<TokenKey> wrapper = new QueryWrapper<>();
+        wrapper.le("expired_time",current);
+        remove(wrapper);
+    }
+
 
     /**
      * get the Claims of the token

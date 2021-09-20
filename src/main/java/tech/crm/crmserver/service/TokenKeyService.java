@@ -37,4 +37,9 @@ public interface TokenKeyService extends IService<TokenKey> {
      */
     public UsernamePasswordAuthenticationToken getAuthentication(String token);
 
+    /**
+     * delete the invalid token key in the database
+     */
+    public void deleteInvalidToken();
+
 }
