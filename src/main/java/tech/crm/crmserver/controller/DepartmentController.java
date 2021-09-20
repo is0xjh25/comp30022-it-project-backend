@@ -10,6 +10,7 @@ import tech.crm.crmserver.common.enums.PermissionLevel;
 import tech.crm.crmserver.common.response.ResponseResult;
 import tech.crm.crmserver.dao.Permission;
 import tech.crm.crmserver.dto.UserPermissionDTO;
+import tech.crm.crmserver.service.DepartmentService;
 import tech.crm.crmserver.service.PermissionService;
 import tech.crm.crmserver.service.UserService;
 
@@ -30,10 +31,13 @@ public class DepartmentController {
     private PermissionService permissionService;
 
     @Autowired
+    private DepartmentService departmentService;
+
+    @Autowired
     private UserService userService;
 
     /**
-     * find all the member in the department
+     * find all the member in the department<br/>
      * will check whether the user has the permission(user need to be an official member in the department)
      * @param departmentId which department user want to search
      * @param size size of each page
@@ -69,6 +73,19 @@ public class DepartmentController {
         }
         permissionService.createPermission(departmentId, userService.getId(),permissionLevel);
         return ResponseResult.suc("Successfully create permission!");
+    }
+
+    /**
+     * delete the department by department id<br/>
+     * will delete the related entities(permissions, contacts)<br/>
+     * will check the permission<br/>
+     * @param departmentId the id of department needed to be deleted
+     * @return whether the user successfully commit the apply
+     */
+    @DeleteMapping
+    public ResponseResult<Object> deleteDepartment(@RequestParam("department_id") Integer departmentId){
+        departmentService.deleteDepartmentByDepartmentId(departmentId);
+        return ResponseResult.suc("Successfully delete the department!");
     }
 
 }

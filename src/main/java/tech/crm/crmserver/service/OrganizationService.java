@@ -24,4 +24,11 @@ public interface OrganizationService extends IService<Organization> {
 
     public List<Organization> getOrgBasedOnExactName(String organizationName);
 
+    /**
+     * delete the organization, belongTo, departments, permission in it<br/>
+     * will check the permission
+     * @param organizationId the organization id of organization need to be deleted
+     */
+    public void deleteOrganization(Integer organizationId);
+
 }

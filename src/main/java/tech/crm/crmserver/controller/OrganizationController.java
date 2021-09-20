@@ -211,6 +211,18 @@ public class OrganizationController {
     }
 
     /**
+     * delete the organization, belongTo, departments, permission in it<br/>
+     * will check the permission
+     * @param organizationId the organization id of organization need to be deleted
+     * @return ResponseResult with mag
+     */
+    @DeleteMapping()
+    public ResponseResult<Object> deleteOrganization(@RequestParam("organization_id") Integer organizationId){
+        organizationService.deleteOrganization(organizationId);
+        return ResponseResult.suc("success");
+    }
+
+    /**
      * join a organization
      * @param organizationId the id of organization user want to join
      * @return ResponseResult with mag
@@ -226,5 +238,7 @@ public class OrganizationController {
         }
         return ResponseResult.suc("success");
     }
+
+
 }
 

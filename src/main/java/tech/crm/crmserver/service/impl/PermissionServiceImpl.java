@@ -4,22 +4,16 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import tech.crm.crmserver.common.enums.PermissionLevel;
-import tech.crm.crmserver.dao.BelongTo;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import tech.crm.crmserver.common.enums.PermissionLevel;
 import tech.crm.crmserver.dao.Organization;
 import tech.crm.crmserver.dao.Permission;
 import tech.crm.crmserver.dto.DepartmentDTO;
 import tech.crm.crmserver.dto.UserPermissionDTO;
-import tech.crm.crmserver.mapper.OrganizationMapper;
 import tech.crm.crmserver.mapper.PermissionMapper;
 import tech.crm.crmserver.service.DepartmentService;
 import tech.crm.crmserver.service.OrganizationService;
 import tech.crm.crmserver.service.PermissionService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
-import tech.crm.crmserver.service.UserService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -154,5 +148,32 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
             }
         }
         return DepartmentDTO.Status.NOT_JOIN;
+    }
+
+    /**
+     * delete permission of the department
+     *
+     * @param departmentId the id of department
+     */
+    @Override
+    public void deletePermissionByDepartmentId(Integer departmentId) {
+        QueryWrapper<Permission> wrapper = new QueryWrapper<>();
+        wrapper.eq("department_id",departmentId);
+        baseMapper.delete(wrapper);
+    }
+
+    /**
+     * delete permission of the department
+     *
+     * @param departmentIdList the list of ids of department
+     */
+    @Override
+    public void deletePermissionByDepartmentIdList(List<Integer> departmentIdList) {
+        if(departmentIdList.isEmpty()){
+            return;
+        }
+        QueryWrapper<Permission> wrapper = new QueryWrapper<>();
+        wrapper.in("department_id",departmentIdList);
+        baseMapper.delete(wrapper);
     }
 }

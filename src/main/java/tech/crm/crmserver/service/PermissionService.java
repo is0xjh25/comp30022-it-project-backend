@@ -38,4 +38,16 @@ public interface PermissionService extends IService<Permission> {
     public List<Permission> getPermissionByUserId(Integer userId);
 
     public DepartmentDTO.Status getDepartmentOwnerShipStatus(List<Permission> permissionList, Integer departmentId);
+
+    /**
+     * delete permission of the department
+     * @param departmentId the id of department
+     */
+    public void deletePermissionByDepartmentId(Integer departmentId);
+
+    /**
+     * delete permission of the department
+     * @param departmentIdList the list of ids of department
+     */
+    public void deletePermissionByDepartmentIdList(List<Integer> departmentIdList);
 }
