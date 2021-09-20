@@ -125,12 +125,23 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
     }
 
     @Override
+    public List<Permission> getPermissionByUserId(Integer userId, PermissionLevel permissionLevel) {
+        QueryWrapper<Permission> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("user_id", userId);
+        queryWrapper.ge("authority_level", permissionLevel.getLevel());
+        List<Permission> permissionList = permissionMapper.selectList(queryWrapper);
+        return permissionList;
+    }
+
+    @Override
     public List<Permission> getPermissionByUserId(Integer userId) {
         QueryWrapper<Permission> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("user_id", userId);
         List<Permission> permissionList = permissionMapper.selectList(queryWrapper);
         return permissionList;
     }
+
+
 
     @Override
     public DepartmentDTO.Status getDepartmentOwnerShipStatus(List<Permission> permissionList, Integer departmentId) {

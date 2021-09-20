@@ -42,7 +42,7 @@ public class PermissionController {
      * @return
      */
     @DeleteMapping
-    public ResponseResult<Object> deleteMember(@RequestParam("userId") Integer userId,
+    public ResponseResult<Object> deleteMember(@RequestParam("user_id") Integer userId,
                                                @RequestParam("department_id") Integer departmentId){
         QueryWrapper<Permission> wrapper = new QueryWrapper<>();
         //executor for delete action
@@ -72,7 +72,7 @@ public class PermissionController {
      */
     @PutMapping
     public ResponseResult<Object> updatePermission(@RequestParam("department_id") Integer departmentId,
-                                                   @RequestParam("userId") Integer userId,
+                                                   @RequestParam("user_id") Integer userId,
                                                    @RequestParam(value = "permission_level")Integer permissionLevel){
         if(permissionService.updateOrCreatePermission(departmentId,userService.getId(), userId,permissionLevel)){
             return ResponseResult.suc("Successfully update permission!");
