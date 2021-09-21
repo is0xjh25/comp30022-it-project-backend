@@ -51,11 +51,10 @@ public class OrganizationServiceImpl extends ServiceImpl<OrganizationMapper, Org
         Map<String, Object> selectMap = new HashMap<>();
         selectMap.put("owner", userId);
         // Own
-        List<Organization> orgOwnByUser = organizationMapper.selectByMap(selectMap);
+        // List<Organization> orgOwnByUser = organizationMapper.selectByMap(selectMap);
         // Belong to
         List<Organization> orgBelongsToUser = organizationMapper.getOrganizationUserBelongsTo(userId);
-        orgOwnByUser.addAll(orgBelongsToUser);
-        return orgOwnByUser;
+        return orgBelongsToUser;
     }
 
     /**
