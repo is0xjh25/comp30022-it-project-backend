@@ -12,4 +12,3 @@ spring:
 mybatis-plus:
   typeEnumsPackage: tech.crm.crmserver.common.enums
 
-

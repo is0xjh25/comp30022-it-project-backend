@@ -3,12 +3,14 @@ package tech.crm.crmserver.dto;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import tech.crm.crmserver.common.enums.Status;
 
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 @Data
@@ -18,18 +20,19 @@ public class ContactDTO {
 
     private Integer id;
 
-    @NonNull
+    @NotNull
+    @JsonProperty("department_id")
     private Integer departmentId;
 
-    @NonNull
+    @NotNull
     private String email;
 
-    @NonNull
+    @NotNull
     private String firstName;
 
     private String middleName;
 
-    @NonNull
+    @NotNull
     private String lastName;
 
     private String phone;

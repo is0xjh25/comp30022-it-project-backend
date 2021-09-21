@@ -16,8 +16,9 @@ import java.util.List;
 public interface RecentContactService extends IService<RecentContact> {
 
     /**
-     * delete the RecentContact by contactId<br/>
+     * Delete the RecentContact by contactId<br/>
      * will not check the permission<br/>
+     *
      * @param contactIds the list of ids of contact need to be deleted
      */
     public void deleteRecentContactByContactIds(List<Integer> contactIds);

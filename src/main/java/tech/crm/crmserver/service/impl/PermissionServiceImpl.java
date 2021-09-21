@@ -38,6 +38,14 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
     @Autowired
     public OrganizationService organizationService;
 
+    /**
+     * Create a permission based on department id, user id, permission level
+     *
+     * @param departmentId the id of the department to create permission
+     * @param userId the id of the user
+     * @param permissionLevel the permission level of permission to create
+     * @return if create success
+     */
     @Override
     public boolean createPermission(Integer departmentId, Integer userId, Integer permissionLevel) {
         if(findPermission(departmentId,userId) != null){
@@ -51,6 +59,15 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
         return true;
     }
 
+    /**
+     * Update a permission based on department id, executor id, executed id and permission level
+     *
+     * @param departmentId the id of the department to update permission
+     * @param executor the user id of the executor of updating
+     * @param executed the user id of the executed of updating
+     * @param permissionLevel the permission level of permission to update
+     * @return if updating success
+     */
     @Override
     public boolean updateOrCreatePermission(Integer departmentId, Integer executor, Integer executed, Integer permissionLevel) {
         //whether the executed member is in the department
@@ -86,6 +103,13 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
         return true;
     }
 
+    /**
+     * Query permissions based on department id, user id
+     *
+     * @param departmentId the id of the department to match
+     * @param userId the user id to match
+     * @return a match permission
+     */
     @Override
     public Permission findPermission(Integer departmentId, Integer userId) {
         QueryWrapper<Permission> wrapper = new QueryWrapper<>();
@@ -95,6 +119,14 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
         return permission;
     }
 
+    /**
+     * Check if there is pending permission request based on organization id and department id
+     *
+     * @param organizationId the id of the organization to check
+     * @param departmentId the id of the department to check
+     * @param userId the user id to check
+     * @return a boolean represent if there is pending permission request
+     */
     @Override
     public boolean checkPendingPermission(Integer organizationId, Integer departmentId, Integer userId) {
         QueryWrapper<Permission> queryWrapper = new QueryWrapper<>();
@@ -119,11 +151,25 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
         return permissionMapper.selectList(queryWrapper).size() > 0;
     }
 
+    /**
+     * Get all the permission based on departmentId
+     *
+     * @param page the page configuration, including the page size, current page
+     * @param departmentId the id of the department to get permission
+     * @return a page of UserPermissionDTO including all the match permission data
+     */
     @Override
     public Page<UserPermissionDTO> getAllPermissionInDepartmentOrdered(Page<UserPermissionDTO> page, Integer departmentId) {
         return this.baseMapper.getPermissionInDepartmentOrdered(page,departmentId);
     }
 
+    /**
+     * Get all the permission based on userId and permission level
+     *
+     * @param userId the userId to match
+     * @param permissionLevel the permission level to match
+     * @return a list of match permission
+     */
     @Override
     public List<Permission> getPermissionByUserId(Integer userId, PermissionLevel permissionLevel) {
         QueryWrapper<Permission> queryWrapper = new QueryWrapper<>();
@@ -133,6 +179,12 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
         return permissionList;
     }
 
+    /**
+     * Get all the permission based on userId
+     *
+     * @param userId the userId to match
+     * @return a list of match permission
+     */
     @Override
     public List<Permission> getPermissionByUserId(Integer userId) {
         QueryWrapper<Permission> queryWrapper = new QueryWrapper<>();
@@ -141,8 +193,13 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
         return permissionList;
     }
 
-
-
+    /**
+     * Get the ownership status based on permissionLevel and departmentId
+     *
+     * @param permissionList all the permission
+     * @param departmentId the departmentId of the permission need to find
+     * @return a status about about the ownership status
+     */
     @Override
     public DepartmentDTO.Status getDepartmentOwnerShipStatus(List<Permission> permissionList, Integer departmentId) {
         for (Permission permission : permissionList) {
@@ -153,7 +210,6 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
                         permission.getAuthorityLevel().equal(PermissionLevel.UPDATE) ||
                         permission.getAuthorityLevel().equal(PermissionLevel.DELETE) ||
                         permission.getAuthorityLevel().equal(PermissionLevel.MANAGE)) {
-
                     return DepartmentDTO.Status.MEMBER;
                 }
             }
@@ -162,7 +218,7 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
     }
 
     /**
-     * delete permission of the department
+     * Delete permission of the department
      *
      * @param departmentId the id of department
      */
@@ -174,7 +230,7 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
     }
 
     /**
-     * delete permission of the department
+     * Delete permission of the department
      *
      * @param departmentIdList the list of ids of department
      */

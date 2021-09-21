@@ -42,6 +42,12 @@ public class DepartmentServiceImpl extends ServiceImpl<DepartmentMapper, Departm
     public UserService userService;
 
 
+    /**
+     * Get departments from organizationId
+     *
+     * @param organizationId the organizationId of the organization to get department
+     * @return a list of departmentId
+     */
     @Override
     public List<Integer> getDepartmentIdByOrganization(Integer organizationId) {
         QueryWrapper<Department> queryWrapper = new QueryWrapper<>();
@@ -55,9 +61,10 @@ public class DepartmentServiceImpl extends ServiceImpl<DepartmentMapper, Departm
     }
 
     /**
-     * delete the department by department id <br/>
+     * Delete the department by department id <br/>
      * will delete the related entities(permissions, contacts)<br/>
      * will check the permission<br/>
+     *
      * @param departmentId the id of department needed to be deleted
      */
     @Override
@@ -73,11 +80,8 @@ public class DepartmentServiceImpl extends ServiceImpl<DepartmentMapper, Departm
         baseMapper.deleteById(departmentId);
     }
 
-
-
-
     /**
-     * delete the departments by department id list<br/>
+     * Delete the departments by department id list<br/>
      * will delete the related entities(permissions, contacts)<br/>
      * will not check the permission<br/>
      *
@@ -94,7 +98,7 @@ public class DepartmentServiceImpl extends ServiceImpl<DepartmentMapper, Departm
     }
 
     /**
-     * delete the departments by organization id <br/>
+     * Delete the departments by organization id <br/>
      * will delete the related entities(permissions, contacts)<br/>
      * will not check the permission<br/>
      *

@@ -38,8 +38,11 @@ public class PermissionController {
     private OrganizationService organizationService;
 
     /**
-     * delete a member from a department
-     * @return
+     * Delete a member from a department
+     *
+     * @param userId the user id to delete
+     * @param departmentId the departmentId to delete
+     * @return the ResponseResult with msg,
      */
     @DeleteMapping
     public ResponseResult<Object> deleteMember(@RequestParam("user_id") Integer userId,
@@ -65,6 +68,7 @@ public class PermissionController {
 
     /**
      * Update the permission of a member in a department
+     *
      * @param departmentId departmentId to update permission level
      * @param userId the member to update
      * @param permissionLevel the new permission level to update
@@ -85,9 +89,10 @@ public class PermissionController {
      * Check if there is a pending join department request, if both
      * organizationId and departmentId is null, and check if the organizations
      * own by this user has pending request
+     *
      * @param organizationId organizationId to check
      * @param departmentId departmentId to check
-     * @return a boolean value represent if there is pending request
+     * @return the ResponseResult with msg, with the boolean value about if the there is pending request
      */
     @GetMapping("/pending")
     public ResponseResult<Object> getIfOrgDepartmentHasPendingRequest

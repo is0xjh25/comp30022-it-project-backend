@@ -40,6 +40,12 @@ public class OrganizationServiceImpl extends ServiceImpl<OrganizationMapper, Org
     @Autowired
     public BelongToService belongToService;
 
+    /**
+     * Get all the organization based on userId
+     *
+     * @param userId the user id to search all organization
+     * @return a list of organization, the user own or belong to
+     */
     @Override
     public List<Organization> getAllOrgUserOwnAndBelongTo(Integer userId) {
         Map<String, Object> selectMap = new HashMap<>();
@@ -52,6 +58,12 @@ public class OrganizationServiceImpl extends ServiceImpl<OrganizationMapper, Org
         return orgOwnByUser;
     }
 
+    /**
+     * Get all the organization own by user
+     *
+     * @param userId the user id to search those owning organization
+     * @return a list of organization, the user own
+     */
     @Override
     public List<Organization> getAllOrgUserOwn(Integer userId) {
         Map<String, Object> selectMap = new HashMap<>();
@@ -60,6 +72,12 @@ public class OrganizationServiceImpl extends ServiceImpl<OrganizationMapper, Org
         return orgOwnByUser;
     }
 
+    /**
+     * Get all the organization by organization name
+     *
+     * @param orgNameName the name of the organization
+     * @return a list of organization match
+     */
     @Override
     public List<Organization> getOrgBasedOnName(String orgNameName) {
         QueryWrapper<Organization> queryWrapper = new QueryWrapper<>();
@@ -68,6 +86,12 @@ public class OrganizationServiceImpl extends ServiceImpl<OrganizationMapper, Org
         return organizations;
     }
 
+    /**
+     * Get all the organization by exact organization name
+     *
+     * @param organizationName the name of the organization
+     * @return a list of organization match
+     */
     @Override
     public List<Organization> getOrgBasedOnExactName(String organizationName) {
         QueryWrapper<Organization> queryWrapper = new QueryWrapper<>();
@@ -77,7 +101,7 @@ public class OrganizationServiceImpl extends ServiceImpl<OrganizationMapper, Org
     }
 
     /**
-     * delete the organization, belongTo, departments, permission in it<br/>
+     * Delete the organization, belongTo, departments, permission in it<br/>
      * will check the permission
      *
      * @param organizationId the organization id of organization need to be deleted
