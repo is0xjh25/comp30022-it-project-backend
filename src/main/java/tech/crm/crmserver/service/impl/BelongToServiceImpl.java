@@ -33,6 +33,14 @@ public class BelongToServiceImpl extends ServiceImpl<BelongToMapper, BelongTo> i
     @Autowired
     private BelongToService belongToService;
 
+    /**
+     * Insert new belongTo relation, when join an organization <br/>
+     * will not check the permission
+     *
+     * @param organizationId the organizationId to join
+     * @param userId the userId join organization
+     * @return if the insert success
+     */
     @Override
     public boolean insertNewBelongTo(Integer organizationId, Integer userId) {
         // First, make sure this user and this organization do not have recorded belong to relationship
@@ -47,6 +55,15 @@ public class BelongToServiceImpl extends ServiceImpl<BelongToMapper, BelongTo> i
         return true;
     }
 
+    /**
+     * Search belongTo relation based on some condition
+     *
+     * @param id the id of the belongTo relationship to match
+     * @param userId the userId of the belongTo relationship to match
+     * @param organizationId the organizationId of the belongTo relationship to match
+     * @param belongToStatus the status of the belongTo relation
+     * @return the list of belongTo relation match
+     */
     @Override
     public List<BelongTo> queryBelongToRelation(Integer id, Integer userId, Integer organizationId, BelongToStatus belongToStatus) {
         QueryWrapper<BelongTo> queryWrapper = new QueryWrapper<>();
@@ -66,7 +83,7 @@ public class BelongToServiceImpl extends ServiceImpl<BelongToMapper, BelongTo> i
     }
 
     /**
-     * delete the belongTo by organizationId<br/>
+     * Delete the belongTo by organizationId<br/>
      * will not check the permission
      *
      * @param organizationId the organization id of organization need to be deleted

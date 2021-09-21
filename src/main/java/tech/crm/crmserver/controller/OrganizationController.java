@@ -57,8 +57,9 @@ public class OrganizationController {
     private BelongToService belongToService;
 
     /**
-     * create a department
+     * Create a department
      * the user need to be the owner of the department
+     *
      * @param orgId which organization this department belong to
      * @param name the name of the department
      * @return the ResponseResult with msg
@@ -111,9 +112,10 @@ public class OrganizationController {
 
 
     /**
-     * find all the departments in the organization
+     * Find all the departments in the organization
+     *
      * @param organizationId the id of organization user want to search
-     * @return all the departments in the organization
+     * @return the ResponseResult with msg and department data
      */
     @GetMapping("/departments")
     public ResponseResult<Object> getDepartment(@RequestParam("organization_id") Integer organizationId){
@@ -138,7 +140,8 @@ public class OrganizationController {
 
     /**
      * Check out all organization this user belongs to
-     * @return all organization this user belongs to
+     *
+     * @return the ResponseResult with msg, with all the match organizations
      */
     @GetMapping("/myOrganization")
     public ResponseResult<Object> getAllOrganization() {
@@ -161,20 +164,25 @@ public class OrganizationController {
     }
 
     /**
-     * Get Organization based on organization Integer
+     * Get Organization based on organization id
+     *
      * @param organizationId the id of organization user want to search
-     * @return Organization
+     * @return the ResponseResult with msg, with the match organization
      */
     @GetMapping()
     public ResponseResult<Object> getOrganization(@RequestParam("organization_id") Integer organizationId) {
         Organization organization = organizationService.getById(organizationId);
-        return ResponseResult.suc("success", organization);
+        if (organization != null) {
+            return ResponseResult.suc("success", organization);
+        }
+        return ResponseResult.fail("No content");
     }
 
     /**
      * Get Organization based on organization Integer
+     *
      * @param organizationName the exact name of organization user want to search
-     * @return Organization
+     * @return the ResponseResult with msg, with the match organizations
      */
     @GetMapping("/name")
     public ResponseResult<Object> getOrganizationBasedOnName(@RequestParam("organization_name") String organizationName) {
@@ -187,8 +195,9 @@ public class OrganizationController {
 
     /**
      * Create new Organization
+     *
      * @param organizationName the name of organization user want to create
-     * @return ResponseResult with mag
+     * @return the ResponseResult with msg
      */
     @PostMapping()
     public ResponseResult<Object> createNewOrganization(@RequestParam("organization_name") String organizationName) {
@@ -211,8 +220,9 @@ public class OrganizationController {
     }
 
     /**
-     * delete the organization, belongTo, departments, permission in it<br/>
+     * Delete the organization, belongTo, departments, permission in it<br/>
      * will check the permission
+     *
      * @param organizationId the organization id of organization need to be deleted
      * @return ResponseResult with mag
      */
@@ -223,7 +233,8 @@ public class OrganizationController {
     }
 
     /**
-     * join a organization
+     * Join a organization
+     *
      * @param organizationId the id of organization user want to join
      * @return ResponseResult with mag
      */
@@ -238,7 +249,5 @@ public class OrganizationController {
         }
         return ResponseResult.suc("success");
     }
-
-
 }
 

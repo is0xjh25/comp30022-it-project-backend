@@ -39,7 +39,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     private PasswordEncoder passwordEncoder;
 
     /**
-     * verify whether the email and password is correct
+     * Verify whether the email and password is correct
+     *
      * @param loginRequest login form for login request
      * @return login user
      */
@@ -54,7 +55,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     /**
-     * register the user
+     * Register the user
+     *
      * @param user user need for register
      * @return null if fail, return user when successfully register
      */
@@ -74,7 +76,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     /**
-     * transfer a userDTO to user class
+     * Transfer a userDTO to user class
+     *
      * @param userDTO userDTO class
      * @return user class
      */
@@ -85,7 +88,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     /**
-     * check whether the encoded of current Password matches the password
+     * Check whether the encoded of current Password matches the password
+     *
      * @param currentPassword raw Password
      * @param password encodedPassword
      * @return whether the password matches
@@ -96,6 +100,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     /**
      * Override the function in UserDetailsService
+     *
      * @param email email of the user
      * @return UserDetails
      * @throws UsernameNotFoundException means user not found in the database
@@ -117,8 +122,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     /**
-     * get user Id from SecurityContextHolder
+     * Get user Id from SecurityContextHolder
      * the Id was stored in the SecurityContextHolder at tech/crm/crmserver/security/JwtAuthorizationFilter.java
+     *
      * @return user id
      */
     public Integer getId(){
