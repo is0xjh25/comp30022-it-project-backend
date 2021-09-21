@@ -35,7 +35,8 @@ public class UserController {
     private UserService userService;
 
     /**
-     * the login  API
+     * The login  API
+     *
      * @param loginRequest the form for login
      * @return return 200 when login successfully, return 400 and reason in the msg
      */
@@ -51,7 +52,8 @@ public class UserController {
     }
 
     /**
-     * using the token to logout, will remove the token from the database
+     * Using the token to logout, will remove the token from the database
+     *
      * @param token the token need to removed
      * @return return successfully logout
      */
@@ -62,7 +64,8 @@ public class UserController {
     }
 
     /**
-     * register API
+     * Register API
+     *
      * @param userDTO the form for register, contain all the information required for User
      * @return 200 when successfully register and set Authorization in response header
      */
@@ -82,6 +85,7 @@ public class UserController {
      * Will set password to null
      * Since the Token contains the User id, thus, we can use this to get the id in the Token and
      * return the user
+     *
      * @return the user, if something go wrong, return Error
      */
     @GetMapping
@@ -94,7 +98,5 @@ public class UserController {
         }
         return ResponseResult.fail("Error");
     }
-
-
 }
 
