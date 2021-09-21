@@ -202,7 +202,7 @@ public class OrganizationController {
     @PostMapping()
     public ResponseResult<Object> createNewOrganization(@RequestParam("organization_name") String organizationName) {
         // todo
-        Integer userID = userService.getId();
+        Integer userId = userService.getId();
         List<Organization> organizationListWithSameName = organizationService.getOrgBasedOnExactName(organizationName);
 
         if (organizationListWithSameName.size() > 0) {
@@ -210,12 +210,14 @@ public class OrganizationController {
         }
         Organization newOrganization = new Organization();
         newOrganization.setName(organizationName);
-        newOrganization.setOwner(userID);
+        newOrganization.setOwner(userId);
         try {
             organizationService.save(newOrganization);
         } catch (Exception e) {
             return ResponseResult.fail("Fail to create organization");
         }
+        Organization organization = organizationService.getOrgBasedOnExactName(organizationName).get(0);
+        belongToService.insertNewBelongTo(organization.getId(), userId);
         return ResponseResult.suc("success");
     }
 
