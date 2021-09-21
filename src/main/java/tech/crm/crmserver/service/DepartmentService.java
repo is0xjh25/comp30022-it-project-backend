@@ -15,27 +15,35 @@ import java.util.List;
  */
 public interface DepartmentService extends IService<Department> {
 
+    /**
+     * Get departments from organizationId
+     *
+     * @param organizationId the organizationId of the organization to get department
+     * @return a list of departmentId
+     */
     List<Integer> getDepartmentIdByOrganization(Integer organizationId);
 
     /**
-     * delete the department by department id<br/>
+     * Delete the department by department id <br/>
      * will delete the related entities(permissions, contacts)<br/>
      * will check the permission<br/>
+     *
      * @param departmentId the id of department needed to be deleted
      */
     public void deleteDepartmentByDepartmentId(Integer departmentId);
 
     /**
-     * delete the departments by department id list<br/>
+     * Delete the departments by department id list<br/>
      * will delete the related entities(permissions, contacts)<br/>
      * will not check the permission<br/>
+     *
      * @param departmentIdList the list of ids of department needed to be deleted
      */
     public void deleteDepartmentByDepartmentIdList(List<Integer> departmentIdList);
 
 
     /**
-     * delete the departments by organization id <br/>
+     * Delete the departments by organization id <br/>
      * will delete the related entities(permissions, contacts)<br/>
      * will not check the permission<br/>
      * @param organizationId the id of organization needed to be deleted

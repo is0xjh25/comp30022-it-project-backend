@@ -15,13 +15,36 @@ import java.util.List;
  */
 public interface OrganizationService extends IService<Organization> {
 
-    // get all the organization the user own and belong to
+    /**
+     * Get all the organization based on userId
+     *
+     * @param userId the user id to search all organization
+     * @return a list of organization, the user own or belong to
+     */
     public List<Organization> getAllOrgUserOwnAndBelongTo(Integer userId);
 
+    /**
+     * Get all the organization own by user
+     *
+     * @param userId the user id to search those owning organization
+     * @return a list of organization, the user own
+     */
     public List<Organization> getAllOrgUserOwn(Integer userId);
 
+    /**
+     * Get all the organization by organization name
+     *
+     * @param organizationName the name of the organization
+     * @return a list of organization match
+     */
     public List<Organization> getOrgBasedOnName(String organizationName);
 
+    /**
+     * Get all the organization by exact organization name
+     *
+     * @param organizationName the name of the organization
+     * @return a list of organization match
+     */
     public List<Organization> getOrgBasedOnExactName(String organizationName);
 
     /**

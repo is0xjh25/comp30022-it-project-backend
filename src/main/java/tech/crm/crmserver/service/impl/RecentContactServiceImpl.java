@@ -21,7 +21,7 @@ import java.util.List;
 public class RecentContactServiceImpl extends ServiceImpl<RecentContactMapper, RecentContact> implements RecentContactService {
 
     /**
-     * delete the RecentContact by contactId<br/>
+     * Delete the RecentContact by contactId<br/>
      * will not check the permission
      *
      * @param contactIds the id of contact need to be deleted
