@@ -42,8 +42,6 @@ import java.util.UUID;
 public class TokenKeyServiceImpl extends ServiceImpl<TokenKeyMapper, TokenKey> implements TokenKeyService {
 
     @Autowired
-    private UserService userService;
-    @Autowired
     private JwtSigningKeyResolver jwtSigningKeyResolver;
 
     /**

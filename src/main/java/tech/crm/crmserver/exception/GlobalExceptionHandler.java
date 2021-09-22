@@ -2,6 +2,7 @@ package tech.crm.crmserver.exception;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -44,5 +45,20 @@ public class GlobalExceptionHandler {
         logger.warn("Exception Reason: " + msg);
         return ResponseResult.fail(msg);
     }
+
+
+    /**
+     * catch all HttpMessageNotReadableException when the input dto is invalid
+     * @param ex HttpMessageNotReadableException
+     * @return fail with msg
+     */
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseResult<Object> handleInvalidDTOException(HttpMessageNotReadableException ex) {
+        String msg = "Required request body is missing";
+        logger.warn("Exception Reason: " + msg);
+        return ResponseResult.fail(msg);
+    }
+
+
 
 }

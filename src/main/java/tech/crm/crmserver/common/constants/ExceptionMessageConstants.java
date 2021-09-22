@@ -15,8 +15,10 @@ public class ExceptionMessageConstants {
     public static final String NOT_ENOUGH_PERMISSION_EXCEPTION  = "Sorry you do not have enough permissions to access it!";
     public static final String ORGANIZATION_NOT_EXIST_EXCEPTION  = "Organization do not exist!";
     public static final String USER_ALREADY_EXIST_EXCEPTION  = "Same email already exist!";
+    public static final String USER_NOT_EXIST_EXCEPTION  = "User not exists!";
     public static final String USER_ALREADY_IN_DEPARTMENT_EXCEPTION  = "This user already in the department";
     public static final String USER_NOT_IN_DEPARTMENT_EXCEPTION  = "You are not a member of this department";
+
 
 
     private ExceptionMessageConstants() {

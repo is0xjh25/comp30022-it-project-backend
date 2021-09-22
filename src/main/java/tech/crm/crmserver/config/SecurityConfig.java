@@ -35,7 +35,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.cors().and().authorizeRequests()
                 //permit without login
                 .antMatchers("/user/login").permitAll()
-                .antMatchers(HttpMethod.POST,"/user").permitAll()
+                .antMatchers(HttpMethod.POST,"/user","/user/resetPassword").permitAll()
                 //need token to get permission
                 //permit all after login
                 .anyRequest().authenticated()
