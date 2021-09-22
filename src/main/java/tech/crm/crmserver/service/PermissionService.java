@@ -1,6 +1,7 @@
 package tech.crm.crmserver.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import org.springframework.web.bind.annotation.RequestParam;
 import tech.crm.crmserver.common.enums.PermissionLevel;
 import tech.crm.crmserver.dao.Permission;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -108,4 +109,12 @@ public interface PermissionService extends IService<Permission> {
      * @param departmentIdList the list of ids of department
      */
     public void deletePermissionByDepartmentIdList(List<Integer> departmentIdList);
+
+    /**
+     * Delete a member from a department
+     *
+     * @param userId the user id to delete
+     * @param departmentId the departmentId to delete
+     */
+    public void deleteMember(Integer userId, Integer departmentId);
 }

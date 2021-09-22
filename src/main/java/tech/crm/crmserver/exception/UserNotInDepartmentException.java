@@ -18,4 +18,8 @@ public class UserNotInDepartmentException extends BaseException{
         super(ResponseResult.fail(ExceptionMessageConstants.USER_NOT_IN_DEPARTMENT_EXCEPTION, HttpStatus.FORBIDDEN));
     }
 
+    public UserNotInDepartmentException(HttpStatus httpStatus) {
+        super(ResponseResult.fail(ExceptionMessageConstants.USER_NOT_IN_DEPARTMENT_EXCEPTION, httpStatus));
+    }
+
 }

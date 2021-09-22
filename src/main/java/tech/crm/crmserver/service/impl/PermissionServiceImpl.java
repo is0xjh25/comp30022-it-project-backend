@@ -3,19 +3,23 @@ package tech.crm.crmserver.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import tech.crm.crmserver.common.enums.PermissionLevel;
+import tech.crm.crmserver.common.response.ResponseResult;
 import tech.crm.crmserver.dao.Organization;
 import tech.crm.crmserver.dao.Permission;
 import tech.crm.crmserver.dto.DepartmentDTO;
 import tech.crm.crmserver.dto.UserPermissionDTO;
 import tech.crm.crmserver.exception.NotEnoughPermissionException;
 import tech.crm.crmserver.exception.UserAlreadyInDepartmentException;
+import tech.crm.crmserver.exception.UserNotInDepartmentException;
 import tech.crm.crmserver.mapper.PermissionMapper;
 import tech.crm.crmserver.service.DepartmentService;
 import tech.crm.crmserver.service.OrganizationService;
 import tech.crm.crmserver.service.PermissionService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
+import tech.crm.crmserver.service.UserService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +43,9 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
 
     @Autowired
     public OrganizationService organizationService;
+
+    @Autowired
+    private UserService userService;
 
     /**
      * Create a permission based on department id, user id, permission level
@@ -245,5 +252,39 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
         QueryWrapper<Permission> wrapper = new QueryWrapper<>();
         wrapper.in("department_id",departmentIdList);
         baseMapper.delete(wrapper);
+    }
+
+    /**
+     * Delete a member from a department
+     *
+     * @param userId       the user id to delete
+     * @param departmentId the departmentId to delete
+     */
+    @Override
+    public void deleteMember(Integer userId, Integer departmentId) {
+        QueryWrapper<Permission> wrapper = new QueryWrapper<>();
+        //executor for delete action
+        wrapper.eq("user_id",userService.getId())
+                .eq("department_id",departmentId);
+        Permission executor = getOne(wrapper);
+        if(executor == null){
+            throw new UserNotInDepartmentException();
+        }
+        //executed person for delete action
+        wrapper = new QueryWrapper<>();
+        wrapper.eq("user_id",userId)
+                .eq("department_id",departmentId);
+        Permission executed = getOne(wrapper);
+        if(executed == null){
+            throw new UserNotInDepartmentException(HttpStatus.BAD_REQUEST);
+        }
+        //check the authority
+        if(executor.getAuthorityLevel().getLevel() >= PermissionLevel.MANAGE.getLevel() &&
+                executor.getAuthorityLevel().getLevel() > executed.getAuthorityLevel().getLevel()){
+            removeById(executed.getId());
+        }
+        else {
+            throw new NotEnoughPermissionException();
+        }
     }
 }
