@@ -17,7 +17,8 @@ INSERT INTO `user` (id,email,password,first_name,last_name,phone) VALUES
 -- -----------------------------------------------------
 INSERT INTO `organization` (id,name, owner) VALUES
 ( 1, 'University of Melbourne', 1),
-( 2, 'MIT', 2);
+( 2, 'MIT', 2),
+( 3, 'Standford', 1);
 
 -- -----------------------------------------------------
 -- belong_to belong to organization
@@ -28,7 +29,8 @@ INSERT INTO `belong_to` (id,user_id, organization_id) VALUES
 ( 3, 3, 1),
 ( 4, 4, 1),
 ( 5, 5, 1),
-( 6, 6, 1);
+( 6, 6, 1),
+( 7, 1, 3);
 
 -- -----------------------------------------------------
 -- department
