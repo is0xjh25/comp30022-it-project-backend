@@ -111,7 +111,7 @@ public class ContactServiceImpl extends ServiceImpl<ContactMapper, Contact> impl
 
         QueryWrapper<Contact> queryWrapper = new QueryWrapper<>();
         Page<Contact> contacts = new Page<>();
-        // User加入的departmentId
+        // User's joined department
         List<Permission> permissionList = permissionService.getPermissionByUserId(userId, PermissionLevel.DISPLAY);
         List<Integer> departmentIdJoinList = new ArrayList<>();
         for (Permission permission : permissionList) {
@@ -120,7 +120,7 @@ public class ContactServiceImpl extends ServiceImpl<ContactMapper, Contact> impl
 
         if (departmentId == null) {
 
-            // Org的departmentId
+            // Org's department
             List<Integer> departmentIdList = departmentService.getDepartmentIdByOrganization(organizationId);
 
             List<Integer> departmentInOrgAndJoin = new ArrayList<>();
