@@ -18,6 +18,9 @@ import tech.crm.crmserver.dao.Organization;
 import tech.crm.crmserver.dao.Permission;
 import tech.crm.crmserver.dto.DepartmentDTO;
 import tech.crm.crmserver.dto.OrganizationDTO;
+import tech.crm.crmserver.exception.DepartmentAlreadyExistException;
+import tech.crm.crmserver.exception.NotEnoughPermissionException;
+import tech.crm.crmserver.exception.OrganizationNotExistException;
 import tech.crm.crmserver.service.*;
 
 import java.util.ArrayList;
@@ -67,46 +70,7 @@ public class OrganizationController {
     @PostMapping("/department")
     public ResponseResult<Object> createDepartment(@RequestParam("organization_id") Integer orgId,
                                            @RequestParam("department_name") String name){
-        Organization organization = null;
-        try{
-            organization = organizationService.getById(orgId);
-        }
-        catch (Exception e){
-            return ResponseResult.fail("Fail to get organization from database(Maybe Organization do not exist)");
-        }
-        //organization not exist
-        if(organization == null){
-            return ResponseResult.fail("Organization do not exist");
-        }
-        //check the authority(creator should be the owner of the organization)
-        if(!organization.getOwner().equals(userService.getId())){
-            return ResponseResult.fail("You don't have enough permission.",HttpStatus.FORBIDDEN);
-        }
-        Department department = new Department();
-        department.setOrganizationId(orgId);
-        department.setName(name);
-        //check whether there already exist a department with same name
-        QueryWrapper<Department> wrapper = new QueryWrapper<>();
-        wrapper.eq("organization_id",department.getOrganizationId());
-        wrapper.eq("name", department.getName());
-        try {
-            //department already exist in this organization
-            if(departmentService.getOne(wrapper) != null){
-                throw new Exception();
-            }
-            departmentService.save(department);
-        }
-        catch (Exception e){
-            return ResponseResult.fail("Department already exist.(Or database error)");
-        }
-        //give the owner the owner permission
-        department = departmentService.getOne(wrapper);
-        Permission permission = new Permission();
-        permission.setUserId(userService.getId());
-        permission.setDepartmentId(department.getId());
-        permission.setAuthorityLevel(PermissionLevel.OWNER);
-        permissionService.save(permission);
-
+        departmentService.createDepartment(orgId,name);
         return ResponseResult.suc("Successfully create department!");
     }
 

@@ -10,6 +10,8 @@ import tech.crm.crmserver.common.enums.PermissionLevel;
 import tech.crm.crmserver.common.response.ResponseResult;
 import tech.crm.crmserver.dao.Organization;
 import tech.crm.crmserver.dao.Permission;
+import tech.crm.crmserver.exception.NotEnoughPermissionException;
+import tech.crm.crmserver.exception.UserNotInDepartmentException;
 import tech.crm.crmserver.service.OrganizationService;
 import tech.crm.crmserver.service.PermissionService;
 import tech.crm.crmserver.service.UserService;
@@ -47,23 +49,9 @@ public class PermissionController {
     @DeleteMapping
     public ResponseResult<Object> deleteMember(@RequestParam("user_id") Integer userId,
                                                @RequestParam("department_id") Integer departmentId){
-        QueryWrapper<Permission> wrapper = new QueryWrapper<>();
-        //executor for delete action
-        wrapper.eq("user_id",userService.getId())
-                .eq("department_id",departmentId);
-        Permission executor = permissionService.getOne(wrapper);
-        //executed person for delete action
-        wrapper = new QueryWrapper<>();
-        wrapper.eq("user_id",userId)
-                .eq("department_id",departmentId);
-        Permission executed = permissionService.getOne(wrapper);
-
-        //check the authority
-        if(executor.getAuthorityLevel().getLevel() >= PermissionLevel.MANAGE.getLevel() &&
-                executor.getAuthorityLevel().getLevel() > executed.getAuthorityLevel().getLevel()){
-            permissionService.removeById(executed.getId());
-        }
+        permissionService.deleteMember(userId,departmentId);
         return ResponseResult.suc("Successfully delete the member!");
+
     }
 
     /**
@@ -78,10 +66,8 @@ public class PermissionController {
     public ResponseResult<Object> updatePermission(@RequestParam("department_id") Integer departmentId,
                                                    @RequestParam("user_id") Integer userId,
                                                    @RequestParam(value = "permission_level")Integer permissionLevel){
-        if(permissionService.updateOrCreatePermission(departmentId,userService.getId(), userId,permissionLevel)){
-            return ResponseResult.suc("Successfully update permission!");
-        }
-        return ResponseResult.fail("You don't have enough permission!", HttpStatus.FORBIDDEN);
+        permissionService.updateOrCreatePermission(departmentId,userService.getId(), userId,permissionLevel);
+        return ResponseResult.suc("Successfully update permission!");
     }
 
 

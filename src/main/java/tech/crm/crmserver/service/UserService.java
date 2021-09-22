@@ -24,6 +24,13 @@ public interface UserService extends IService<User> {
     public User verify(LoginRequest loginRequest);
 
     /**
+     * Login and return the token
+     * @param loginRequest login form for login request
+     * @return Token
+     */
+    public String login(LoginRequest loginRequest);
+
+    /**
      * Register the user
      *
      * @param user user need for register
