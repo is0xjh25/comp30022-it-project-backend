@@ -1,5 +1,6 @@
 package tech.crm.crmserver.exception;
 
+import tech.crm.crmserver.common.constants.ExceptionMessageConstants;
 import tech.crm.crmserver.common.response.ResponseResult;
 
 /**
@@ -13,6 +14,6 @@ import tech.crm.crmserver.common.response.ResponseResult;
 public class UserNotExistException extends BaseException{
 
     public UserNotExistException() {
-        super(ResponseResult.fail("User not exists!"));
+        super(ResponseResult.fail(ExceptionMessageConstants.USER_NOT_EXIST_EXCEPTION));
     }
 }
