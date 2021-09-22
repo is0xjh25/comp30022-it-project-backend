@@ -97,9 +97,6 @@ public class OrganizationController {
             departmentDTO.setStatus(permissionService.getDepartmentOwnerShipStatus(permissionByUserId, department.getId()).getName());
             response.add(departmentDTO);
         }
-        if (response.size() == 0) {
-            return ResponseResult.fail("No departments data");
-        }
         return ResponseResult.suc("success", response);
     }
 

@@ -49,9 +49,6 @@ public class DepartmentControllerTest {
      */
     @Before
     public void loginTest() throws Exception {
-        if(token != null){
-            return;
-        }
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post("/user/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\n" +
@@ -66,9 +63,11 @@ public class DepartmentControllerTest {
 
     /**
      * Test join a department and create a permission with permissionLevel 0
+     *
      * @throws Exception
      */
     @Test
+    @Transactional
     public void testBJoinDepartment() throws Exception {
         int departmentId = 3;
         mvc.perform(MockMvcRequestBuilders.post("/department/join").param("department_id", String.valueOf(departmentId)).header(SecurityConstants.TOKEN_HEADER,token))
@@ -94,11 +93,10 @@ public class DepartmentControllerTest {
     @Test
     public void testAGetMemberofDepartment() throws Exception{
         int departmentId = 3;
-        mvc.perform(MockMvcRequestBuilders.post("/department/join").param("department_id", String.valueOf(departmentId)).header(SecurityConstants.TOKEN_HEADER,token))
-                .andExpect(MockMvcResultMatchers.status().isOk())
+        mvc.perform(MockMvcRequestBuilders.post("/department/member").param("department_id", String.valueOf(departmentId)).param("size", "1").param("current", "1").header(SecurityConstants.TOKEN_HEADER,token))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
                 .andDo(MockMvcResultHandlers.print())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.msg").value("Successfully create permission!"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.msg").value("You are not a member of this department"))
                 .andReturn();
     }
-
 }
