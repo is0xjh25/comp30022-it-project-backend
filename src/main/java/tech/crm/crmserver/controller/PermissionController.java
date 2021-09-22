@@ -106,5 +106,20 @@ public class PermissionController {
         }
         return ResponseResult.suc("No pending");
     }
+
+    /**
+     * Get user's permission of a particular department
+     * @param departmentId the department to get permission
+     * @return the ResponseResult with msg, with the boolean value about if the there is pending request
+     */
+    @GetMapping("/myPermission")
+    public ResponseResult<Object> getUserPermissisonInADepartment(@RequestParam(value = "department_id") Integer departmentId) {
+        Integer userId = userService.getId();
+        Permission permission = permissionService.getPermissionByUserIdAndDepartmentId(userId, departmentId);
+        if (permission == null) {
+            ResponseResult.fail("No permission, not join the department yet");
+        }
+        return ResponseResult.suc("success", permission);
+    }
 }
 
