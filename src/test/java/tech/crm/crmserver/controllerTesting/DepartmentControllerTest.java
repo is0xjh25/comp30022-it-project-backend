@@ -22,8 +22,10 @@ import org.springframework.transaction.annotation.Transactional;
 import tech.crm.crmserver.common.constants.ExceptionMessageConstants;
 import tech.crm.crmserver.common.constants.SecurityConstants;
 import tech.crm.crmserver.common.enums.PermissionLevel;
+import tech.crm.crmserver.dao.Department;
 import tech.crm.crmserver.dao.Permission;
 import tech.crm.crmserver.dto.LoginRequest;
+import tech.crm.crmserver.service.DepartmentService;
 import tech.crm.crmserver.service.PermissionService;
 import tech.crm.crmserver.service.UserService;
 
@@ -42,6 +44,9 @@ public class DepartmentControllerTest {
 
     @Autowired
     private PermissionService permissionService;
+
+    @Autowired
+    private DepartmentService departmentService;
 
     /**
      * login before test
@@ -93,12 +98,29 @@ public class DepartmentControllerTest {
      */
     @Test
     public void testAGetMemberofDepartment() throws Exception{
-        int departmentId = 3;
-        mvc.perform(MockMvcRequestBuilders.post("/department/join").param("department_id", String.valueOf(departmentId)).header(SecurityConstants.TOKEN_HEADER,token))
+        int departmentId = 2;
+        mvc.perform(MockMvcRequestBuilders.get("/department/member").param("department_id", String.valueOf(departmentId)).param("size", "4").param("current", "1").header(SecurityConstants.TOKEN_HEADER,token))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andDo(MockMvcResultHandlers.print())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.msg").value("Successfully create permission!"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.msg").value("Success"))
                 .andReturn();
+    }
+
+    /**
+     * Test delete department by departmentId
+     * @throws Exception
+     */
+    @Test
+    public void testCDeleteDepartment() throws Exception{
+        int departmentId = 2;
+        mvc.perform(MockMvcRequestBuilders.delete("/department").param("department_id", String.valueOf(departmentId)).header(SecurityConstants.TOKEN_HEADER,token))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.msg").value("Successfully delete the department!"))
+                .andReturn();
+
+        Department department = departmentService.getById(departmentId);
+        assert (department == null);
     }
 
 }
