@@ -23,6 +23,7 @@ import tech.crm.crmserver.exception.OrganizationNotExistException;
 import tech.crm.crmserver.service.*;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -122,6 +123,18 @@ public class OrganizationController {
             }
             organizationDTOS.add(organizationDTO);
         }
+        organizationDTOS.sort(new Comparator<OrganizationDTO>() {
+            @Override
+            public int compare(OrganizationDTO o1, OrganizationDTO o2) {
+                if (o1.isOwner() && !o2.isOwner()) {
+                    return -1;
+                } else if (!o1.isOwner() && o2.isOwner()){
+                    return 1;
+                } else {
+                    return 0;
+                }
+            }
+        });
         return ResponseResult.suc("success", organizationDTOS);
     }
 
