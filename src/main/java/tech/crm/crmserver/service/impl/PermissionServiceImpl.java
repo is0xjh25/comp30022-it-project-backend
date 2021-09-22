@@ -8,6 +8,8 @@ import tech.crm.crmserver.dao.Organization;
 import tech.crm.crmserver.dao.Permission;
 import tech.crm.crmserver.dto.DepartmentDTO;
 import tech.crm.crmserver.dto.UserPermissionDTO;
+import tech.crm.crmserver.exception.NotEnoughPermissionException;
+import tech.crm.crmserver.exception.UserAlreadyInDepartmentException;
 import tech.crm.crmserver.mapper.PermissionMapper;
 import tech.crm.crmserver.service.DepartmentService;
 import tech.crm.crmserver.service.OrganizationService;
@@ -50,6 +52,7 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
     public boolean createPermission(Integer departmentId, Integer userId, Integer permissionLevel) {
         if(findPermission(departmentId,userId) != null){
             log.warn("This user already in the department");
+            throw new UserAlreadyInDepartmentException();
         }
         Permission permission = new Permission();
         permission.setDepartmentId(departmentId);
@@ -85,13 +88,13 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
         }
         if(executorPermission == null){
             log.warn("This user not in the department");
-            return false;
+            throw new NotEnoughPermissionException();
         }
         if(executorPermission.getAuthorityLevel().getLevel() < PermissionLevel.MANAGE.getLevel()
         || executorPermission.getAuthorityLevel().getLevel() <= permissionLevel
         || executorPermission.getAuthorityLevel().getLevel() < executedPermission.getAuthorityLevel().getLevel()){
             log.warn("Do not have enough permission!");
-            return false;
+            throw new NotEnoughPermissionException();
         }
         executedPermission.setAuthorityLevel(PermissionLevel.getPermissionLevel(permissionLevel));
         if (existence) {

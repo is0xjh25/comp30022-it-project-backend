@@ -1,7 +1,7 @@
 package tech.crm.crmserver.controllerTesting;
 
 
-import org.junit.After;
+
 import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -17,17 +17,14 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import tech.crm.crmserver.common.constants.SecurityConstants;
-
-import java.util.regex.Matcher;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
-@FixMethodOrder(MethodSorters.JVM)
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class UserControllerTest {
 
 
@@ -46,6 +43,7 @@ public class UserControllerTest {
         if(token != null){
             return;
         }
+
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post("/user/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\n" +
@@ -56,7 +54,6 @@ public class UserControllerTest {
                 .andReturn();
 
         token = mvcResult.getResponse().getHeader(SecurityConstants.TOKEN_HEADER);
-
     }
 
     /**
@@ -165,14 +162,12 @@ public class UserControllerTest {
 
 
     /**
-     *
-     * @throws Exception
+     * get current user with token
      */
     @Test
     public void getUserTest() throws Exception {
         mvc.perform(MockMvcRequestBuilders.get("/user").header(SecurityConstants.TOKEN_HEADER,token))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.data.id").value(1))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data.email").value("lingxiao1@student.unimelb.edu.au"));
     }
 

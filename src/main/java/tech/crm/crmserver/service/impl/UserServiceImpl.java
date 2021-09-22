@@ -18,6 +18,7 @@ import tech.crm.crmserver.dto.UserDTO;
 import tech.crm.crmserver.exception.LoginBadCredentialsException;
 import tech.crm.crmserver.exception.UserAlreadyExistException;
 import tech.crm.crmserver.mapper.UserMapper;
+import tech.crm.crmserver.service.TokenKeyService;
 import tech.crm.crmserver.service.UserService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
@@ -38,6 +39,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private TokenKeyService tokenKeyService;
+
     /**
      * Verify whether the email and password is correct
      *
@@ -52,6 +56,20 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             throw new LoginBadCredentialsException();
         }
         return user;
+    }
+
+    /**
+     * Login and return the token
+     *
+     * @param loginRequest login form for login request
+     * @return Token
+     */
+    @Override
+    public String login(LoginRequest loginRequest) {
+        //verify the user
+        User user = verify(loginRequest);
+        //return the token
+        return tokenKeyService.createToken(user);
     }
 
     /**

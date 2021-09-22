@@ -10,6 +10,7 @@ import tech.crm.crmserver.common.enums.PermissionLevel;
 import tech.crm.crmserver.common.response.ResponseResult;
 import tech.crm.crmserver.dao.Organization;
 import tech.crm.crmserver.dao.Permission;
+import tech.crm.crmserver.exception.NotEnoughPermissionException;
 import tech.crm.crmserver.service.OrganizationService;
 import tech.crm.crmserver.service.PermissionService;
 import tech.crm.crmserver.service.UserService;
@@ -62,8 +63,11 @@ public class PermissionController {
         if(executor.getAuthorityLevel().getLevel() >= PermissionLevel.MANAGE.getLevel() &&
                 executor.getAuthorityLevel().getLevel() > executed.getAuthorityLevel().getLevel()){
             permissionService.removeById(executed.getId());
+            return ResponseResult.suc("Successfully delete the member!");
         }
-        return ResponseResult.suc("Successfully delete the member!");
+        else {
+            throw new NotEnoughPermissionException();
+        }
     }
 
     /**
@@ -78,10 +82,8 @@ public class PermissionController {
     public ResponseResult<Object> updatePermission(@RequestParam("department_id") Integer departmentId,
                                                    @RequestParam("user_id") Integer userId,
                                                    @RequestParam(value = "permission_level")Integer permissionLevel){
-        if(permissionService.updateOrCreatePermission(departmentId,userService.getId(), userId,permissionLevel)){
-            return ResponseResult.suc("Successfully update permission!");
-        }
-        return ResponseResult.fail("You don't have enough permission!", HttpStatus.FORBIDDEN);
+        permissionService.updateOrCreatePermission(departmentId,userService.getId(), userId,permissionLevel);
+        return ResponseResult.suc("Successfully update permission!");
     }
 
 
