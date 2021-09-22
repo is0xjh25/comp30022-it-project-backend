@@ -1,6 +1,7 @@
 package tech.crm.crmserver.exception;
 
 import org.springframework.http.HttpStatus;
+import tech.crm.crmserver.common.constants.ExceptionMessageConstants;
 import tech.crm.crmserver.common.response.ResponseResult;
 
 /**
@@ -14,6 +15,6 @@ import tech.crm.crmserver.common.response.ResponseResult;
 public class NotEnoughPermissionException extends BaseException{
 
     public NotEnoughPermissionException() {
-        super(ResponseResult.fail("Sorry you do not have enough permissions to access it!", HttpStatus.FORBIDDEN));
+        super(ResponseResult.fail(ExceptionMessageConstants.NOT_ENOUGH_PERMISSION_EXCEPTION, HttpStatus.FORBIDDEN));
     }
 }

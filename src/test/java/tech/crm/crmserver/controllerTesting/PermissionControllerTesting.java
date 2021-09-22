@@ -16,6 +16,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.transaction.annotation.Transactional;
+import tech.crm.crmserver.common.constants.ExceptionMessageConstants;
 import tech.crm.crmserver.common.constants.SecurityConstants;
 import tech.crm.crmserver.common.enums.PermissionLevel;
 import tech.crm.crmserver.dao.Permission;
@@ -45,7 +46,7 @@ public class PermissionControllerTesting {
 
     private static final String deleteSuccess = "Successfully delete the member!";
     private static final String updateSuccess = "Successfully update permission!";
-    private static final String permissionDenied = "Sorry you do not have enough permissions to access it!";
+    private static final String permissionDenied = ExceptionMessageConstants.NOT_ENOUGH_PERMISSION_EXCEPTION;
 
 
     /**

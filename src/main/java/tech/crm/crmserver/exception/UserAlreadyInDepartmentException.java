@@ -1,5 +1,6 @@
 package tech.crm.crmserver.exception;
 
+import tech.crm.crmserver.common.constants.ExceptionMessageConstants;
 import tech.crm.crmserver.common.response.ResponseResult;
 
 /**
@@ -13,7 +14,7 @@ import tech.crm.crmserver.common.response.ResponseResult;
 public class UserAlreadyInDepartmentException extends BaseException{
 
     public UserAlreadyInDepartmentException() {
-        super(ResponseResult.fail("This user already in the department"));
+        super(ResponseResult.fail(ExceptionMessageConstants.USER_ALREADY_IN_DEPARTMENT_EXCEPTION));
     }
 
 }

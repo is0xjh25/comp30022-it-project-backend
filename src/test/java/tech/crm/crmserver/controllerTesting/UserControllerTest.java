@@ -18,6 +18,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.transaction.annotation.Transactional;
 import tech.crm.crmserver.common.constants.SecurityConstants;
 
 @RunWith(SpringRunner.class)
@@ -111,6 +112,7 @@ public class UserControllerTest {
      * register with correct input
      */
     @Test
+    @Transactional
     public void registerTest() throws Exception {
         mvc.perform(MockMvcRequestBuilders.post("/user")
                 .contentType(MediaType.APPLICATION_JSON)

@@ -1,6 +1,7 @@
 package tech.crm.crmserver.exception;
 
 import org.springframework.http.HttpStatus;
+import tech.crm.crmserver.common.constants.ExceptionMessageConstants;
 import tech.crm.crmserver.common.response.ResponseResult;
 
 /**
@@ -14,7 +15,7 @@ import tech.crm.crmserver.common.response.ResponseResult;
 public class UserNotInDepartmentException extends BaseException{
 
     public UserNotInDepartmentException() {
-        super(ResponseResult.fail("You are not a member of this department", HttpStatus.FORBIDDEN));
+        super(ResponseResult.fail(ExceptionMessageConstants.USER_NOT_IN_DEPARTMENT_EXCEPTION, HttpStatus.FORBIDDEN));
     }
 
 }
