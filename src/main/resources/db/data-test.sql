@@ -53,4 +53,5 @@ INSERT INTO `permission` (id, user_id, department_id, authority_level) VALUES
 ( 6, 4, 1, 2),
 ( 7, 5, 1, 0),
 ( 8, 6, 1, 4),
-( 9, 5, 2, 0);
+( 9, 5, 2, 0),
+( 10, 2, 2, 2);
