@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import tech.crm.crmserver.common.response.ResponseResult;
@@ -52,9 +53,9 @@ public class GlobalExceptionHandler {
      * @param ex HttpMessageNotReadableException
      * @return fail with msg
      */
-    @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ResponseResult<Object> handleInvalidDTOException(HttpMessageNotReadableException ex) {
-        String msg = "Required request body is missing";
+    @ExceptionHandler({HttpMessageNotReadableException.class, MissingServletRequestParameterException.class})
+    public ResponseResult<Object> handleInvalidDTOException(Exception ex) {
+        String msg = "Required params is missing";
         logger.warn("Exception Reason: " + msg);
         return ResponseResult.fail(msg);
     }
