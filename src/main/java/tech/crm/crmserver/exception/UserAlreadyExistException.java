@@ -1,5 +1,6 @@
 package tech.crm.crmserver.exception;
 
+import tech.crm.crmserver.common.constants.ExceptionMessageConstants;
 import tech.crm.crmserver.common.response.ResponseResult;
 
 /**
@@ -13,6 +14,6 @@ import tech.crm.crmserver.common.response.ResponseResult;
 public class UserAlreadyExistException extends BaseException{
 
     public UserAlreadyExistException() {
-        super(ResponseResult.fail("Same email already exist!"));
+        super(ResponseResult.fail(ExceptionMessageConstants.USER_ALREADY_EXIST_EXCEPTION));
     }
 }

@@ -1,5 +1,6 @@
 package tech.crm.crmserver.service;
 
+import org.springframework.web.bind.annotation.RequestParam;
 import tech.crm.crmserver.dao.Department;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -49,5 +50,12 @@ public interface DepartmentService extends IService<Department> {
      * @param organizationId the id of organization needed to be deleted
      */
     public void deleteDepartmentByOrganizationId(Integer organizationId);
+
+    /**
+     * create department in the organization
+     * @param orgId the organization this department belong to
+     * @param name the name of the department
+     */
+    public void createDepartment( Integer orgId, String name);
 
 }

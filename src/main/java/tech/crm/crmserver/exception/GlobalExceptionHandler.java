@@ -23,6 +23,11 @@ public class GlobalExceptionHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
+    /**
+     * catch all BaseException and return the response
+     * @param ex instance of BaseException
+     * @return fail with msg
+     */
     @ExceptionHandler(value =BaseException.class)
     public ResponseResult<Object> handleException(BaseException ex) {
         logger.warn("Exception Reason: " + ex.getResponseResult().getBody().getMsg());

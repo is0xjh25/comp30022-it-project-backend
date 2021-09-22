@@ -14,17 +14,18 @@ import tech.crm.crmserver.common.enums.PermissionLevel;
 import tech.crm.crmserver.common.enums.Status;
 import tech.crm.crmserver.common.response.ResponseResult;
 import tech.crm.crmserver.common.utils.NullAwareBeanUtilsBean;
-import tech.crm.crmserver.dao.Organization;
-import tech.crm.crmserver.dao.Permission;
+import tech.crm.crmserver.dao.*;
 import tech.crm.crmserver.dto.DepartmentDTO;
 import tech.crm.crmserver.dto.OrganizationDTO;
+import tech.crm.crmserver.exception.DepartmentAlreadyExistException;
+import tech.crm.crmserver.exception.NotEnoughPermissionException;
+import tech.crm.crmserver.exception.OrganizationNotExistException;
 import tech.crm.crmserver.service.*;
 
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import tech.crm.crmserver.dao.Department;
 import tech.crm.crmserver.dao.Organization;
 import tech.crm.crmserver.service.OrganizationService;
 import tech.crm.crmserver.service.UserService;
@@ -67,46 +68,7 @@ public class OrganizationController {
     @PostMapping("/department")
     public ResponseResult<Object> createDepartment(@RequestParam("organization_id") Integer orgId,
                                            @RequestParam("department_name") String name){
-        Organization organization = null;
-        try{
-            organization = organizationService.getById(orgId);
-        }
-        catch (Exception e){
-            return ResponseResult.fail("Fail to get organization from database(Maybe Organization do not exist)");
-        }
-        //organization not exist
-        if(organization == null){
-            return ResponseResult.fail("Organization do not exist");
-        }
-        //check the authority(creator should be the owner of the organization)
-        if(!organization.getOwner().equals(userService.getId())){
-            return ResponseResult.fail("You don't have enough permission.",HttpStatus.FORBIDDEN);
-        }
-        Department department = new Department();
-        department.setOrganizationId(orgId);
-        department.setName(name);
-        //check whether there already exist a department with same name
-        QueryWrapper<Department> wrapper = new QueryWrapper<>();
-        wrapper.eq("organization_id",department.getOrganizationId());
-        wrapper.eq("name", department.getName());
-        try {
-            //department already exist in this organization
-            if(departmentService.getOne(wrapper) != null){
-                throw new Exception();
-            }
-            departmentService.save(department);
-        }
-        catch (Exception e){
-            return ResponseResult.fail("Department already exist.(Or database error)");
-        }
-        //give the owner the owner permission
-        department = departmentService.getOne(wrapper);
-        Permission permission = new Permission();
-        permission.setUserId(userService.getId());
-        permission.setDepartmentId(department.getId());
-        permission.setAuthorityLevel(PermissionLevel.OWNER);
-        permissionService.save(permission);
-
+        departmentService.createDepartment(orgId,name);
         return ResponseResult.suc("Successfully create department!");
     }
 
@@ -134,6 +96,9 @@ public class OrganizationController {
             NullAwareBeanUtilsBean.copyProperties(department,departmentDTO);
             departmentDTO.setStatus(permissionService.getDepartmentOwnerShipStatus(permissionByUserId, department.getId()).getName());
             response.add(departmentDTO);
+        }
+        if (response.size() == 0) {
+            return ResponseResult.fail("No departments data");
         }
         return ResponseResult.suc("success", response);
     }
@@ -188,7 +153,7 @@ public class OrganizationController {
     public ResponseResult<Object> getOrganizationBasedOnName(@RequestParam("organization_name") String organizationName) {
         List<Organization> organizations = organizationService.getOrgBasedOnName(organizationName);
         if (organizations.size() == 0) {
-            ResponseResult.suc("No match organization");
+            return ResponseResult.fail("No match organization");
         }
         return ResponseResult.suc("success", organizations);
     }
@@ -244,6 +209,11 @@ public class OrganizationController {
     public ResponseResult<Object> joinOrganization(@RequestParam("organization_id") Integer organizationId) {
         Integer userId = userService.getId();
         Organization organization = organizationService.getById(organizationId);
+
+        List<BelongTo> belongToList = belongToService.queryBelongToRelation(null, userId, organizationId, null);
+        if (belongToList.size() > 0) {
+            return ResponseResult.fail("You have been in the organization");
+        }
         if (organization != null) {
             belongToService.insertNewBelongTo(organizationId, userId);
         } else {

@@ -46,10 +46,8 @@ public class UserController {
      */
     @PostMapping("/login")
     public ResponseResult<Object> login(@Validated @RequestBody LoginRequest loginRequest){
-        //verify the user
-        User user = userService.verify(loginRequest);
-        //return the token
-        String token = tokenKeyService.createToken(user);
+        //login and return the token
+        String token = userService.login(loginRequest);
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.set(SecurityConstants.TOKEN_HEADER, token);
         return ResponseResult.suc("successfully login!","",httpHeaders);

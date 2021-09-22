@@ -1,6 +1,7 @@
 package tech.crm.crmserver.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import org.springframework.web.bind.annotation.RequestParam;
 import tech.crm.crmserver.common.enums.PermissionLevel;
 import tech.crm.crmserver.dao.Permission;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -79,6 +80,14 @@ public interface PermissionService extends IService<Permission> {
     public List<Permission> getPermissionByUserId(Integer userId, PermissionLevel permissionLevel);
 
     /**
+     * Get a user's permission in a department
+     *
+     * @param userId       the user id to delete
+     * @param departmentId the departmentId to delete
+     */
+    public Permission getPermissionByUserIdAndDepartmentId(Integer userId, Integer departmentId);
+
+    /**
      * Get all the permission based on userId
      *
      * @param userId the userId to match
@@ -108,4 +117,12 @@ public interface PermissionService extends IService<Permission> {
      * @param departmentIdList the list of ids of department
      */
     public void deletePermissionByDepartmentIdList(List<Integer> departmentIdList);
+
+    /**
+     * Delete a member from a department
+     *
+     * @param userId the user id to delete
+     * @param departmentId the departmentId to delete
+     */
+    public void deleteMember(Integer userId, Integer departmentId);
 }

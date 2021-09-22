@@ -1,5 +1,6 @@
 package tech.crm.crmserver.exception;
 
+import tech.crm.crmserver.common.constants.ExceptionMessageConstants;
 import tech.crm.crmserver.common.response.ResponseResult;
 
 /**
@@ -13,6 +14,6 @@ import tech.crm.crmserver.common.response.ResponseResult;
 public class OrganizationNotExistException extends BaseException{
 
     public OrganizationNotExistException() {
-        super(ResponseResult.fail("Organization do not exist!"));
+        super(ResponseResult.fail(ExceptionMessageConstants.ORGANIZATION_NOT_EXIST_EXCEPTION));
     }
 }

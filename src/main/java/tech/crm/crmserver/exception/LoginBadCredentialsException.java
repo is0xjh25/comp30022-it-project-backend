@@ -1,5 +1,6 @@
 package tech.crm.crmserver.exception;
 
+import tech.crm.crmserver.common.constants.ExceptionMessageConstants;
 import tech.crm.crmserver.common.response.ResponseResult;
 
 /**
@@ -13,6 +14,6 @@ import tech.crm.crmserver.common.response.ResponseResult;
 public class LoginBadCredentialsException extends BaseException{
 
     public LoginBadCredentialsException() {
-        super(ResponseResult.fail("The user email or password is not correct."));
+        super(ResponseResult.fail(ExceptionMessageConstants.LOGIN_BAD_CREDENTIALS_EXCEPTION ));
     }
 }
