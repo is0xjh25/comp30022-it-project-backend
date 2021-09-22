@@ -10,10 +10,10 @@ import tech.crm.crmserver.common.response.ResponseResult;
  * @author Lingxiao
  * @since 2021-09-22
  */
-public class UserAlreadyInDepartmentException extends BaseException{
+public class DepartmentAlreadyExistException extends BaseException{
 
-    public UserAlreadyInDepartmentException() {
-        super(ResponseResult.fail("This user already in the department"));
+    public DepartmentAlreadyExistException() {
+        super(ResponseResult.fail("Department already exist."));
     }
 
 }

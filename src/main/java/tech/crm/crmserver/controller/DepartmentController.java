@@ -10,6 +10,8 @@ import tech.crm.crmserver.common.enums.PermissionLevel;
 import tech.crm.crmserver.common.response.ResponseResult;
 import tech.crm.crmserver.dao.Permission;
 import tech.crm.crmserver.dto.UserPermissionDTO;
+import tech.crm.crmserver.exception.NotEnoughPermissionException;
+import tech.crm.crmserver.exception.UserNotInDepartmentException;
 import tech.crm.crmserver.service.DepartmentService;
 import tech.crm.crmserver.service.PermissionService;
 import tech.crm.crmserver.service.UserService;
@@ -51,7 +53,7 @@ public class DepartmentController {
         //check whether the user is in this department
         Permission userPermission = permissionService.findPermission(departmentId, userService.getId());
         if(userPermission == null || userPermission.getAuthorityLevel().equal(PermissionLevel.PENDING)){
-            return ResponseResult.fail("You are not a member of this department", HttpStatus.FORBIDDEN);
+            throw new UserNotInDepartmentException();
         }
         //find all the member within the department
         Page<UserPermissionDTO> p = permissionService.getAllPermissionInDepartmentOrdered(new Page<>(current, size), departmentId);
@@ -69,7 +71,7 @@ public class DepartmentController {
                                                    @RequestParam(value = "permission_level",
                                                            defaultValue = "0") Integer permissionLevel){
         if(permissionLevel != 0){
-            return ResponseResult.fail("You don't have enough permission!", HttpStatus.FORBIDDEN);
+            throw new NotEnoughPermissionException();
         }
         permissionService.createPermission(departmentId, userService.getId(),permissionLevel);
         return ResponseResult.suc("Successfully create permission!");

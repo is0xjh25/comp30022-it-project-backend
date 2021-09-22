@@ -5,15 +5,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import tech.crm.crmserver.common.enums.PermissionLevel;
 import tech.crm.crmserver.dao.Contact;
 import tech.crm.crmserver.dao.Department;
+import tech.crm.crmserver.dao.Organization;
 import tech.crm.crmserver.dao.Permission;
+import tech.crm.crmserver.exception.DepartmentAlreadyExistException;
 import tech.crm.crmserver.exception.NotEnoughPermissionException;
+import tech.crm.crmserver.exception.OrganizationNotExistException;
 import tech.crm.crmserver.mapper.DepartmentMapper;
-import tech.crm.crmserver.service.ContactService;
-import tech.crm.crmserver.service.DepartmentService;
+import tech.crm.crmserver.service.*;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
-import tech.crm.crmserver.service.PermissionService;
-import tech.crm.crmserver.service.UserService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +31,9 @@ public class DepartmentServiceImpl extends ServiceImpl<DepartmentMapper, Departm
 
     @Autowired
     public DepartmentMapper departmentMapper;
+
+    @Autowired
+    public OrganizationService organizationService;
 
     @Autowired
     public ContactService contactService;
@@ -108,4 +111,45 @@ public class DepartmentServiceImpl extends ServiceImpl<DepartmentMapper, Departm
     public void deleteDepartmentByOrganizationId(Integer organizationId) {
         deleteDepartmentByDepartmentIdList(getDepartmentIdByOrganization(organizationId));
     }
+
+    /**
+     * create department in the organization
+     *
+     * @param orgId the organization this department belong to
+     * @param name  the name of the department
+     */
+    @Override
+    public void createDepartment(Integer orgId, String name) {
+        Organization organization = null;
+        try{
+            organization = organizationService.getById(orgId);
+        }
+        catch (Exception e){
+            throw new OrganizationNotExistException();
+        }
+        //organization not exist
+        if(organization == null){
+            throw new OrganizationNotExistException();
+        }
+        //check the authority(creator should be the owner of the organization)
+        if(!organization.getOwner().equals(userService.getId())){
+            throw new NotEnoughPermissionException();
+        }
+        Department department = new Department();
+        department.setOrganizationId(orgId);
+        department.setName(name);
+        //check whether there already exist a department with same name
+        QueryWrapper<Department> wrapper = new QueryWrapper<>();
+        wrapper.eq("organization_id",department.getOrganizationId());
+        wrapper.eq("name", department.getName());
+        //department already exist in this organization
+        if(getOne(wrapper) != null){
+            throw new DepartmentAlreadyExistException();
+        }
+        save(department);
+        //give the owner the owner permission
+        department = getOne(wrapper);
+        permissionService.createPermission(department.getId(),userService.getId(),PermissionLevel.OWNER.getLevel());
+    }
+
 }
