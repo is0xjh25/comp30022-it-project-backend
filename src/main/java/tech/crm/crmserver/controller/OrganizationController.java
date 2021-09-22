@@ -14,8 +14,7 @@ import tech.crm.crmserver.common.enums.PermissionLevel;
 import tech.crm.crmserver.common.enums.Status;
 import tech.crm.crmserver.common.response.ResponseResult;
 import tech.crm.crmserver.common.utils.NullAwareBeanUtilsBean;
-import tech.crm.crmserver.dao.Organization;
-import tech.crm.crmserver.dao.Permission;
+import tech.crm.crmserver.dao.*;
 import tech.crm.crmserver.dto.DepartmentDTO;
 import tech.crm.crmserver.dto.OrganizationDTO;
 import tech.crm.crmserver.exception.DepartmentAlreadyExistException;
@@ -27,7 +26,6 @@ import java.util.ArrayList;
 import java.util.List;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import tech.crm.crmserver.dao.Department;
 import tech.crm.crmserver.dao.Organization;
 import tech.crm.crmserver.service.OrganizationService;
 import tech.crm.crmserver.service.UserService;
@@ -99,6 +97,9 @@ public class OrganizationController {
             departmentDTO.setStatus(permissionService.getDepartmentOwnerShipStatus(permissionByUserId, department.getId()).getName());
             response.add(departmentDTO);
         }
+        if (response.size() == 0) {
+            return ResponseResult.fail("No departments data");
+        }
         return ResponseResult.suc("success", response);
     }
 
@@ -152,7 +153,7 @@ public class OrganizationController {
     public ResponseResult<Object> getOrganizationBasedOnName(@RequestParam("organization_name") String organizationName) {
         List<Organization> organizations = organizationService.getOrgBasedOnName(organizationName);
         if (organizations.size() == 0) {
-            ResponseResult.suc("No match organization");
+            return ResponseResult.fail("No match organization");
         }
         return ResponseResult.suc("success", organizations);
     }
@@ -208,6 +209,11 @@ public class OrganizationController {
     public ResponseResult<Object> joinOrganization(@RequestParam("organization_id") Integer organizationId) {
         Integer userId = userService.getId();
         Organization organization = organizationService.getById(organizationId);
+
+        List<BelongTo> belongToList = belongToService.queryBelongToRelation(null, userId, organizationId, null);
+        if (belongToList.size() > 0) {
+            return ResponseResult.fail("You have been in the organization");
+        }
         if (organization != null) {
             belongToService.insertNewBelongTo(organizationId, userId);
         } else {
