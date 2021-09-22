@@ -152,7 +152,7 @@ public class OrganizationController {
     public ResponseResult<Object> getOrganizationBasedOnName(@RequestParam("organization_name") String organizationName) {
         List<Organization> organizations = organizationService.getOrgBasedOnName(organizationName);
         if (organizations.size() == 0) {
-            ResponseResult.suc("No match organization");
+            return ResponseResult.fail("No match organization");
         }
         return ResponseResult.suc("success", organizations);
     }
