@@ -60,8 +60,7 @@ public class UserControllerTest {
     public void myOrganization() throws Exception {
         mvc.perform(MockMvcRequestBuilders.get("/organization/myOrganization").header(SecurityConstants.TOKEN_HEADER,token))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andDo(MockMvcResultHandlers.print())
-                .andReturn();
+                .andDo(MockMvcResultHandlers.print());
 
     }
 }
