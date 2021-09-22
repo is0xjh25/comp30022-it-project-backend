@@ -287,4 +287,21 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
             throw new NotEnoughPermissionException();
         }
     }
+
+    /**
+     * Get a user's permission in a department
+     *
+     * @param userId       the user id to delete
+     * @param departmentId the departmentId to delete
+     */
+    @Override
+    public Permission getPermissionByUserIdAndDepartmentId(Integer userId, Integer departmentId) {
+        List<Permission> permissionByUserId = getPermissionByUserId(userId);
+        for (Permission permission : permissionByUserId) {
+            if (permission.getDepartmentId().equals(departmentId)) {
+                return permission;
+            }
+        }
+        return null;
+    }
 }
