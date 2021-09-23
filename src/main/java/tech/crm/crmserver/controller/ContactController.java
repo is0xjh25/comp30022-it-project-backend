@@ -4,6 +4,7 @@ package tech.crm.crmserver.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import tech.crm.crmserver.common.enums.PermissionLevel;
@@ -154,7 +155,7 @@ public class ContactController {
         Integer userID = userService.getId();
         Permission myPermission = permissionService.findPermission(departmentAddTo, userID);
         if (myPermission != null && myPermission.getAuthorityLevel().getLevel() < PermissionLevel.UPDATE.getLevel()) {
-            return ResponseResult.fail("Do not have authority to update new contact");
+            return ResponseResult.fail("Do not have authority to update new contact", HttpStatus.FORBIDDEN);
         }
 
         if (contactService.updateContact(newContact)) {
@@ -179,7 +180,7 @@ public class ContactController {
         Integer userID = userService.getId();
         Permission myPermission = permissionService.findPermission(departmentId, userID);
         if (myPermission != null && myPermission.getAuthorityLevel().getLevel() < PermissionLevel.DELETE.getLevel()) {
-            return ResponseResult.fail("Do not have authority to delete new contact");
+            return ResponseResult.fail("Do not have authority to delete new contact", HttpStatus.FORBIDDEN);
         }
 
         if (contactService.removeById(contactId)) {
@@ -198,8 +199,8 @@ public class ContactController {
      * @return ResponseResult about if the search success, or why it fail
      */
     @GetMapping("/search")
-    public ResponseResult<Object> searchContact(@RequestParam(value = "firstName",required = false) String firstName,
-                                                @RequestParam(value = "lastName",required = false) String lastName,
+    public ResponseResult<Object> searchContact(@RequestParam(value = "first_name",required = false) String firstName,
+                                                @RequestParam(value = "last_name",required = false) String lastName,
                                                 @RequestParam(value = "gender",required = false) String gender,
                                                 @RequestParam(value = "organization",required = false) String organization){
         Map<String,String> map = new HashMap<>();
