@@ -1,15 +1,13 @@
 package tech.crm.crmserver.dto;
 
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
 import tech.crm.crmserver.common.enums.Status;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
@@ -18,21 +16,23 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class ContactDTO {
 
+    @NotNull(message = "Missing id of the contact")
     private Integer id;
 
-    @NotNull
+    @NotNull(message = "department_id cannot be null")
     @JsonProperty("department_id")
     private Integer departmentId;
 
-    @NotNull
+    @NotNull(message = "email cannot be null")
+    @Email(message = "invalid email for contact")
     private String email;
 
-    @NotNull
+    @NotNull(message = "first_name cannot be null")
     private String firstName;
 
     private String middleName;
 
-    @NotNull
+    @NotNull(message = "last_name cannot be null")
     private String lastName;
 
     private String phone;

@@ -13,12 +13,14 @@ import tech.crm.crmserver.dao.Contact;
 import tech.crm.crmserver.dao.Department;
 import tech.crm.crmserver.dao.Permission;
 import tech.crm.crmserver.dto.ContactDTO;
+import tech.crm.crmserver.exception.*;
 import tech.crm.crmserver.service.ContactService;
 import tech.crm.crmserver.service.DepartmentService;
 import tech.crm.crmserver.service.PermissionService;
 import tech.crm.crmserver.service.UserService;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -54,12 +56,12 @@ public class ContactController {
      * @return ResponseResult about if the search success, or why it fail, with contact data
      */
     @GetMapping("/detail")
-    public ResponseResult<Object> getContactById(@RequestParam("contact_id") Integer contactId) {
+    public ResponseResult<Object> getContactById(@RequestParam("contact_id") Integer contactId){
         Contact contact = contactService.getById(contactId);
         if (contact != null) {
             return ResponseResult.suc("success", contact);
         }
-        return ResponseResult.fail("No match contact");
+        throw new ContactNotExistException();
     }
 
     /**
@@ -78,13 +80,13 @@ public class ContactController {
                                                                             @RequestParam("current") Integer current) {
         Integer userId = userService.getId();
         if (organizationId == null) {
-            return ResponseResult.fail("missing organizationId");
+            throw new OrganizationNotExistException();
         }
 
         Page<Contact> contacts = contactService.getContactByOrgIdAndDepartmentId(new Page<>(current, size), organizationId, departmentId, userId);
 
         if (contacts.getTotal() == 0) {
-            return ResponseResult.fail("No match contact");
+            throw new ContactNotExistException();
         }
         return ResponseResult.suc("success", contacts);
     }
@@ -103,7 +105,7 @@ public class ContactController {
         Integer departmentId = newContact.getDepartmentId();
         Department department = departmentService.getById(departmentId);
         if (department == null) {
-            return ResponseResult.fail("Department does not exist");
+            throw new DepartmentNotExistException();
         }
         Integer departmentAddTo = department.getId();
 
@@ -111,22 +113,22 @@ public class ContactController {
         Integer userID = userService.getId();
         Permission myPermission = permissionService.findPermission(departmentAddTo, userID);
         if (myPermission != null && myPermission.getAuthorityLevel().getLevel() < PermissionLevel.UPDATE.getLevel()) {
-            return ResponseResult.fail("Do not have authority to add new contact");
+            throw new NotEnoughPermissionException();
         }
 
         // check if the same contact already exists
         List<Contact> contacts = contactService.getContactBasedOnSomeConditionFromDB(departmentAddTo,newContact.getEmail(), null, null, null, null, null, null, null);
         if (contacts.size() > 0) {
-            return ResponseResult.fail("Contact with same email already exist!");
+            throw new ContactAlreadyExistException();
         }
         boolean addSucc = false;
         try {
             addSucc = contactService.save(newContact);
         } catch (Exception e) {
-            return ResponseResult.fail("Adding a new contact fail");
+            throw new ContactFailAddedException();
         }
         if (!addSucc) {
-            return ResponseResult.fail("Adding a new contact fail");
+            throw new ContactFailAddedException();
         }
         return ResponseResult.suc("Adding a new contact success");
     }
@@ -141,13 +143,10 @@ public class ContactController {
     public ResponseResult<Object> updateContact(@RequestBody @Valid ContactDTO contactDTO) {
         // For updating, it must have id
         Contact newContact = contactService.fromContactDTO(contactDTO);
-        if (newContact.getId() == null) {
-            return ResponseResult.fail("Missing id of the contact to be updated");
-        }
         Integer departmentId = newContact.getDepartmentId();
         Department department = departmentService.getById(departmentId);
         if (department == null) {
-            return ResponseResult.fail("Department does not exist");
+            throw new DepartmentNotExistException();
         }
         Integer departmentAddTo = department.getId();
 
@@ -155,13 +154,13 @@ public class ContactController {
         Integer userID = userService.getId();
         Permission myPermission = permissionService.findPermission(departmentAddTo, userID);
         if (myPermission != null && myPermission.getAuthorityLevel().getLevel() < PermissionLevel.UPDATE.getLevel()) {
-            return ResponseResult.fail("Do not have authority to update new contact", HttpStatus.FORBIDDEN);
+            throw new NotEnoughPermissionException();
         }
 
         if (contactService.updateContact(newContact)) {
             return ResponseResult.suc("update a new contact success");
         }
-        return ResponseResult.fail("update a new contact fail");
+        throw new ContactFailUpdateException();
     }
 
     /**
@@ -180,13 +179,13 @@ public class ContactController {
         Integer userID = userService.getId();
         Permission myPermission = permissionService.findPermission(departmentId, userID);
         if (myPermission != null && myPermission.getAuthorityLevel().getLevel() < PermissionLevel.DELETE.getLevel()) {
-            return ResponseResult.fail("Do not have authority to delete new contact", HttpStatus.FORBIDDEN);
+            throw new NotEnoughPermissionException();
         }
 
         if (contactService.removeById(contactId)) {
             return ResponseResult.suc("delete a new contact success");
         }
-        return ResponseResult.fail("delete a new contact fail");
+        throw new ContactFailDeleteException();
     }
 
     /**
@@ -199,25 +198,22 @@ public class ContactController {
      * @return ResponseResult about if the search success, or why it fail
      */
     @GetMapping("/search")
-    public ResponseResult<Object> searchContact(@RequestParam(value = "first_name",required = false) String firstName,
-                                                @RequestParam(value = "last_name",required = false) String lastName,
-                                                @RequestParam(value = "gender",required = false) String gender,
-                                                @RequestParam(value = "organization",required = false) String organization){
+    public ResponseResult<Object> searchContact(@RequestParam String searchContent){
         Map<String,String> map = new HashMap<>();
-        map.put("first_name",firstName);
-        map.put("last_name",lastName);
-        map.put("gender",gender);
-        map.put("organization",organization);
-        QueryWrapper<Contact> wrapper = new QueryWrapper<>();
+        map.put("first_name",searchContent);
+        map.put("last_name",searchContent);
+        map.put("gender",searchContent);
+        map.put("organization",searchContent);
+        QueryWrapper<Contact> wrapper;
+        List<Contact> contacts = new ArrayList<>();
         for(Map.Entry<String,String> entry : map.entrySet()){
-            if(entry.getValue() == null){
-                continue;
-            }
+            wrapper = new QueryWrapper<>();
             wrapper.like(entry.getKey(),entry.getValue());
+            contacts.addAll(contactService.list(wrapper));
         }
-        List<Contact> contacts = contactService.list(wrapper);
+
         if(contacts.isEmpty()){
-            return ResponseResult.fail("no match result is found");
+            throw new ContactNotFoundException();
         }
         return ResponseResult.suc("success",contacts);
     }
