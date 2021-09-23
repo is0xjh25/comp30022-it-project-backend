@@ -170,7 +170,9 @@ public class ContactServiceImpl extends ServiceImpl<ContactMapper, Contact> impl
      * @return the list of match contact
      */
     @Override
-    public List<Contact> getContactBasedOnSomeConditionFromDB(Integer departmentId, String email, String firstName, String middleName, String lastName, String phone, String gender, String customerType, String status) {
+    public List<Contact> getContactBasedOnSomeConditionFromDB(Integer departmentId, String email, String firstName,
+                                                              String middleName, String lastName, String phone,
+                                                              String gender, String customerType, String status) {
         QueryWrapper<Contact> queryWrapper = new QueryWrapper<>();
         if (departmentId != null) {
             queryWrapper.eq("department_id", departmentId);

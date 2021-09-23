@@ -14,6 +14,6 @@ import tech.crm.crmserver.common.response.ResponseResult;
 public class LoginBadCredentialsException extends BaseException{
 
     public LoginBadCredentialsException() {
-        super(ResponseResult.fail(ExceptionMessageConstants.LOGIN_BAD_CREDENTIALS_EXCEPTION ));
+        super(ResponseResult.fail(ExceptionMessageConstants.LOGIN_BAD_CREDENTIALS_EXCEPTION));
     }
 }

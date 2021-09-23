@@ -1,14 +1,14 @@
-package tech.crm.crmserver.exception;
+package tech.crm.crmserver.config;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import tech.crm.crmserver.common.response.ResponseResult;
+import tech.crm.crmserver.exception.BaseException;
 
 /**
  * <p>
@@ -29,7 +29,7 @@ public class GlobalExceptionHandler {
      * @param ex instance of BaseException
      * @return fail with msg
      */
-    @ExceptionHandler(value =BaseException.class)
+    @ExceptionHandler(value = BaseException.class)
     public ResponseResult<Object> handleException(BaseException ex) {
         logger.warn("Exception Reason: " + ex.getResponseResult().getBody().getMsg());
         return ex.getResponseResult();
