@@ -69,12 +69,14 @@ public interface ContactService extends IService<Contact> {
      * @param status the status to match
      * @return the list of match contact
      */
-    public List<Contact> getContactBasedOnSomeConditionFromDB(Integer departmentId, String email, String firstName, String middleName,
+    public List<Contact> getContactBasedOnSomeConditionFromDB(Integer departmentId, String email, String firstName,
+                                                              String middleName,String lastName, String phone,
+                                                              String gender, String customerType, String status);
 
     /**
     * Update contact
     * @param contact the contact to update
     * @return if the updating success
-    */                                                          String lastName, String phone, String gender, String customerType, String status);
+    */
     public boolean updateContact(Contact contact);
 }
