@@ -7,6 +7,10 @@ spring:
   mvc:
     log-resolved-exception: true
 
+  #jackson
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+
   #mail config
   mail:
     host: smtp.gmail.com

@@ -8,6 +8,9 @@ spring:
     data: classpath:db/data-test.sql
     initialization-mode: always
 
+  #jackson
+  jackson:
+    property-naming-strategy: SNAKE_CASE
 
   #mail config
   mail:
