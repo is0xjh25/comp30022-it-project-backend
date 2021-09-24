@@ -46,7 +46,7 @@ public interface ContactService extends IService<Contact> {
      * @param userId the userId to search contact
      * @return a list of match contact
      */
-    public Page<Contact> getContactByOrgIdAndDepartmentId(Page<Contact> page, Integer organizationId, Integer departmentId, Integer userId);
+    public Page<ContactDTO> getContactByOrgIdAndDepartmentId(Page<ContactDTO> page, Integer organizationId, Integer departmentId, Integer userId);
 
     /**
      * Transfer ContactCreateDTO to contact
@@ -79,6 +79,15 @@ public interface ContactService extends IService<Contact> {
      * @return a list of ContactDTO instances transferred
      */
     public List<ContactDTO> ContactToContactDTO(List<Contact> contacts);
+
+    /**
+     * search contacts in department by contact key
+     * @param page the configuration of the page
+     * @param departmentId the departmentId to search contact
+     * @param searchKey search key
+     * @return
+     */
+    public Page<ContactDTO> searchContactDTO(Page<ContactDTO> page, Integer departmentId, String searchKey);
 
     /**
      * Search contact based on some condition
