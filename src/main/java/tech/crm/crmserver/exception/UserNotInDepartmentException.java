@@ -15,7 +15,7 @@ import tech.crm.crmserver.common.response.ResponseResult;
 public class UserNotInDepartmentException extends BaseException{
 
     public UserNotInDepartmentException() {
-        super(ResponseResult.fail(ExceptionMessageConstants.USER_NOT_IN_DEPARTMENT_EXCEPTION, HttpStatus.FORBIDDEN));
+        super(ResponseResult.fail(ExceptionMessageConstants.USER_NOT_IN_DEPARTMENT_EXCEPTION));
     }
 
     public UserNotInDepartmentException(HttpStatus httpStatus) {

@@ -27,12 +27,12 @@ public class UserDTO {
     @NotNull(message = "password cannot be null")
     private String password;
 
-    @NotNull(message = "firstName cannot be null")
+    @NotNull(message = "first_name cannot be null")
     private String firstName;
 
     private String middleName;
 
-    @NotNull(message = "lastName cannot be null")
+    @NotNull(message = "last_name cannot be null")
     private String lastName;
 
     @NotNull(message = "phone cannot be null")

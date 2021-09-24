@@ -16,6 +16,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import tech.crm.crmserver.common.constants.ExceptionMessageConstants;
 import tech.crm.crmserver.common.constants.SecurityConstants;
 
 @RunWith(SpringRunner.class)
@@ -80,7 +81,7 @@ public class OrganizationControllerTest {
         mvc.perform(MockMvcRequestBuilders.post("/organization").param("organization_name", "TestingOrganization").header(SecurityConstants.TOKEN_HEADER,token))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest())
                 .andDo(MockMvcResultHandlers.print())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.msg").value("Organization with same name exists"));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.msg").value(ExceptionMessageConstants.ORGANIZATION_ALREADY_EXIST_EXCEPTION));
 
         mvc.perform(MockMvcRequestBuilders.get("/organization/name").param("organization_name", "TestingOrganization").header(SecurityConstants.TOKEN_HEADER,token))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -103,7 +104,7 @@ public class OrganizationControllerTest {
         mvc.perform(MockMvcRequestBuilders.get("/organization").param("organization_id", "100").header(SecurityConstants.TOKEN_HEADER,token))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest())
                 .andDo(MockMvcResultHandlers.print())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.msg").value("No content"));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.msg").value(ExceptionMessageConstants.ORGANIZATION_NOT_EXIST_EXCEPTION));
     }
 
     /**
@@ -120,7 +121,7 @@ public class OrganizationControllerTest {
         mvc.perform(MockMvcRequestBuilders.get("/organization/name").param("organization_name", "NotOrganizationWithThis").header(SecurityConstants.TOKEN_HEADER,token))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest())
                 .andDo(MockMvcResultHandlers.print())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.msg").value("No match organization"));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.msg").value(ExceptionMessageConstants.ORGANIZATION_NOT_FOUND_EXCEPTION));
     }
 
     /**
@@ -163,13 +164,13 @@ public class OrganizationControllerTest {
         mvc.perform(MockMvcRequestBuilders.post("/organization/join").param("organization_id", "3").header(SecurityConstants.TOKEN_HEADER,token))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest())
                 .andDo(MockMvcResultHandlers.print())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.msg").value("You have been in the organization"));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.msg").value(ExceptionMessageConstants.USER_ALREADY_IN_ORGANIZATION_EXCEPTION));
 
         // Join organization with invalid organization id
         mvc.perform(MockMvcRequestBuilders.post("/organization/join").param("organization_id", "100").header(SecurityConstants.TOKEN_HEADER,token))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest())
                 .andDo(MockMvcResultHandlers.print())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.msg").value("Invalid organization Id"));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.msg").value(ExceptionMessageConstants.ORGANIZATION_NOT_EXIST_EXCEPTION));
     }
 
     /**

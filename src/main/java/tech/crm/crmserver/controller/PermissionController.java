@@ -117,7 +117,7 @@ public class PermissionController {
         Integer userId = userService.getId();
         Permission permission = permissionService.getPermissionByUserIdAndDepartmentId(userId, departmentId);
         if (permission == null) {
-            return ResponseResult.fail("No permission, not join the department yet");
+            throw new UserNotInDepartmentException();
         }
         return ResponseResult.suc("success", permission);
     }

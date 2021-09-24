@@ -101,10 +101,16 @@ public class UserController {
         return ResponseResult.fail("Error");
     }
 
+    /**
+     * Send the new password to user's email<br/>
+     * and store the new encoded password into database
+     * @param resetPasswordDTO the form of resetPassword
+     * @return response with msg
+     */
     @PostMapping("/resetPassword")
     public ResponseResult<Object> resetPassword(@Validated @RequestBody ResetPasswordDTO resetPasswordDTO){
         userService.resetPassword(resetPasswordDTO.getEmail());
-        return ResponseResult.suc("Check your email for new password!","");
+        return ResponseResult.suc("Check your email for new password!");
     }
 }
 

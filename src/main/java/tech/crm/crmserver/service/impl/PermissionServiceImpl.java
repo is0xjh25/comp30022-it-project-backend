@@ -268,7 +268,7 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
                 .eq("department_id",departmentId);
         Permission executor = getOne(wrapper);
         if(executor == null){
-            throw new UserNotInDepartmentException();
+            throw new UserNotInDepartmentException(HttpStatus.FORBIDDEN);
         }
         //executed person for delete action
         wrapper = new QueryWrapper<>();
@@ -276,7 +276,7 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
                 .eq("department_id",departmentId);
         Permission executed = getOne(wrapper);
         if(executed == null){
-            throw new UserNotInDepartmentException(HttpStatus.BAD_REQUEST);
+            throw new UserNotInDepartmentException();
         }
         //check the authority
         if(executor.getAuthorityLevel().getLevel() >= PermissionLevel.MANAGE.getLevel() &&

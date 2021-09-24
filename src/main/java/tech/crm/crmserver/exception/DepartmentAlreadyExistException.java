@@ -14,7 +14,7 @@ import tech.crm.crmserver.common.response.ResponseResult;
 public class DepartmentAlreadyExistException extends BaseException{
 
     public DepartmentAlreadyExistException() {
-        super(ResponseResult.fail(ExceptionMessageConstants.DEPARTMENT_ALREADY_EXIST_EXCEPTION ));
+        super(ResponseResult.fail(ExceptionMessageConstants.DEPARTMENT_ALREADY_EXIST_EXCEPTION));
     }
 
 }

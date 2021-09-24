@@ -118,8 +118,8 @@ public class UserControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\n" +
                         "    \"email\": \"lingxiao2@student.unimelb.edu.au\",\n" +
-                        "    \"firstName\": \"lingxiao\",\n" +
-                        "    \"lastName\": \"li\",\n" +
+                        "    \"first_name\": \"lingxiao\",\n" +
+                        "    \"last_name\": \"li\",\n" +
                         "    \"password\": \"123456\",\n" +
                         "    \"phone\": \"188188\"\n" +
                         "}"))
@@ -153,8 +153,8 @@ public class UserControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\n" +
                         "    \"email\": \"lingxiao1@student.unimelb.edu.au\",\n" +
-                        "    \"firstName\": \"lingxiao\",\n" +
-                        "    \"lastName\": \"li\",\n" +
+                        "    \"first_name\": \"lingxiao\",\n" +
+                        "    \"last_name\": \"li\",\n" +
                         "    \"password\": \"123456\",\n" +
                         "    \"phone\": \"188188\"\n" +
                         "}"))
@@ -170,7 +170,8 @@ public class UserControllerTest {
     public void getUserTest() throws Exception {
         mvc.perform(MockMvcRequestBuilders.get("/user").header(SecurityConstants.TOKEN_HEADER,token))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.data.email").value("lingxiao1@student.unimelb.edu.au"));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.email").value("lingxiao1@student.unimelb.edu.au"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.first_name").value("lingxiao"));
     }
 
     /**

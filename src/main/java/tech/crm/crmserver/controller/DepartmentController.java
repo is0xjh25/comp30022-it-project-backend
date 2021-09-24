@@ -53,7 +53,7 @@ public class DepartmentController {
         //check whether the user is in this department
         Permission userPermission = permissionService.findPermission(departmentId, userService.getId());
         if(userPermission == null || userPermission.getAuthorityLevel().equal(PermissionLevel.PENDING)){
-            throw new UserNotInDepartmentException();
+            throw new UserNotInDepartmentException(HttpStatus.FORBIDDEN);
         }
         //find all the member within the department
         Page<UserPermissionDTO> p = permissionService.getAllPermissionInDepartmentOrdered(new Page<>(current, size), departmentId);
