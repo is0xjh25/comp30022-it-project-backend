@@ -4,7 +4,6 @@ package tech.crm.crmserver.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import tech.crm.crmserver.common.enums.PermissionLevel;
@@ -12,7 +11,8 @@ import tech.crm.crmserver.common.response.ResponseResult;
 import tech.crm.crmserver.dao.Contact;
 import tech.crm.crmserver.dao.Department;
 import tech.crm.crmserver.dao.Permission;
-import tech.crm.crmserver.dto.ContactDTO;
+import tech.crm.crmserver.dto.ContactCreateDTO;
+import tech.crm.crmserver.dto.ContactUpdateDTO;
 import tech.crm.crmserver.exception.*;
 import tech.crm.crmserver.service.ContactService;
 import tech.crm.crmserver.service.DepartmentService;
@@ -91,13 +91,13 @@ public class ContactController {
     /**
      * Add a contact into the department
      *
-     * @param contactDTO the details of contact to add
+     * @param contactCreateDTO the details of contact to add
      * @return ResponseResult about if the adding success, or why it fail
      */
     @PostMapping()
-    public ResponseResult<Object> createNewCustomer(@RequestBody @Valid ContactDTO contactDTO) {
+    public ResponseResult<Object> createNewCustomer(@RequestBody @Valid ContactCreateDTO contactCreateDTO) {
         // read in the customer details
-        Contact newContact = contactService.fromContactDTO(contactDTO);
+        Contact newContact = contactService.fromContactCreateDTO(contactCreateDTO);
 
         Integer departmentId = newContact.getDepartmentId();
         Department department = departmentService.getById(departmentId);
@@ -137,13 +137,14 @@ public class ContactController {
      * @return ResponseResult about if the update success, or why it fail
      */
     @PutMapping
-    public ResponseResult<Object> updateContact(@RequestBody @Valid ContactDTO contactDTO) {
+    public ResponseResult<Object> updateContact(@RequestBody @Valid ContactUpdateDTO contactDTO) {
         // For updating, it must have id
-        Contact newContact = contactService.fromContactDTO(contactDTO);
-        if(newContact.getId() == null){
-            throw new IdNotExistException();
+        Contact newContact = contactService.fromContactUpdateDTO(contactDTO);
+        Contact oldContact = contactService.getById(newContact.getId());
+        if(oldContact == null){
+            throw new ContactNotExistException();
         }
-        Integer departmentId = newContact.getDepartmentId();
+        Integer departmentId = oldContact.getDepartmentId();
         Department department = departmentService.getById(departmentId);
         if (department == null) {
             throw new DepartmentNotExistException();
@@ -196,10 +197,12 @@ public class ContactController {
     @GetMapping("/search")
     public ResponseResult<Object> searchContact(@RequestParam String searchContent){
         Map<String,String> map = new HashMap<>();
+        map.put("email",searchContent);
         map.put("first_name",searchContent);
         map.put("last_name",searchContent);
         map.put("gender",searchContent);
         map.put("organization",searchContent);
+        map.put("description",searchContent);
         QueryWrapper<Contact> wrapper;
         List<Contact> contacts = new ArrayList<>();
         for(Map.Entry<String,String> entry : map.entrySet()){

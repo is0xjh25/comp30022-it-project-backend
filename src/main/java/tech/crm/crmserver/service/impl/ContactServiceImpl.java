@@ -7,8 +7,8 @@ import tech.crm.crmserver.common.enums.PermissionLevel;
 import tech.crm.crmserver.common.utils.NullAwareBeanUtilsBean;
 import tech.crm.crmserver.dao.Contact;
 import tech.crm.crmserver.dao.Permission;
-import tech.crm.crmserver.dao.RecentContact;
-import tech.crm.crmserver.dto.ContactDTO;
+import tech.crm.crmserver.dto.ContactCreateDTO;
+import tech.crm.crmserver.dto.ContactUpdateDTO;
 import tech.crm.crmserver.mapper.ContactMapper;
 import tech.crm.crmserver.service.*;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -143,15 +143,28 @@ public class ContactServiceImpl extends ServiceImpl<ContactMapper, Contact> impl
     }
 
     /**
-     * Transfer contactDTO to contact
+     * Transfer ContactCreateDTO to contact
      *
-     * @param contactDTO to contactDTO to transfer
+     * @param contactCreateDTO to ContactCreateDTO to transfer
      * @return the contact instance transferred
      */
     @Override
-    public Contact fromContactDTO(ContactDTO contactDTO) {
+    public Contact fromContactCreateDTO(ContactCreateDTO contactCreateDTO) {
         Contact contact = new Contact();
-        NullAwareBeanUtilsBean.copyProperties(contactDTO, contact);
+        NullAwareBeanUtilsBean.copyProperties(contactCreateDTO, contact);
+        return contact;
+    }
+
+    /**
+     * Transfer ContactUpdateDTO to contact
+     *
+     * @param contactUpdateDTO to ContactUpdateDTO to transfer
+     * @return the contact instance transferred
+     */
+    @Override
+    public Contact fromContactUpdateDTO(ContactUpdateDTO contactUpdateDTO) {
+        Contact contact = new Contact();
+        NullAwareBeanUtilsBean.copyProperties(contactUpdateDTO, contact);
         return contact;
     }
 

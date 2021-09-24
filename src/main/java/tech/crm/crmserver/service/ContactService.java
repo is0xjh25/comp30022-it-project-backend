@@ -1,10 +1,10 @@
 package tech.crm.crmserver.service;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import tech.crm.crmserver.dao.Contact;
 import com.baomidou.mybatisplus.extension.service.IService;
-import tech.crm.crmserver.dto.ContactDTO;
+import tech.crm.crmserver.dto.ContactCreateDTO;
+import tech.crm.crmserver.dto.ContactUpdateDTO;
 
 import java.util.List;
 
@@ -48,12 +48,20 @@ public interface ContactService extends IService<Contact> {
     public Page<Contact> getContactByOrgIdAndDepartmentId(Page<Contact> page, Integer organizationId, Integer departmentId, Integer userId);
 
     /**
-     * Transfer contactDTO to contact
+     * Transfer ContactCreateDTO to contact
      *
-     * @param contactDTO to contactDTO to transfer
+     * @param contactCreateDTO to ContactCreateDTO to transfer
      * @return the contact instance transferred
      */
-    public Contact fromContactDTO(ContactDTO contactDTO);
+    public Contact fromContactCreateDTO(ContactCreateDTO contactCreateDTO);
+
+    /**
+     * Transfer ContactUpdateDTO to contact
+     *
+     * @param contactUpdateDTO to ContactUpdateDTO to transfer
+     * @return the contact instance transferred
+     */
+    public Contact fromContactUpdateDTO(ContactUpdateDTO contactUpdateDTO);
 
     /**
      * Search contact based on some condition

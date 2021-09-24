@@ -14,8 +14,8 @@ import java.time.LocalDate;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ContactDTO {
-    
+public class ContactCreateDTO {
+
     private Integer id;
 
     @NotNull(message = "department_id cannot be null")
@@ -48,5 +48,4 @@ public class ContactDTO {
 
     private String customerType;
 
-    private Status status;
 }
