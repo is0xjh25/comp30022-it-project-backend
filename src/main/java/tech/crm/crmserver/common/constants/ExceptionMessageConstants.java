@@ -35,6 +35,8 @@ public class ExceptionMessageConstants {
     public static final String CONTACT_FAIL_UPDATE_EXCEPTION  = "Fail to update a contact!";
     public static final String CONTACT_FAIL_DELETE_EXCEPTION  = "Fail to delete a contact!";
 
+    public static final String ID_NOT_EXIST_EXCEPTION  = "Id can not be null!";
+
 
 
     private ExceptionMessageConstants() {

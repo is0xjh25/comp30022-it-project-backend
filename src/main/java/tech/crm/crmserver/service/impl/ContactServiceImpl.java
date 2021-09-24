@@ -7,13 +7,15 @@ import tech.crm.crmserver.common.enums.PermissionLevel;
 import tech.crm.crmserver.common.utils.NullAwareBeanUtilsBean;
 import tech.crm.crmserver.dao.Contact;
 import tech.crm.crmserver.dao.Permission;
-import tech.crm.crmserver.dao.RecentContact;
+import tech.crm.crmserver.dto.ContactCreateDTO;
 import tech.crm.crmserver.dto.ContactDTO;
+import tech.crm.crmserver.dto.ContactUpdateDTO;
 import tech.crm.crmserver.mapper.ContactMapper;
 import tech.crm.crmserver.service.*;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -143,16 +145,61 @@ public class ContactServiceImpl extends ServiceImpl<ContactMapper, Contact> impl
     }
 
     /**
-     * Transfer contactDTO to contact
+     * Transfer ContactCreateDTO to contact
      *
-     * @param contactDTO to contactDTO to transfer
+     * @param contactCreateDTO to ContactCreateDTO to transfer
      * @return the contact instance transferred
      */
     @Override
-    public Contact fromContactDTO(ContactDTO contactDTO) {
+    public Contact fromContactCreateDTO(ContactCreateDTO contactCreateDTO) {
         Contact contact = new Contact();
-        NullAwareBeanUtilsBean.copyProperties(contactDTO, contact);
+        NullAwareBeanUtilsBean.copyProperties(contactCreateDTO, contact);
         return contact;
+    }
+
+    /**
+     * Transfer ContactUpdateDTO to contact
+     *
+     * @param contactUpdateDTO to ContactUpdateDTO to transfer
+     * @return the contact instance transferred
+     */
+    @Override
+    public Contact fromContactUpdateDTO(ContactUpdateDTO contactUpdateDTO) {
+        Contact contact = new Contact();
+        NullAwareBeanUtilsBean.copyProperties(contactUpdateDTO, contact);
+        return contact;
+    }
+
+    /**
+     * Transfer Contact to ContactDTO
+     *
+     * @param contact to Contact to transfer
+     * @return the contact instance transferred
+     */
+    @Override
+    public ContactDTO ContactToContactDTO(Contact contact) {
+        ContactDTO contactDTO = new ContactDTO();
+        NullAwareBeanUtilsBean.copyProperties(contact, contactDTO);
+        LocalDate birthday = contactDTO.getBirthday();
+        if(birthday != null){
+            contactDTO.setAge(birthday.until(LocalDate.now()).getYears());
+        }
+        return contactDTO;
+    }
+
+    /**
+     * Transfer List<Contact> to List<ContactDTO>
+     *
+     * @param contacts a list of contacts
+     * @return a list of ContactDTO instances transferred
+     */
+    @Override
+    public List<ContactDTO> ContactToContactDTO(List<Contact> contacts) {
+        List<ContactDTO> contactDTOList = new ArrayList<>();
+        for (Contact contact: contacts){
+            contactDTOList.add(ContactToContactDTO(contact));
+        }
+        return contactDTOList;
     }
 
     /**

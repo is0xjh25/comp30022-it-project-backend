@@ -1,20 +1,25 @@
 package tech.crm.crmserver.dto;
 
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import tech.crm.crmserver.common.enums.Status;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ContactDTO {
+public class ContactUpdateDTO {
 
+    @NotNull(message = "id cannot be null")
     private Integer id;
 
-    private Integer departmentId;
-
+    @Email(message = "invalid email for contact")
     private String email;
 
     private String firstName;
@@ -31,12 +36,9 @@ public class ContactDTO {
 
     private LocalDate birthday;
 
-    private Integer age;
-
     private String address;
 
     private String organization;
 
     private String customerType;
-
 }

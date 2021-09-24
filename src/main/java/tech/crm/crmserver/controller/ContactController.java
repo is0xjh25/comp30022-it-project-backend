@@ -4,15 +4,17 @@ package tech.crm.crmserver.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import tech.crm.crmserver.common.enums.PermissionLevel;
 import tech.crm.crmserver.common.response.ResponseResult;
+import tech.crm.crmserver.common.utils.NullAwareBeanUtilsBean;
 import tech.crm.crmserver.dao.Contact;
 import tech.crm.crmserver.dao.Department;
 import tech.crm.crmserver.dao.Permission;
+import tech.crm.crmserver.dto.ContactCreateDTO;
 import tech.crm.crmserver.dto.ContactDTO;
+import tech.crm.crmserver.dto.ContactUpdateDTO;
 import tech.crm.crmserver.exception.*;
 import tech.crm.crmserver.service.ContactService;
 import tech.crm.crmserver.service.DepartmentService;
@@ -59,7 +61,8 @@ public class ContactController {
     public ResponseResult<Object> getContactById(@RequestParam("contact_id") Integer contactId){
         Contact contact = contactService.getById(contactId);
         if (contact != null) {
-            return ResponseResult.suc("success", contact);
+            ContactDTO contactDTO = contactService.ContactToContactDTO(contact);
+            return ResponseResult.suc("success", contactDTO);
         }
         throw new ContactNotExistException();
     }
@@ -84,23 +87,27 @@ public class ContactController {
         }
 
         Page<Contact> contacts = contactService.getContactByOrgIdAndDepartmentId(new Page<>(current, size), organizationId, departmentId, userId);
-
-        if (contacts.getTotal() == 0) {
-            throw new ContactNotExistException();
+        //transfer into ContactDTO
+        List<Contact> records = contacts.getRecords();
+        List<ContactDTO> recordDTOs = new ArrayList<>();
+        for(Contact contact: records){
+            recordDTOs.add(contactService.ContactToContactDTO(contact));
         }
-        return ResponseResult.suc("success", contacts);
+        Page<ContactDTO> contactDTOs = new Page<>(contacts.getCurrent(),contacts.getSize(),contacts.getTotal());
+        contactDTOs.setRecords(recordDTOs);
+        return ResponseResult.suc("success", contactDTOs);
     }
 
     /**
      * Add a contact into the department
      *
-     * @param contactDTO the details of contact to add
+     * @param contactCreateDTO the details of contact to add
      * @return ResponseResult about if the adding success, or why it fail
      */
     @PostMapping()
-    public ResponseResult<Object> createNewCustomer(@RequestBody @Valid ContactDTO contactDTO) {
+    public ResponseResult<Object> createNewCustomer(@RequestBody @Valid ContactCreateDTO contactCreateDTO) {
         // read in the customer details
-        Contact newContact = contactService.fromContactDTO(contactDTO);
+        Contact newContact = contactService.fromContactCreateDTO(contactCreateDTO);
 
         Integer departmentId = newContact.getDepartmentId();
         Department department = departmentService.getById(departmentId);
@@ -112,7 +119,7 @@ public class ContactController {
         // check the user's permission level
         Integer userID = userService.getId();
         Permission myPermission = permissionService.findPermission(departmentAddTo, userID);
-        if (myPermission != null && myPermission.getAuthorityLevel().getLevel() < PermissionLevel.UPDATE.getLevel()) {
+        if (myPermission == null || myPermission.getAuthorityLevel().getLevel() < PermissionLevel.UPDATE.getLevel()) {
             throw new NotEnoughPermissionException();
         }
 
@@ -140,10 +147,14 @@ public class ContactController {
      * @return ResponseResult about if the update success, or why it fail
      */
     @PutMapping
-    public ResponseResult<Object> updateContact(@RequestBody @Valid ContactDTO contactDTO) {
+    public ResponseResult<Object> updateContact(@RequestBody @Valid ContactUpdateDTO contactDTO) {
         // For updating, it must have id
-        Contact newContact = contactService.fromContactDTO(contactDTO);
-        Integer departmentId = newContact.getDepartmentId();
+        Contact newContact = contactService.fromContactUpdateDTO(contactDTO);
+        Contact oldContact = contactService.getById(newContact.getId());
+        if(oldContact == null){
+            throw new ContactNotExistException();
+        }
+        Integer departmentId = oldContact.getDepartmentId();
         Department department = departmentService.getById(departmentId);
         if (department == null) {
             throw new DepartmentNotExistException();
@@ -153,7 +164,7 @@ public class ContactController {
         // check the user's permission level
         Integer userID = userService.getId();
         Permission myPermission = permissionService.findPermission(departmentAddTo, userID);
-        if (myPermission != null && myPermission.getAuthorityLevel().getLevel() < PermissionLevel.UPDATE.getLevel()) {
+        if (myPermission == null || myPermission.getAuthorityLevel().getLevel() < PermissionLevel.UPDATE.getLevel()) {
             throw new NotEnoughPermissionException();
         }
 
@@ -178,7 +189,7 @@ public class ContactController {
         // check the user's permission level
         Integer userID = userService.getId();
         Permission myPermission = permissionService.findPermission(departmentId, userID);
-        if (myPermission != null && myPermission.getAuthorityLevel().getLevel() < PermissionLevel.DELETE.getLevel()) {
+        if (myPermission == null || myPermission.getAuthorityLevel().getLevel() < PermissionLevel.DELETE.getLevel()) {
             throw new NotEnoughPermissionException();
         }
 
@@ -191,25 +202,29 @@ public class ContactController {
     /**
      * Search contacts by some details
      *
-     * @param firstName the first name to match
-     * @param lastName the last name to match
-     * @param gender the gender to match
-     * @param organization the organization name to match
      * @return ResponseResult about if the search success, or why it fail
      */
     @GetMapping("/search")
-    public ResponseResult<Object> searchContact(@RequestParam String searchContent){
+    public ResponseResult<Object> searchContact(@RequestParam("department_id") Integer departmentId,
+                                                @RequestParam("search_key") String searchKey){
+        Permission myPermission = permissionService.findPermission(departmentId, userService.getId());
+        if (myPermission == null || myPermission.getAuthorityLevel().getLevel() < PermissionLevel.DISPLAY.getLevel()) {
+            throw new NotEnoughPermissionException();
+        }
         Map<String,String> map = new HashMap<>();
-        map.put("first_name",searchContent);
-        map.put("last_name",searchContent);
-        map.put("gender",searchContent);
-        map.put("organization",searchContent);
+        map.put("email",searchKey);
+        map.put("first_name",searchKey);
+        map.put("last_name",searchKey);
+        map.put("gender",searchKey);
+        map.put("organization",searchKey);
+        map.put("description",searchKey);
         QueryWrapper<Contact> wrapper;
-        List<Contact> contacts = new ArrayList<>();
+        List<ContactDTO> contacts = new ArrayList<>();
         for(Map.Entry<String,String> entry : map.entrySet()){
             wrapper = new QueryWrapper<>();
+            wrapper.eq("department_id",departmentId);
             wrapper.like(entry.getKey(),entry.getValue());
-            contacts.addAll(contactService.list(wrapper));
+            contacts.addAll(contactService.ContactToContactDTO(contactService.list(wrapper)));
         }
 
         if(contacts.isEmpty()){
