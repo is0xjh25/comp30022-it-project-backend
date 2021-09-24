@@ -109,7 +109,7 @@ public class ContactController {
         // check the user's permission level
         Integer userID = userService.getId();
         Permission myPermission = permissionService.findPermission(departmentAddTo, userID);
-        if (myPermission != null && myPermission.getAuthorityLevel().getLevel() < PermissionLevel.UPDATE.getLevel()) {
+        if (myPermission == null || myPermission.getAuthorityLevel().getLevel() < PermissionLevel.UPDATE.getLevel()) {
             throw new NotEnoughPermissionException();
         }
 
@@ -154,7 +154,7 @@ public class ContactController {
         // check the user's permission level
         Integer userID = userService.getId();
         Permission myPermission = permissionService.findPermission(departmentAddTo, userID);
-        if (myPermission != null && myPermission.getAuthorityLevel().getLevel() < PermissionLevel.UPDATE.getLevel()) {
+        if (myPermission == null || myPermission.getAuthorityLevel().getLevel() < PermissionLevel.UPDATE.getLevel()) {
             throw new NotEnoughPermissionException();
         }
 
@@ -179,7 +179,7 @@ public class ContactController {
         // check the user's permission level
         Integer userID = userService.getId();
         Permission myPermission = permissionService.findPermission(departmentId, userID);
-        if (myPermission != null && myPermission.getAuthorityLevel().getLevel() < PermissionLevel.DELETE.getLevel()) {
+        if (myPermission == null || myPermission.getAuthorityLevel().getLevel() < PermissionLevel.DELETE.getLevel()) {
             throw new NotEnoughPermissionException();
         }
 
@@ -195,18 +195,24 @@ public class ContactController {
      * @return ResponseResult about if the search success, or why it fail
      */
     @GetMapping("/search")
-    public ResponseResult<Object> searchContact(@RequestParam String searchContent){
+    public ResponseResult<Object> searchContact(@RequestParam("department_id") Integer departmentId,
+                                                @RequestParam("search_key") String searchKey){
+        Permission myPermission = permissionService.findPermission(departmentId, userService.getId());
+        if (myPermission == null || myPermission.getAuthorityLevel().getLevel() < PermissionLevel.DISPLAY.getLevel()) {
+            throw new NotEnoughPermissionException();
+        }
         Map<String,String> map = new HashMap<>();
-        map.put("email",searchContent);
-        map.put("first_name",searchContent);
-        map.put("last_name",searchContent);
-        map.put("gender",searchContent);
-        map.put("organization",searchContent);
-        map.put("description",searchContent);
+        map.put("email",searchKey);
+        map.put("first_name",searchKey);
+        map.put("last_name",searchKey);
+        map.put("gender",searchKey);
+        map.put("organization",searchKey);
+        map.put("description",searchKey);
         QueryWrapper<Contact> wrapper;
         List<Contact> contacts = new ArrayList<>();
         for(Map.Entry<String,String> entry : map.entrySet()){
             wrapper = new QueryWrapper<>();
+            wrapper.eq("department_id",departmentId);
             wrapper.like(entry.getKey(),entry.getValue());
             contacts.addAll(contactService.list(wrapper));
         }
