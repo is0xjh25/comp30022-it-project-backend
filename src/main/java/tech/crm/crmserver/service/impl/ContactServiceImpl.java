@@ -188,6 +188,21 @@ public class ContactServiceImpl extends ServiceImpl<ContactMapper, Contact> impl
     }
 
     /**
+     * Transfer List<Contact> to List<ContactDTO>
+     *
+     * @param contacts a list of contacts
+     * @return a list of ContactDTO instances transferred
+     */
+    @Override
+    public List<ContactDTO> ContactToContactDTO(List<Contact> contacts) {
+        List<ContactDTO> contactDTOList = new ArrayList<>();
+        for (Contact contact: contacts){
+            contactDTOList.add(ContactToContactDTO(contact));
+        }
+        return contactDTOList;
+    }
+
+    /**
      * Search contact based on some condition
      *
      * @param departmentId the departmentId to match

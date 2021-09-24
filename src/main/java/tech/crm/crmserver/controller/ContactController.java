@@ -219,12 +219,12 @@ public class ContactController {
         map.put("organization",searchKey);
         map.put("description",searchKey);
         QueryWrapper<Contact> wrapper;
-        List<Contact> contacts = new ArrayList<>();
+        List<ContactDTO> contacts = new ArrayList<>();
         for(Map.Entry<String,String> entry : map.entrySet()){
             wrapper = new QueryWrapper<>();
             wrapper.eq("department_id",departmentId);
             wrapper.like(entry.getKey(),entry.getValue());
-            contacts.addAll(contactService.list(wrapper));
+            contacts.addAll(contactService.ContactToContactDTO(contactService.list(wrapper)));
         }
 
         if(contacts.isEmpty()){

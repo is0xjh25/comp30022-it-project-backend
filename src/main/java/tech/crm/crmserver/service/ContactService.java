@@ -73,6 +73,14 @@ public interface ContactService extends IService<Contact> {
     public ContactDTO ContactToContactDTO(Contact contact);
 
     /**
+     * Transfer List<Contact> to List<ContactDTO>
+     *
+     * @param contacts a list of contacts
+     * @return a list of ContactDTO instances transferred
+     */
+    public List<ContactDTO> ContactToContactDTO(List<Contact> contacts);
+
+    /**
      * Search contact based on some condition
      *
      * @param departmentId the departmentId to match
