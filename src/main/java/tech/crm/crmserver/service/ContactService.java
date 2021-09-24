@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import tech.crm.crmserver.dao.Contact;
 import com.baomidou.mybatisplus.extension.service.IService;
 import tech.crm.crmserver.dto.ContactCreateDTO;
+import tech.crm.crmserver.dto.ContactDTO;
 import tech.crm.crmserver.dto.ContactUpdateDTO;
 
 import java.util.List;
@@ -62,6 +63,14 @@ public interface ContactService extends IService<Contact> {
      * @return the contact instance transferred
      */
     public Contact fromContactUpdateDTO(ContactUpdateDTO contactUpdateDTO);
+
+    /**
+     * Transfer Contact to ContactDTO
+     *
+     * @param contact to Contact to transfer
+     * @return the contact instance transferred
+     */
+    public ContactDTO ContactToContactDTO(Contact contact);
 
     /**
      * Search contact based on some condition

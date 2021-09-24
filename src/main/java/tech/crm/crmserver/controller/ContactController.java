@@ -8,10 +8,12 @@ import org.springframework.web.bind.annotation.*;
 
 import tech.crm.crmserver.common.enums.PermissionLevel;
 import tech.crm.crmserver.common.response.ResponseResult;
+import tech.crm.crmserver.common.utils.NullAwareBeanUtilsBean;
 import tech.crm.crmserver.dao.Contact;
 import tech.crm.crmserver.dao.Department;
 import tech.crm.crmserver.dao.Permission;
 import tech.crm.crmserver.dto.ContactCreateDTO;
+import tech.crm.crmserver.dto.ContactDTO;
 import tech.crm.crmserver.dto.ContactUpdateDTO;
 import tech.crm.crmserver.exception.*;
 import tech.crm.crmserver.service.ContactService;
@@ -59,7 +61,8 @@ public class ContactController {
     public ResponseResult<Object> getContactById(@RequestParam("contact_id") Integer contactId){
         Contact contact = contactService.getById(contactId);
         if (contact != null) {
-            return ResponseResult.suc("success", contact);
+            ContactDTO contactDTO = contactService.ContactToContactDTO(contact);
+            return ResponseResult.suc("success", contactDTO);
         }
         throw new ContactNotExistException();
     }
@@ -84,8 +87,15 @@ public class ContactController {
         }
 
         Page<Contact> contacts = contactService.getContactByOrgIdAndDepartmentId(new Page<>(current, size), organizationId, departmentId, userId);
-
-        return ResponseResult.suc("success", contacts);
+        //transfer into ContactDTO
+        List<Contact> records = contacts.getRecords();
+        List<ContactDTO> recordDTOs = new ArrayList<>();
+        for(Contact contact: records){
+            recordDTOs.add(contactService.ContactToContactDTO(contact));
+        }
+        Page<ContactDTO> contactDTOs = new Page<>(contacts.getCurrent(),contacts.getSize(),contacts.getTotal());
+        contactDTOs.setRecords(recordDTOs);
+        return ResponseResult.suc("success", contactDTOs);
     }
 
     /**

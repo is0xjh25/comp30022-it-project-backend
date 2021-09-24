@@ -8,12 +8,14 @@ import tech.crm.crmserver.common.utils.NullAwareBeanUtilsBean;
 import tech.crm.crmserver.dao.Contact;
 import tech.crm.crmserver.dao.Permission;
 import tech.crm.crmserver.dto.ContactCreateDTO;
+import tech.crm.crmserver.dto.ContactDTO;
 import tech.crm.crmserver.dto.ContactUpdateDTO;
 import tech.crm.crmserver.mapper.ContactMapper;
 import tech.crm.crmserver.service.*;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -166,6 +168,23 @@ public class ContactServiceImpl extends ServiceImpl<ContactMapper, Contact> impl
         Contact contact = new Contact();
         NullAwareBeanUtilsBean.copyProperties(contactUpdateDTO, contact);
         return contact;
+    }
+
+    /**
+     * Transfer Contact to ContactDTO
+     *
+     * @param contact to Contact to transfer
+     * @return the contact instance transferred
+     */
+    @Override
+    public ContactDTO ContactToContactDTO(Contact contact) {
+        ContactDTO contactDTO = new ContactDTO();
+        NullAwareBeanUtilsBean.copyProperties(contact, contactDTO);
+        LocalDate birthday = contactDTO.getBirthday();
+        if(birthday != null){
+            contactDTO.setAge(birthday.until(LocalDate.now()).getYears());
+        }
+        return contactDTO;
     }
 
     /**
