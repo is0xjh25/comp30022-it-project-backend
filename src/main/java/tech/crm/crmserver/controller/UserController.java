@@ -103,7 +103,8 @@ public class UserController {
 
     /**
      * Send the new password to user's email<br/>
-     * and store the new encoded password into database
+     * ,store the new encoded password into database<br/>
+     * and delete all the token of this user in database
      * @param resetPasswordDTO the form of resetPassword
      * @return response with msg
      */
