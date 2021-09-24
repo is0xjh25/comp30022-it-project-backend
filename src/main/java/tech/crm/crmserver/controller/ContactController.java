@@ -85,9 +85,6 @@ public class ContactController {
 
         Page<Contact> contacts = contactService.getContactByOrgIdAndDepartmentId(new Page<>(current, size), organizationId, departmentId, userId);
 
-        if (contacts.getTotal() == 0) {
-            throw new ContactNotExistException();
-        }
         return ResponseResult.suc("success", contacts);
     }
 
@@ -194,10 +191,6 @@ public class ContactController {
     /**
      * Search contacts by some details
      *
-     * @param firstName the first name to match
-     * @param lastName the last name to match
-     * @param gender the gender to match
-     * @param organization the organization name to match
      * @return ResponseResult about if the search success, or why it fail
      */
     @GetMapping("/search")
