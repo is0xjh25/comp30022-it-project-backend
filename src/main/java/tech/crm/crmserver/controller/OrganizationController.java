@@ -17,12 +17,11 @@ import tech.crm.crmserver.common.utils.NullAwareBeanUtilsBean;
 import tech.crm.crmserver.dao.*;
 import tech.crm.crmserver.dto.DepartmentDTO;
 import tech.crm.crmserver.dto.OrganizationDTO;
-import tech.crm.crmserver.exception.DepartmentAlreadyExistException;
-import tech.crm.crmserver.exception.NotEnoughPermissionException;
-import tech.crm.crmserver.exception.OrganizationNotExistException;
+import tech.crm.crmserver.exception.*;
 import tech.crm.crmserver.service.*;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -97,9 +96,6 @@ public class OrganizationController {
             departmentDTO.setStatus(permissionService.getDepartmentOwnerShipStatus(permissionByUserId, department.getId()).getName());
             response.add(departmentDTO);
         }
-        if (response.size() == 0) {
-            return ResponseResult.fail("No departments data");
-        }
         return ResponseResult.suc("success", response);
     }
 
@@ -125,6 +121,18 @@ public class OrganizationController {
             }
             organizationDTOS.add(organizationDTO);
         }
+        organizationDTOS.sort(new Comparator<OrganizationDTO>() {
+            @Override
+            public int compare(OrganizationDTO o1, OrganizationDTO o2) {
+                if (o1.isOwner() && !o2.isOwner()) {
+                    return -1;
+                } else if (!o1.isOwner() && o2.isOwner()){
+                    return 1;
+                } else {
+                    return 0;
+                }
+            }
+        });
         return ResponseResult.suc("success", organizationDTOS);
     }
 
@@ -140,7 +148,7 @@ public class OrganizationController {
         if (organization != null) {
             return ResponseResult.suc("success", organization);
         }
-        return ResponseResult.fail("No content");
+        throw new OrganizationNotExistException();
     }
 
     /**
@@ -153,7 +161,7 @@ public class OrganizationController {
     public ResponseResult<Object> getOrganizationBasedOnName(@RequestParam("organization_name") String organizationName) {
         List<Organization> organizations = organizationService.getOrgBasedOnName(organizationName);
         if (organizations.size() == 0) {
-            return ResponseResult.fail("No match organization");
+            throw new OrganizationNotFoundException();
         }
         return ResponseResult.suc("success", organizations);
     }
@@ -171,7 +179,7 @@ public class OrganizationController {
         List<Organization> organizationListWithSameName = organizationService.getOrgBasedOnExactName(organizationName);
 
         if (organizationListWithSameName.size() > 0) {
-            return ResponseResult.fail("Organization with same name exists");
+            throw new OrganizationAlreadyExistException();
         }
         Organization newOrganization = new Organization();
         newOrganization.setName(organizationName);
@@ -179,7 +187,7 @@ public class OrganizationController {
         try {
             organizationService.save(newOrganization);
         } catch (Exception e) {
-            return ResponseResult.fail("Fail to create organization");
+            throw new FailToCreateOrganizationException();
         }
         Organization organization = organizationService.getOrgBasedOnExactName(organizationName).get(0);
         belongToService.insertNewBelongTo(organization.getId(), userId);
@@ -212,12 +220,12 @@ public class OrganizationController {
 
         List<BelongTo> belongToList = belongToService.queryBelongToRelation(null, userId, organizationId, null);
         if (belongToList.size() > 0) {
-            return ResponseResult.fail("You have been in the organization");
+            throw new UserAlreadyInOrganizationException();
         }
         if (organization != null) {
             belongToService.insertNewBelongTo(organizationId, userId);
         } else {
-            return ResponseResult.fail("Invalid organization Id");
+            throw new OrganizationNotExistException();
         }
         return ResponseResult.suc("success");
     }

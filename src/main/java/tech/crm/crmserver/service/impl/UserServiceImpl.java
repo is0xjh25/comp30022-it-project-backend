@@ -1,6 +1,7 @@
 package tech.crm.crmserver.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
@@ -17,13 +18,16 @@ import tech.crm.crmserver.dto.LoginRequest;
 import tech.crm.crmserver.dto.UserDTO;
 import tech.crm.crmserver.exception.LoginBadCredentialsException;
 import tech.crm.crmserver.exception.UserAlreadyExistException;
+import tech.crm.crmserver.exception.UserNotExistException;
 import tech.crm.crmserver.mapper.UserMapper;
+import tech.crm.crmserver.service.MailService;
 import tech.crm.crmserver.service.TokenKeyService;
 import tech.crm.crmserver.service.UserService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * <p>
@@ -40,7 +44,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     private PasswordEncoder passwordEncoder;
 
     @Autowired
+    private MailService mailService;
+
+    @Autowired
     private TokenKeyService tokenKeyService;
+
+    private static String EMAIL_TITLE = "Your new Password for ConnecTi";
 
     /**
      * Verify whether the email and password is correct
@@ -151,5 +160,27 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             return (Integer)authentication.getPrincipal();
         }
         return null;
+    }
+
+    /**
+     * generate a random password and store encrypted password into database <br/>
+     * then send the password to the email
+     *
+     * @param email the email of user who needs reset password
+     */
+    @Override
+    public void resetPassword(String email) {
+        UpdateWrapper<User> wrapper = new UpdateWrapper<>();
+        wrapper.eq("email",email);
+        User user = this.getOne(wrapper);
+        if(user == null){
+            throw new UserNotExistException();
+        }
+        String rawPassword = passwordEncoder.encode(UUID.randomUUID().toString());
+        String encryptPassword = passwordEncoder.encode(rawPassword);
+
+        wrapper.set("password",encryptPassword);
+        update(wrapper);
+        mailService.sendSimpleMail(email,EMAIL_TITLE,rawPassword);
     }
 }

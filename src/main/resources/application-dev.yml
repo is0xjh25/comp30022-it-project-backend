@@ -6,6 +6,30 @@ spring:
     password: 415623
   mvc:
     log-resolved-exception: true
+
+  #jackson
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+
+  #mail config
+  mail:
+    host: smtp.gmail.com
+    username: connecti.yyds@gmail.com
+    password: ysqujsagxxfyqwvm
+    protocol: smtp
+    properties:
+      mail:
+        smtp:
+          auth: true
+          port: 465
+          ssl:
+            enable: true
+          starttls:
+            enable: true
+            required: true
+    from: connecti.yyds@gmail.com
+    default-encoding: utf-8
+
 debug: true
 mybatis-plus:
   typeEnumsPackage: tech.crm.crmserver.common.enums
