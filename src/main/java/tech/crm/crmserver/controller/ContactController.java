@@ -143,6 +143,9 @@ public class ContactController {
     public ResponseResult<Object> updateContact(@RequestBody @Valid ContactDTO contactDTO) {
         // For updating, it must have id
         Contact newContact = contactService.fromContactDTO(contactDTO);
+        if(newContact.getId() == null){
+            throw new IdNotExistException();
+        }
         Integer departmentId = newContact.getDepartmentId();
         Department department = departmentService.getById(departmentId);
         if (department == null) {

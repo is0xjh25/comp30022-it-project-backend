@@ -15,8 +15,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ContactDTO {
-
-    @NotNull(message = "Missing id of the contact")
+    
     private Integer id;
 
     @NotNull(message = "department_id cannot be null")
