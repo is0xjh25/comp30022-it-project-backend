@@ -90,7 +90,10 @@ public class ContactControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\n" +
                         "    \"department_id\": \"2\", \n" +
+                        "    \"email\": \"test@gamil.com\", \n" +
+                        "    \"first_name\": \"testFirst\", \n" +
                         "    \"last_name\": \"testLast\", \n" +
+                        "    \"gender\": \"male\", \n" +
                         "    \"birthday\": \"2020-01-01\", \n" +
                         "    \"status\": \"active\" \n" +
                         "}"))
@@ -111,7 +114,11 @@ public class ContactControllerTest {
 
 
         String email = "te@gamil.com";
+
+        String updateEmail = "updateEmail@gamil.com";
+
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post("/contact").header(SecurityConstants.TOKEN_HEADER,token)
+                .contentType(MediaType.APPLICATION_JSON)
                 .content("{\n" +
                         "    \"department_id\": \"2\", \n" +
                         "    \"email\": \"te@gamil.com\", \n" +
@@ -121,7 +128,11 @@ public class ContactControllerTest {
                         "    \"birthday\": \"2020-01-01\", \n" +
                         "    \"status\": \"active\" \n" +
                         "}"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn();
+
         List<Contact> contactBasedOnSomeConditionFromDB = contactService.getContactBasedOnSomeConditionFromDB(departmentId, email, null, null, null, null, null, null, null);
+        contactId = contactBasedOnSomeConditionFromDB.get(0).getId();
 
         MvcResult mvcResult1 = mvc.perform(MockMvcRequestBuilders.put("/contact").header(SecurityConstants.TOKEN_HEADER,token)
                 .contentType(MediaType.APPLICATION_JSON)
