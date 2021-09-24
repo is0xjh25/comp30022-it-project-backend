@@ -33,3 +33,5 @@ spring:
 debug: true
 mybatis-plus:
   typeEnumsPackage: tech.crm.crmserver.common.enums
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl

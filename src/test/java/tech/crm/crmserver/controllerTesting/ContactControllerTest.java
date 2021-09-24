@@ -83,17 +83,14 @@ public class ContactControllerTest {
      */
     @Test
     public void testAAddNewContact() throws Exception {
-        int departmentId = 3;
+        int departmentId = 2;
 
         String email = "test@gamil.com";
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post("/contact").header(SecurityConstants.TOKEN_HEADER,token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\n" +
-                        "    \"department_id\": \"3\", \n" +
-                        "    \"email\": \"test@gamil.com\", \n" +
-                        "    \"first_name\": \"testFirst\", \n" +
+                        "    \"department_id\": \"2\", \n" +
                         "    \"last_name\": \"testLast\", \n" +
-                        "    \"gender\": \"male\", \n" +
                         "    \"birthday\": \"2020-01-01\", \n" +
                         "    \"status\": \"active\" \n" +
                         "}"))
@@ -110,17 +107,13 @@ public class ContactControllerTest {
      */
     @Test
     public void testBUpdatingContact() throws Exception {
-        int departmentId = 3;
+        int departmentId = 2;
 
 
         String email = "te@gamil.com";
-
-        String updateEmail = "updateEmail@gamil.com";
-
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post("/contact").header(SecurityConstants.TOKEN_HEADER,token)
-                .contentType(MediaType.APPLICATION_JSON)
                 .content("{\n" +
-                        "    \"department_id\": \"3\", \n" +
+                        "    \"department_id\": \"2\", \n" +
                         "    \"email\": \"te@gamil.com\", \n" +
                         "    \"first_name\": \"testFirst\", \n" +
                         "    \"last_name\": \"testLast\", \n" +
@@ -128,17 +121,13 @@ public class ContactControllerTest {
                         "    \"birthday\": \"2020-01-01\", \n" +
                         "    \"status\": \"active\" \n" +
                         "}"))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andReturn();
-
         List<Contact> contactBasedOnSomeConditionFromDB = contactService.getContactBasedOnSomeConditionFromDB(departmentId, email, null, null, null, null, null, null, null);
-        contactId = contactBasedOnSomeConditionFromDB.get(0).getId();
 
         MvcResult mvcResult1 = mvc.perform(MockMvcRequestBuilders.put("/contact").header(SecurityConstants.TOKEN_HEADER,token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\n" +
                         "    \"id\": \"" +String.valueOf(contactId) + "\", \n" +
-                        "    \"department_id\": \"3\", \n" +
+                        "    \"department_id\": \"2\", \n" +
                         "    \"email\": \"updateEmail@gamil.com\", \n" +
                         "    \"first_name\": \"updateFirstName\", \n" +
                         "    \"last_name\": \"testLast\", \n" +
@@ -160,7 +149,7 @@ public class ContactControllerTest {
      */
     @Test
     public void testCDeleteContact() throws Exception {
-        int departmentId = 3;
+        int departmentId = 2;
 
 
         String email = "testDelete@gamil.com";
@@ -170,7 +159,7 @@ public class ContactControllerTest {
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post("/contact").header(SecurityConstants.TOKEN_HEADER,token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\n" +
-                        "    \"department_id\": \"3\", \n" +
+                        "    \"department_id\": \"2\", \n" +
                         "    \"email\": \"testDelete@gamil.com\", \n" +
                         "    \"first_name\": \"testFirst\", \n" +
                         "    \"last_name\": \"testLast\", \n" +
@@ -197,7 +186,7 @@ public class ContactControllerTest {
      */
     @Test
     public void testDGetContactDetails() throws Exception {
-        int departmentId = 3;
+        int departmentId = 2;
 
 
         String email = "testGetContact@gamil.com";
@@ -205,7 +194,7 @@ public class ContactControllerTest {
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post("/contact").header(SecurityConstants.TOKEN_HEADER,token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\n" +
-                        "    \"department_id\": \"3\", \n" +
+                        "    \"department_id\": \"2\", \n" +
                         "    \"email\": \"testGetContact@gamil.com\", \n" +
                         "    \"first_name\": \"testFirst\", \n" +
                         "    \"last_name\": \"testLast\", \n" +

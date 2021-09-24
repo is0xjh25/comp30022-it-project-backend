@@ -17,7 +17,9 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -107,7 +109,7 @@ public class ContactServiceImpl extends ServiceImpl<ContactMapper, Contact> impl
      * @return a list of match contact
      */
     @Override
-    public Page<Contact> getContactByOrgIdAndDepartmentId(Page<Contact> page, Integer organizationId, Integer departmentId, Integer userId) {
+    public Page<ContactDTO> getContactByOrgIdAndDepartmentId(Page<ContactDTO> page, Integer organizationId, Integer departmentId, Integer userId) {
 
         QueryWrapper<Contact> queryWrapper = new QueryWrapper<>();
         Page<Contact> contacts = new Page<>();
@@ -133,11 +135,11 @@ public class ContactServiceImpl extends ServiceImpl<ContactMapper, Contact> impl
             for (Integer department : departmentInOrgAndJoin) {
                 queryWrapper.or().eq("department_id", department);
             }
-            page = contactMapper.selectPage(page, queryWrapper);
+            page = contactMapper.getContactDTOByDepartmentId(page, queryWrapper);
         } else {
             if (departmentIdJoinList.contains(departmentId)) {
                 queryWrapper.eq("department_id", departmentId);
-                page = contactMapper.selectPage(page, queryWrapper);
+                page = contactMapper.getContactDTOByDepartmentId(page, queryWrapper);
             }
         }
 
@@ -200,6 +202,35 @@ public class ContactServiceImpl extends ServiceImpl<ContactMapper, Contact> impl
             contactDTOList.add(ContactToContactDTO(contact));
         }
         return contactDTOList;
+    }
+
+    /**
+     * search contacts in department by contact key
+     * will not check the permission
+     * @param page         the configuration of the page
+     * @param departmentId the departmentId to search contact
+     * @param searchKey    search key
+     * @return
+     */
+    @Override
+    public Page<ContactDTO> searchContactDTO(Page<ContactDTO> page, Integer departmentId, String searchKey) {
+        Map<String,String> map = new HashMap<>();
+        map.put("email",searchKey);
+        map.put("first_name",searchKey);
+        map.put("last_name",searchKey);
+        map.put("gender",searchKey);
+        map.put("organization",searchKey);
+        map.put("description",searchKey);
+        //to the true wrapper
+        QueryWrapper<Contact> wrapper = new QueryWrapper<>();
+        wrapper.eq("department_id",departmentId).and(i -> {
+            //add conditions into a wrapper
+            for(Map.Entry<String,String> entry : map.entrySet()){
+                i.or().like(entry.getKey(),entry.getValue());
+            }
+        });
+        page = baseMapper.getContactDTOByDepartmentId(page,wrapper);
+        return page;
     }
 
     /**
