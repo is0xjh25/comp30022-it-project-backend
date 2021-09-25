@@ -190,7 +190,7 @@ public class ContactServiceImpl extends ServiceImpl<ContactMapper, Contact> impl
     }
 
     /**
-     * Transfer List<Contact> to List<ContactDTO>
+     * Transfer List of Contact to List of ContactDTO
      *
      * @param contacts a list of contacts
      * @return a list of ContactDTO instances transferred
