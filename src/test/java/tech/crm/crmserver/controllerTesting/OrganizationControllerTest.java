@@ -17,6 +17,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.transaction.annotation.Transactional;
 import tech.crm.crmserver.common.constants.ExceptionMessageConstants;
 import tech.crm.crmserver.common.constants.SecurityConstants;
 
@@ -135,6 +136,7 @@ public class OrganizationControllerTest {
      */
     @Test
     @Order(5)
+    @Transactional
     public void testEdeleteOrganizationById() throws Exception {
         // Delete the organization which is owned by user
         mvc.perform(MockMvcRequestBuilders.delete("/organization").param("organization_id", "1").header(SecurityConstants.TOKEN_HEADER,token))

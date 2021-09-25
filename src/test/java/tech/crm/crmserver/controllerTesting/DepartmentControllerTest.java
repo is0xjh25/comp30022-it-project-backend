@@ -13,6 +13,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.transaction.annotation.Transactional;
 import tech.crm.crmserver.common.constants.SecurityConstants;
 import tech.crm.crmserver.common.enums.PermissionLevel;
 import tech.crm.crmserver.dao.Department;
@@ -105,6 +106,7 @@ public class DepartmentControllerTest {
      */
     @Test
     @Order(3)
+    @Transactional
     public void testCDeleteDepartment() throws Exception{
         int departmentId = 2;
         mvc.perform(MockMvcRequestBuilders.delete("/department").param("department_id", String.valueOf(departmentId)).header(SecurityConstants.TOKEN_HEADER,token))
