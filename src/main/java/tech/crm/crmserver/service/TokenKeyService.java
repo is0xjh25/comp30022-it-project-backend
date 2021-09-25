@@ -45,4 +45,10 @@ public interface TokenKeyService extends IService<TokenKey> {
      */
     public void deleteInvalidToken();
 
+    /**
+     * delete all the token of this user in database
+     * @param userId the id of user
+     */
+    public void deleteTokenByUser(Integer userId);
+
 }

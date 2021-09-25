@@ -164,7 +164,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     /**
      * generate a random password and store encrypted password into database <br/>
-     * then send the password to the email
+     * then send the password to the email<br/>
+     * and delete all the token of this user in database
      *
      * @param email the email of user who needs reset password
      */
@@ -176,11 +177,16 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if(user == null){
             throw new UserNotExistException();
         }
+        //delete token
+        tokenKeyService.deleteTokenByUser(user.getId());
+        //generate password
         String rawPassword = passwordEncoder.encode(UUID.randomUUID().toString());
         String encryptPassword = passwordEncoder.encode(rawPassword);
 
+        //store password
         wrapper.set("password",encryptPassword);
         update(wrapper);
+        //send email
         mailService.sendSimpleMail(email,EMAIL_TITLE,rawPassword);
     }
 }

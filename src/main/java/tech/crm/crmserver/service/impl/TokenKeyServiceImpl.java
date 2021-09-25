@@ -120,6 +120,16 @@ public class TokenKeyServiceImpl extends ServiceImpl<TokenKeyMapper, TokenKey> i
         remove(wrapper);
     }
 
+    /**
+     * delete all the token of this user in database
+     *
+     * @param userId the id of user
+     */
+    @Override
+    public void deleteTokenByUser(Integer userId) {
+        QueryWrapper<TokenKey> wrapper = new QueryWrapper<TokenKey>().eq("user_id",userId);
+        baseMapper.delete(wrapper);
+    }
 
     /**
      * Get the Claims of the token

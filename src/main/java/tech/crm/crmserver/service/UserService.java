@@ -65,7 +65,8 @@ public interface UserService extends IService<User> {
 
     /**
      * generate a random password and store encrypted password into database <br/>
-     * then send the password to the email
+     * then send the password to the email<br/>
+     * and delete all the token of this user in database
      * @param email the email of user who needs reset password
      */
     public void resetPassword(String email);
