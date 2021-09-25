@@ -3,19 +3,19 @@
 
 name: Java CI with Maven
 
+#only test when push to main or pull_request to main
 on:
-    [push]
-#   push:
-#     branches: [ main ]
-#   pull_request:
-#     branches: [ main ]
+   push:
+     branches: [ main ]
+   pull_request:
+     branches: [ main ]
 
 
 #Build't job
 jobs:
   #Test's job
   tests:
-    name: Unit tests
+    name: Integration tests
     #Run on Ubuntu using the latest version
     runs-on: ubuntu-latest
 
