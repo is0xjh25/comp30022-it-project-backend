@@ -214,6 +214,7 @@ public class ContactControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn();
 
+
         List<Contact> contactBasedOnSomeConditionFromDB = contactService.getContactBasedOnSomeConditionFromDB(departmentId, email, null, null, null, null, null, null, null);
         contactId = contactBasedOnSomeConditionFromDB.get(0).getId();
 
