@@ -1,9 +1,9 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://mydb.mysql.database.azure.com:3306/testdb?reconnect=true
-    username: yyds
-    password: comp30022-
+    url: jdbc:mysql://localhost:3306/testdb
+    username: root
+    password: 415623
     schema: classpath:db/schema-test.sql
     data: classpath:db/data-test.sql
     initialization-mode: always
