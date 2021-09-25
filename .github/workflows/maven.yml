@@ -32,10 +32,6 @@ jobs:
           distribution: 'adopt'
           cache: maven
 
-      #build with Maven
-      - name: Build with Maven
-        run: mvn -B package --file pom.xml
-
       #Run Tests
       - name: Run Tests
         run: mvn -B test
