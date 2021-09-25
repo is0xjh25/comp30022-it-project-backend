@@ -11,7 +11,7 @@ import org.springframework.util.MultiValueMap;
  *
  * @author Lingxiao
  * @since 2021-08-30
- * @param <T>
+ * @param <T> the body of response
  */
 public class ResponseResult<T> extends ResponseEntity<Result<T>> {
 

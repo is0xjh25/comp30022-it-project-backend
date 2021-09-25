@@ -141,7 +141,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
         //user not exist
         if(user == null){
-            throw new UsernameNotFoundException("User not exist！");
+            throw new UsernameNotFoundException("User not exist!");
         }
 
         List<GrantedAuthority> auths = AuthorityUtils.commaSeparatedStringToAuthorityList("user");

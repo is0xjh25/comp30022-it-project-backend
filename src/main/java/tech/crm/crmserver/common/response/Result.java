@@ -13,7 +13,7 @@ import org.springframework.http.ResponseEntity;
  *
  * @author Lingxiao
  * @since 2021-08-30
- * @param <T>
+ * @param <T> the data of response
  */
 
 @AllArgsConstructor
