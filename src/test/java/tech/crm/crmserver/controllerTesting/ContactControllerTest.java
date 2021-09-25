@@ -200,6 +200,7 @@ public class ContactControllerTest {
         int departmentId = 2;
 
 
+
         String email = "testGetContact@gamil.com";
 
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post("/contact").header(SecurityConstants.TOKEN_HEADER,token)
