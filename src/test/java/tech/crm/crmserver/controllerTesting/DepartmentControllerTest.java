@@ -1,41 +1,33 @@
 package tech.crm.crmserver.controllerTesting;
 
-import org.junit.Before;
-import org.junit.FixMethodOrder;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.MethodSorters;
+import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.transaction.annotation.Transactional;
-import tech.crm.crmserver.common.constants.ExceptionMessageConstants;
 import tech.crm.crmserver.common.constants.SecurityConstants;
 import tech.crm.crmserver.common.enums.PermissionLevel;
 import tech.crm.crmserver.dao.Department;
 import tech.crm.crmserver.dao.Permission;
-import tech.crm.crmserver.dto.LoginRequest;
 import tech.crm.crmserver.service.DepartmentService;
 import tech.crm.crmserver.service.PermissionService;
-import tech.crm.crmserver.service.UserService;
 
 import java.util.List;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class DepartmentControllerTest {
     @Autowired
     private MockMvc mvc;
@@ -52,11 +44,8 @@ public class DepartmentControllerTest {
      * login before test
      * @throws Exception
      */
-    @Before
+    @BeforeEach
     public void loginTest() throws Exception {
-        if(token != null){
-            return;
-        }
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post("/user/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\n" +
@@ -74,6 +63,7 @@ public class DepartmentControllerTest {
      * @throws Exception
      */
     @Test
+    @Order(1)
     public void testBJoinDepartment() throws Exception {
         int departmentId = 3;
         mvc.perform(MockMvcRequestBuilders.post("/department/join").param("department_id", String.valueOf(departmentId)).header(SecurityConstants.TOKEN_HEADER,token))
@@ -97,6 +87,7 @@ public class DepartmentControllerTest {
      * @throws Exception
      */
     @Test
+    @Order(2)
     public void testAGetMemberofDepartment() throws Exception{
         int departmentId = 2;
         mvc.perform(MockMvcRequestBuilders.get("/department/member").param("department_id", String.valueOf(departmentId)).param("size", "4").param("current", "1").header(SecurityConstants.TOKEN_HEADER,token))
@@ -111,6 +102,8 @@ public class DepartmentControllerTest {
      * @throws Exception
      */
     @Test
+    @Order(3)
+    @Transactional
     public void testCDeleteDepartment() throws Exception{
         int departmentId = 2;
         mvc.perform(MockMvcRequestBuilders.delete("/department").param("department_id", String.valueOf(departmentId)).header(SecurityConstants.TOKEN_HEADER,token))
