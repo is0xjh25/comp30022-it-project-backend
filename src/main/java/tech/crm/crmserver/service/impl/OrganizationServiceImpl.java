@@ -1,7 +1,9 @@
 package tech.crm.crmserver.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import tech.crm.crmserver.dao.Organization;
 import tech.crm.crmserver.exception.NotEnoughPermissionException;
 import tech.crm.crmserver.exception.OrganizationNotExistException;
@@ -9,8 +11,6 @@ import tech.crm.crmserver.mapper.OrganizationMapper;
 import tech.crm.crmserver.service.BelongToService;
 import tech.crm.crmserver.service.DepartmentService;
 import tech.crm.crmserver.service.OrganizationService;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import org.springframework.stereotype.Service;
 import tech.crm.crmserver.service.UserService;
 
 import java.util.HashMap;

@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import tech.crm.crmserver.common.enums.Status;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;

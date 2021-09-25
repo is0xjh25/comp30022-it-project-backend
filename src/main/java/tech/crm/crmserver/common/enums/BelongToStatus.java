@@ -1,8 +1,7 @@
 package tech.crm.crmserver.common.enums;
+
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
 
 /**
  * Status Enum for Belong To

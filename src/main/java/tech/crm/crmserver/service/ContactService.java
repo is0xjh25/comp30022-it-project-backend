@@ -1,8 +1,8 @@
 package tech.crm.crmserver.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import tech.crm.crmserver.dao.Contact;
 import com.baomidou.mybatisplus.extension.service.IService;
+import tech.crm.crmserver.dao.Contact;
 import tech.crm.crmserver.dto.ContactCreateDTO;
 import tech.crm.crmserver.dto.ContactDTO;
 import tech.crm.crmserver.dto.ContactUpdateDTO;

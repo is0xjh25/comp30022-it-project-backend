@@ -1,8 +1,7 @@
 package tech.crm.crmserver.service;
 
-import org.springframework.web.bind.annotation.RequestParam;
-import tech.crm.crmserver.dao.Department;
 import com.baomidou.mybatisplus.extension.service.IService;
+import tech.crm.crmserver.dao.Department;
 
 import java.util.List;
 
