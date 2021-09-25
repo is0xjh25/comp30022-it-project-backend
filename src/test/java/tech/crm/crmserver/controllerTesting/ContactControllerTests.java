@@ -48,9 +48,6 @@ public class ContactControllerTests {
      */
     @BeforeEach
     public void loginTest() throws Exception {
-        if(token != null){
-            return;
-        }
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post("/user/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\n" +
