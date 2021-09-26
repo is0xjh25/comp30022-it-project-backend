@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
-import tech.crm.crmserver.common.response.ResponseResult;
 import tech.crm.crmserver.common.response.Result;
 
 import javax.servlet.http.HttpServletRequest;

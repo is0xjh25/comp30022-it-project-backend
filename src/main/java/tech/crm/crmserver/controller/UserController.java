@@ -11,13 +11,8 @@ import tech.crm.crmserver.dao.User;
 import tech.crm.crmserver.dto.LoginRequest;
 import tech.crm.crmserver.dto.ResetPasswordDTO;
 import tech.crm.crmserver.dto.UserDTO;
-import tech.crm.crmserver.exception.LoginBadCredentialsException;
-import tech.crm.crmserver.exception.UserAlreadyExistException;
-import tech.crm.crmserver.service.MailService;
 import tech.crm.crmserver.service.TokenKeyService;
 import tech.crm.crmserver.service.UserService;
-
-import javax.validation.constraints.Email;
 
 
 /**
