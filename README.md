@@ -114,7 +114,7 @@ yyds's Backend Server uses GitHub’s integrated issue tracking system to record
 
 * If possible, try to create a test-case or project that replicates the problem and attach it to the issue.
 
-## System REquirements
+## System Requirements
 The backend can be run on any operating system.
 
 List below are the requirements to run the application:
