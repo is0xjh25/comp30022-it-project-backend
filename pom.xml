@@ -89,11 +89,6 @@
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-core</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<scope>test</scope>
-		</dependency>
 <!--		mail sender for sending mail-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

@@ -18,7 +18,7 @@ import javax.validation.constraints.NotNull;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserDTO {
+public class UserRegisterDTO {
 
     @NotNull(message = "email cannot be null")
     @Email(message = "invalid email")

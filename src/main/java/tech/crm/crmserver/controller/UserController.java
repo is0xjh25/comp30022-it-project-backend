@@ -10,7 +10,8 @@ import tech.crm.crmserver.common.response.ResponseResult;
 import tech.crm.crmserver.dao.User;
 import tech.crm.crmserver.dto.LoginRequest;
 import tech.crm.crmserver.dto.ResetPasswordDTO;
-import tech.crm.crmserver.dto.UserDTO;
+import tech.crm.crmserver.dto.UserRegisterDTO;
+import tech.crm.crmserver.dto.UserUpdateDTO;
 import tech.crm.crmserver.service.TokenKeyService;
 import tech.crm.crmserver.service.UserService;
 
@@ -63,12 +64,12 @@ public class UserController {
     /**
      * Register API
      *
-     * @param userDTO the form for register, contain all the information required for User
+     * @param userRegisterDTO the form for register, contain all the information required for User
      * @return 200 when successfully register and set Authorization in response header
      */
     @PostMapping
-    public ResponseResult<Object> register(@Validated @RequestBody UserDTO userDTO){
-        User user = userService.fromUserDTO(userDTO);
+    public ResponseResult<Object> register(@Validated @RequestBody UserRegisterDTO userRegisterDTO){
+        User user = userService.fromUserRegisterDTO(userRegisterDTO);
         //check whether there is same email already exist
         userService.register(user);
         //return token
@@ -108,5 +109,18 @@ public class UserController {
         userService.resetPassword(resetPasswordDTO.getEmail());
         return ResponseResult.suc("Check your email for new password!");
     }
+
+    /**
+     * Update user details
+     *
+     * @param userUpdateDTO the form of update user details
+     * @return response with msg
+     */
+    @PutMapping
+    public ResponseResult<Object> updateUserDetail(@RequestBody UserUpdateDTO userUpdateDTO){
+        userService.updateUser(userUpdateDTO);
+        return ResponseResult.suc("Successfully update user detail");
+    }
+
 }
 

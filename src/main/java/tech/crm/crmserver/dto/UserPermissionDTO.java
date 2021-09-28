@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import tech.crm.crmserver.common.enums.PermissionLevel;
 
+import java.time.LocalDateTime;
+
 /**
  * <p>
  *  DTO for User Permission
@@ -26,5 +28,6 @@ public class UserPermissionDTO {
     private String firstName;
     private String middleName;
     private String lastName;
+    private LocalDateTime recentActivity;
 
 }

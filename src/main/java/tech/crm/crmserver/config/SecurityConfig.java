@@ -13,6 +13,7 @@ import tech.crm.crmserver.security.JwtAccessDeniedHandler;
 import tech.crm.crmserver.security.JwtAuthenticationEntryPoint;
 import tech.crm.crmserver.security.JwtAuthorizationFilter;
 import tech.crm.crmserver.service.TokenKeyService;
+import tech.crm.crmserver.service.UserService;
 
 /**
  * <p>
@@ -28,6 +29,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     public TokenKeyService tokenKeyService;
 
+    @Autowired
+    public UserService userService;
+
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
@@ -41,7 +46,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated()
                 .and()
                 //JWT
-                .addFilter(new JwtAuthorizationFilter(authenticationManager(), tokenKeyService))
+                .addFilter(new JwtAuthorizationFilter(authenticationManager(), tokenKeyService, userService))
                 //exception handling
                 .exceptionHandling().authenticationEntryPoint(new JwtAuthenticationEntryPoint())
                 .accessDeniedHandler(new JwtAccessDeniedHandler());

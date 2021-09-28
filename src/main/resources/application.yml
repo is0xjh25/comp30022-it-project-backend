@@ -1,7 +1,7 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://mydb.mysql.database.azure.com:3306/mydb?reconnect=true
+    url: jdbc:mysql://mydb.mysql.database.azure.com:3306/mydb?reconnect=true&serverTimezone=Australia/Victoria
     username: yyds
     password: comp30022-
   mvc:
@@ -10,6 +10,7 @@ spring:
   #jackson
   jackson:
     property-naming-strategy: SNAKE_CASE
+    time-zone: GMT+10
 
   #mail config
   mail:

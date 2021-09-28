@@ -20,7 +20,7 @@ import tech.crm.crmserver.dto.UserPermissionDTO;
 public interface PermissionMapper extends BaseMapper<Permission> {
 
 
-    @Select("SELECT p.user_id, p.department_id, p.id permission_id, p.authority_level, u.email, u.first_name, u.middle_name, u.last_name " +
+    @Select("SELECT p.user_id, p.department_id, p.id permission_id, p.authority_level, u.email, u.first_name, u.middle_name, u.last_name, u.recent_activity " +
             "FROM permission  p LEFT JOIN user u ON p.user_id = u.id " +
             "WHERE department_id = #{departmentId} " +
             "ORDER BY FIELD(authority_level,0,5,4,3,2,1)")
