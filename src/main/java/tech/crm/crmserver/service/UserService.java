@@ -70,4 +70,10 @@ public interface UserService extends IService<User> {
      * @param email the email of user who needs reset password
      */
     public void resetPassword(String email);
+
+    /**
+     * update the recent activity time of user
+     * @param userId user id
+     */
+    public void updateRecentActivity(Integer userId);
 }

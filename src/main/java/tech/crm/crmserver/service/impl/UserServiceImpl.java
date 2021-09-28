@@ -25,6 +25,7 @@ import tech.crm.crmserver.service.MailService;
 import tech.crm.crmserver.service.TokenKeyService;
 import tech.crm.crmserver.service.UserService;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -187,5 +188,24 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         update(wrapper);
         //send email
         mailService.sendSimpleMail(email,EMAIL_TITLE,rawPassword);
+    }
+
+    /**
+     * update the recent activity time of user
+     *
+     * @param userId user id
+     */
+    @Override
+    public void updateRecentActivity(Integer userId) {
+        //update recent activity
+        UpdateWrapper<User> wrapper = new UpdateWrapper<>();
+        wrapper.eq("id", userId)
+                .set("recent_activity", LocalDateTime.now());
+        try {
+            update(wrapper);
+        }
+        catch (Exception e){
+            throw new UserNotExistException();
+        }
     }
 }
