@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tech.crm.crmserver.common.enums.PermissionLevel;
+import tech.crm.crmserver.common.enums.Status;
 import tech.crm.crmserver.dao.Department;
 import tech.crm.crmserver.dao.Organization;
 import tech.crm.crmserver.dao.Permission;
@@ -151,4 +152,18 @@ public class DepartmentServiceImpl extends ServiceImpl<DepartmentMapper, Departm
         permissionService.createPermission(department.getId(),userService.getId(),PermissionLevel.OWNER.getLevel());
     }
 
+    /**
+     * Check if department is exits and active
+     *
+     * @param departmentId
+     * @return if the department with the input departmentId is exits and the status is active
+     */
+    @Override
+    public boolean checkIfValidDepartmentId(Integer departmentId) {
+        Department department = getById(departmentId);
+        if (!department.getStatus().equals(Status.ACTIVE)) {
+            return false;
+        }
+        return true;
+    }
 }

@@ -90,6 +90,30 @@ public interface ContactService extends IService<Contact> {
     public Page<ContactDTO> searchContactDTO(Page<ContactDTO> page, Integer departmentId, String searchKey);
 
     /**
+     * Create contact based on contactDTO
+     *
+     * @param contactDTO all the information need to create contact
+     * @return if create success
+     */
+    public boolean createContactByContactDTO(ContactCreateDTO contactDTO, Integer userId);
+
+    /**
+     * Update contact based on contactUpdateDTO
+     *
+     * @param contactDTO all the information need to update contact
+     * @return if update success
+     */
+    public boolean updateContactByContactDTO(ContactUpdateDTO contactDTO, Integer userId);
+
+    /**
+     * Delete contact based on contactId
+     *
+     * @param contactId the id of the contact to delete
+     * @return if delete success
+     */
+    public boolean deleteContactByContactId(Integer contactId, Integer userId);
+
+    /**
      * Search contact based on some condition
      *
      * @param departmentId the departmentId to match
