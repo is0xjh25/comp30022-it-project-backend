@@ -28,12 +28,12 @@ This is the backend for team yyds of comp30022 It Project.
 
 ## Installation and Getting Started
 
-### environment
-download java runtime environment(JRE) 8 [link to Java download](https://www.oracle.com/java/technologies/downloads/#java8)
+### Environment
+download [java runtime environment(JRE) 8](https://www.oracle.com/java/technologies/downloads/#java8)
 
-Then go to release [link to release](https://github.com/is0xjh25/comp30022-it-project-backend/releases) and choose the latest release.
+Then go to [release](https://github.com/is0xjh25/comp30022-it-project-backend/releases) and choose the latest release.
 
-### source
+### Source
 Go to assert and download the java package(.jar)
 ![image](https://user-images.githubusercontent.com/71265122/134913809-5631de25-8731-4534-978a-f3e84fb362a0.png)
 
@@ -96,9 +96,9 @@ mybatis-plus:
 
 ## Getting Help
 
-Are you having trouble with yyds's backend server? We want to help!
+Are you having trouble with yyds's Backend Server? We want to help!
 
-Report bugs with Spring Boot at [issues](https://github.com/is0xjh25/comp30022-it-project-backend/issues).
+Report bugs with yyds's Backend Server at [issues](https://github.com/is0xjh25/comp30022-it-project-backend/issues).
 
 ## Reporting Issues
 
@@ -126,4 +126,10 @@ We also recommend using [IntelliJ IDEA Ultimate](https://www.jetbrains.com/idea/
 ## Technologies Used
 
 * [Spring boot](https://spring.io/)
+* [Spring Security](https://spring.io/projects/spring-security)
 * [Maven](https://maven.apache.org/)
+* [Mybatis Plus](https://baomidou.com/)
+* [lombok](https://projectlombok.org/)
+* [jwt](https://jwt.io/)
+* [jjwt](https://github.com/jwtk/jjwt)
+* [Junit 5](https://junit.org/junit5/)
