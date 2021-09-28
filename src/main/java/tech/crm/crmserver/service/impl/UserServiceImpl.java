@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 import tech.crm.crmserver.common.utils.NullAwareBeanUtilsBean;
 import tech.crm.crmserver.dao.User;
 import tech.crm.crmserver.dto.LoginRequest;
-import tech.crm.crmserver.dto.UserDTO;
+import tech.crm.crmserver.dto.UserRegisterDTO;
 import tech.crm.crmserver.exception.LoginBadCredentialsException;
 import tech.crm.crmserver.exception.UserAlreadyExistException;
 import tech.crm.crmserver.exception.UserNotExistException;
@@ -102,14 +102,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     /**
-     * Transfer a userDTO to user class
+     * Transfer a userRegisterDTO to user class
      *
-     * @param userDTO userDTO class
+     * @param userRegisterDTO userDTO class
      * @return user class
      */
-    public User fromUserDTO(UserDTO userDTO){
+    public User fromUserRegisterDTO(UserRegisterDTO userRegisterDTO){
         User user = new User();
-        NullAwareBeanUtilsBean.copyProperties(userDTO, user);
+        NullAwareBeanUtilsBean.copyProperties(userRegisterDTO, user);
         return user;
     }
 

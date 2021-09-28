@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import tech.crm.crmserver.common.enums.Status;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
  * <p>
@@ -42,6 +43,8 @@ public class User implements Serializable {
     private String lastName;
 
     private String phone;
+
+    private LocalDateTime recentActivity;
 
     private String website;
 
