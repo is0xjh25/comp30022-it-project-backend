@@ -57,4 +57,13 @@ public interface DepartmentService extends IService<Department> {
      */
     public void createDepartment( Integer orgId, String name);
 
+    /**
+     * Check if department is exits and active
+     *
+     * @param departmentId
+     * @return if the department with the input departmentId is exits and the status is active
+     */
+    public boolean checkIfValidDepartmentId(Integer departmentId);
+
+
 }

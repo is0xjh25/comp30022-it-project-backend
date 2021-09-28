@@ -6,12 +6,14 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tech.crm.crmserver.common.enums.PermissionLevel;
+import tech.crm.crmserver.common.enums.Status;
 import tech.crm.crmserver.common.utils.NullAwareBeanUtilsBean;
 import tech.crm.crmserver.dao.Contact;
 import tech.crm.crmserver.dao.Permission;
 import tech.crm.crmserver.dto.ContactCreateDTO;
 import tech.crm.crmserver.dto.ContactDTO;
 import tech.crm.crmserver.dto.ContactUpdateDTO;
+import tech.crm.crmserver.exception.*;
 import tech.crm.crmserver.mapper.ContactMapper;
 import tech.crm.crmserver.service.*;
 
@@ -46,6 +48,9 @@ public class ContactServiceImpl extends ServiceImpl<ContactMapper, Contact> impl
 
     @Autowired
     public DepartmentService departmentService;
+
+    @Autowired
+    public ContactService contactService;
 
     /**
      * Delete the Contact by departmentId<br/>
@@ -294,5 +299,78 @@ public class ContactServiceImpl extends ServiceImpl<ContactMapper, Contact> impl
             return true;
         };
         return false;
+    }
+
+    /**
+     * Create contact based on contactDTO
+     *
+     * @param contactDTO all the information need to create contact
+     * @return if create success
+     */
+    @Override
+    public boolean createContactByContactDTO(ContactCreateDTO contactDTO, Integer userId) {
+        // Verify departmentID is valid
+        if (!departmentService.checkIfValidDepartmentId(contactDTO.getDepartmentId())) {
+            throw new DepartmentNotExistException();
+        }
+
+        if (!permissionService.ifPermissionLevelSatisfied(userId, PermissionLevel.UPDATE, contactDTO.getDepartmentId())) {
+            throw new NotEnoughPermissionException();
+        }
+
+        // check if the same contact already exists
+        List<Contact> contacts = contactService.getContactBasedOnSomeConditionFromDB(contactDTO.getDepartmentId(),contactDTO.getEmail(), null, null, null, null, null, null, null);
+        if (contacts.size() > 0) {
+            throw new ContactAlreadyExistException();
+        }
+
+        Contact newContact = contactService.fromContactCreateDTO(contactDTO);
+        return save(newContact);
+    }
+
+    /**
+     * Update contact based on contactUpdateDTO
+     *
+     * @param contactDTO all the information need to update contact
+     * @return if update success
+     */
+    public boolean updateContactByContactDTO(ContactUpdateDTO contactDTO, Integer userId) {
+        Contact newContact = contactService.fromContactUpdateDTO(contactDTO);
+
+        Contact oldContact = contactService.getById(newContact.getId());
+        if(oldContact == null || oldContact.getStatus().equals(Status.DELETED)){
+            throw new ContactNotExistException();
+        }
+
+        // Verify departmentID is valid
+        if (!departmentService.checkIfValidDepartmentId(oldContact.getDepartmentId())) {
+            throw new DepartmentNotExistException();
+        }
+
+        // Verify permissionLevel
+        if (!permissionService.ifPermissionLevelSatisfied(userId, PermissionLevel.UPDATE, oldContact.getDepartmentId())) {
+            throw new NotEnoughPermissionException();
+        }
+       return contactService.updateContact(newContact);
+    }
+
+    /**
+     * Delete contact based on contactId
+     *
+     * @param contactId the id of the contact to delete
+     * @return if delete success
+     */
+    public boolean deleteContactByContactId(Integer contactId, Integer userId) {
+        Contact contact = contactService.getById(contactId);
+
+        if (contact == null || contact.getStatus().equals(Status.DELETED)) {
+            throw new ContactNotExistException();
+        }
+        // Verify permissionLevel, the permissionLevel here is delete
+        if (!permissionService.ifPermissionLevelSatisfied(userId, PermissionLevel.DELETE, contact.getDepartmentId())) {
+            throw new NotEnoughPermissionException();
+        }
+        return removeById(contactId);
+
     }
 }

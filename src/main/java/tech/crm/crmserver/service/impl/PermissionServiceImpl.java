@@ -303,4 +303,22 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
         }
         return null;
     }
+
+    /**
+     * Check if the permission for a user in a department is satisfied requirement
+     *
+     * @param userId
+     * @param permissionLevel
+     * @param departmentId
+     * @return a boolean value to represent if the user's permission in this department is greater or equal than
+     * the required permissionLevel
+     */
+    @Override
+    public boolean ifPermissionLevelSatisfied(Integer userId, PermissionLevel permissionLevel, Integer departmentId) {
+        Permission myPermission = findPermission(departmentId, userId);
+        if (myPermission == null || myPermission.getAuthorityLevel().getLevel() < permissionLevel.getLevel()) {
+            return false;
+        }
+        return true;
+    }
 }
