@@ -236,6 +236,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if(rawPassword != null){
             String encodePassword = passwordEncoder.encode(rawPassword);
             updateWrapper.set("password",encodePassword);
+            //clean token and notify the user
+            tokenKeyService.deleteTokenByUser(getId());
+            mailService.sendSimpleMail(getById(getId()).getEmail(),"Safety Notice",
+                    "Your password for ConnecTi has been changed");
         }
 
         //update to database

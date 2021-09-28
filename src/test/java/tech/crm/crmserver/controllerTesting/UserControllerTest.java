@@ -189,6 +189,31 @@ public class UserControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.msg").value("successfully logout!"));
     }
 
+    /**
+     * update user details with token
+     */
+    @Test
+    @Order(8)
+    @Transactional
+    public void updateUserDetail()throws Exception{
+        mvc.perform(MockMvcRequestBuilders.put("/user").header(SecurityConstants.TOKEN_HEADER,token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\n" +
+                        "    \"first_name\": \"lingxiao1\",\n" +
+                        "    \"last_name\": \"li\",\n" +
+                        "    \"phone\": \"188188\",\n" +
+                        "    \"website\": \"https://comp30022-yyds.herokuapp.com/\",\n" +
+                        "    \"description\": \"unimelb cs studnet\"\n" +
+                        "}"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.msg").value("Successfully update user detail"));
+
+        mvc.perform(MockMvcRequestBuilders.get("/user").header(SecurityConstants.TOKEN_HEADER,token))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.email").value("lingxiao1@student.unimelb.edu.au"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.first_name").value("lingxiao1"));
+    }
+
 
 }
 

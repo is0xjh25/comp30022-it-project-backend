@@ -26,6 +26,7 @@ CREATE TABLE IF NOT EXISTS `testdb`.`user` (
                                                `middle_name` VARCHAR(45) NULL,
                                                `last_name` VARCHAR(45) NOT NULL,
                                                `phone` VARCHAR(45) NOT NULL,
+                                               `recent_activity` DATETIME,
                                                `website` VARCHAR(255) NULL,
                                                `description` LONGTEXT NULL,
                                                `status` ENUM('active', 'deleted', 'pending') NOT NULL DEFAULT 'active',
