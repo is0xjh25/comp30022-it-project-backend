@@ -3,6 +3,9 @@ package tech.crm.crmserver.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -17,6 +20,7 @@ import tech.crm.crmserver.common.utils.NullAwareBeanUtilsBean;
 import tech.crm.crmserver.dao.User;
 import tech.crm.crmserver.dto.LoginRequest;
 import tech.crm.crmserver.dto.UserRegisterDTO;
+import tech.crm.crmserver.dto.UserUpdateDTO;
 import tech.crm.crmserver.exception.LoginBadCredentialsException;
 import tech.crm.crmserver.exception.UserAlreadyExistException;
 import tech.crm.crmserver.exception.UserNotExistException;
@@ -27,6 +31,7 @@ import tech.crm.crmserver.service.UserService;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -207,5 +212,33 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         catch (Exception e){
             throw new UserNotExistException();
         }
+    }
+
+    /**
+     * update the not null properties in userUpdateDTO
+     *
+     * @param userUpdateDTO user update information
+     */
+    @Override
+    public void updateUser(UserUpdateDTO userUpdateDTO) {
+        UpdateWrapper<User> updateWrapper = new UpdateWrapper<>();
+        updateWrapper.eq("id",getId());
+        Map<String, String> map = new ObjectMapper().convertValue(userUpdateDTO, Map.class);
+        //translate to underscore
+        PropertyNamingStrategy.SnakeCaseStrategy snakeCaseStrategy = new PropertyNamingStrategy.SnakeCaseStrategy();
+        for(Map.Entry<String,String> entry : map.entrySet()){
+            if(entry.getValue() != null && !entry.getKey().equals("password")){
+                updateWrapper.set(snakeCaseStrategy.translate(entry.getKey()),entry.getValue());
+            }
+        }
+        //encode the password
+        String rawPassword = userUpdateDTO.getPassword();
+        if(rawPassword != null){
+            String encodePassword = passwordEncoder.encode(rawPassword);
+            updateWrapper.set("password",encodePassword);
+        }
+
+        //update to database
+        update(updateWrapper);
     }
 }

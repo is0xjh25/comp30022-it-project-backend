@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import tech.crm.crmserver.dao.User;
 import tech.crm.crmserver.dto.LoginRequest;
 import tech.crm.crmserver.dto.UserRegisterDTO;
+import tech.crm.crmserver.dto.UserUpdateDTO;
 
 /**
  * <p>
@@ -76,4 +77,10 @@ public interface UserService extends IService<User> {
      * @param userId user id
      */
     public void updateRecentActivity(Integer userId);
+
+    /**
+     * update the not null properties in userUpdateDTO
+     * @param userUpdateDTO user update information
+     */
+    public void updateUser(UserUpdateDTO userUpdateDTO);
 }
