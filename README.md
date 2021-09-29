@@ -2,7 +2,7 @@
 
 ## Project Description
 
-This is the backend for team yyds of comp30022 It Project.
+This is the backend for team yyds of comp30022 It Project, a personal CRM website to record customers' details
 
 ## Features
 * backend security
