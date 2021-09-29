@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import tech.crm.crmserver.common.enums.ToDoListStatus;
 import tech.crm.crmserver.dao.ToDoList;
 import tech.crm.crmserver.dto.TodoListCreateDTO;
+import tech.crm.crmserver.dto.TodoListUpdateDTO;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -45,4 +46,29 @@ public interface ToDoListService extends IService<ToDoList> {
      * @return if create success
      */
     public boolean createTodoList(Integer userId, TodoListCreateDTO todoListCreateDTO);
+
+    /**
+     * Update todolist based on todolistUpdateDTO
+     *
+     * @param todoListDTO all the information that the update needs
+     * @param userId the user who wants to update the todolist
+     * @return if the update is successful or not
+     */
+    public boolean updateTodoListByTodoListDTO(TodoListUpdateDTO todoListDTO, Integer userId);
+
+    /**
+     * Transfer from TodoListUpdateDTO to a todolist object
+     *
+     * @param todoListUpdateDTO the TodoListUpdateDTO to transfer
+     * @return a todolist object
+     */
+    public ToDoList fromTodoListUpdateDTO(TodoListUpdateDTO todoListUpdateDTO);
+
+    /**
+     * Update a todoList
+     *
+     * @param todoList the todoList to update
+     * @return if the update is successful
+     */
+    public boolean updateTodoList(ToDoList todoList);
 }

@@ -104,7 +104,7 @@ public class ContactController {
      * Update a contact's into
      *
      * @param contactDTO the details of contact to update
-     * @return ResponseResult about if the update success, or why it fail
+     * @return ResponseResult about if the update succeeds, or why it fails
      */
     @PutMapping
     public ResponseResult<Object> updateContact(@RequestBody @Valid ContactUpdateDTO contactDTO) {
