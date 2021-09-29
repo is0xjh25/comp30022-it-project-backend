@@ -12,6 +12,7 @@ import tech.crm.crmserver.dto.TodoListUpdateDTO;
 import tech.crm.crmserver.exception.TodoListFailAddedException;
 import tech.crm.crmserver.service.ToDoListService;
 import tech.crm.crmserver.service.UserService;
+import tech.crm.crmserver.exception.*;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -78,7 +79,7 @@ public class ToDoListController {
         boolean updateSuccess = false;
         updateSuccess = toDoListService.updateTodoListByTodoListDTO(todoListDTO, userService.getId());
         if (!updateSuccess) {
-            throw new TodoListFailUpdateException();
+            throw new TodoListUpdateFailException();
         }
         return ResponseResult.suc("Update todolist success");
     }

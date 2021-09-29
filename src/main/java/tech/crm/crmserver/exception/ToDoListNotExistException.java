@@ -5,6 +5,6 @@ import tech.crm.crmserver.common.response.ResponseResult;
 
 public class ToDoListNotExistException extends BaseException {
     public ToDoListNotExistException() {
-        super(ResponseResult.fail(ExceptionMessageConstants))
+        super(ResponseResult.fail(ExceptionMessageConstants.TODOLIST_NOT_EXIST_EXCEPTION));
     }
 }
