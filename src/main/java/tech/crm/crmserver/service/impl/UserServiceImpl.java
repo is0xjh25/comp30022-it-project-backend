@@ -7,6 +7,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -17,6 +19,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import tech.crm.crmserver.common.constants.TimeZoneConstants;
+import tech.crm.crmserver.common.constants.SecurityConstants;
+import tech.crm.crmserver.common.enums.Status;
 import tech.crm.crmserver.common.utils.NullAwareBeanUtilsBean;
 import tech.crm.crmserver.dao.User;
 import tech.crm.crmserver.dto.LoginRequest;
@@ -24,6 +28,7 @@ import tech.crm.crmserver.dto.UserRegisterDTO;
 import tech.crm.crmserver.dto.UserUpdateDTO;
 import tech.crm.crmserver.exception.LoginBadCredentialsException;
 import tech.crm.crmserver.exception.UserAlreadyExistException;
+import tech.crm.crmserver.exception.UserNotActiveException;
 import tech.crm.crmserver.exception.UserNotExistException;
 import tech.crm.crmserver.mapper.UserMapper;
 import tech.crm.crmserver.service.MailService;
@@ -56,6 +61,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Autowired
     private TokenKeyService tokenKeyService;
 
+    @Value("${spring.mail.active}")
+    private String activeUrl;
+
     private static String EMAIL_TITLE = "Your new Password for ConnecTi";
 
     /**
@@ -84,6 +92,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     public String login(LoginRequest loginRequest) {
         //verify the user
         User user = verify(loginRequest);
+        dealPendingUser(user);
         //return the token
         return tokenKeyService.createToken(user);
     }
@@ -97,15 +106,18 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     public User register(User user){
         //encode password
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setStatus(Status.PENDING);
         try {
             save(user);
             QueryWrapper<User> userQueryWrapper = new QueryWrapper<>();
             userQueryWrapper.eq("email",user.getEmail());
             user = getOne(userQueryWrapper);
+            sendActivationEmail(user);
         }
         catch (Exception e){
             throw new UserAlreadyExistException();
         }
+
         return user;
     }
 
@@ -184,6 +196,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if(user == null){
             throw new UserNotExistException();
         }
+        dealPendingUser(user);
         //delete token
         tokenKeyService.deleteTokenByUser(user.getId());
         //generate password
@@ -246,5 +259,48 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
         //update to database
         update(updateWrapper);
+    }
+
+    /**
+     * check whether the user status is pending<br/>
+     * if the status is pending, resend verify email and throw error
+     *
+     * @param user user whose status is pending
+     */
+    @Override
+    public void dealPendingUser(User user) {
+        //not pending
+        if(!user.getStatus().equals(Status.PENDING)){
+            return;
+        }
+        //resend verify email
+        sendActivationEmail(user);
+        throw new UserNotActiveException(HttpStatus.FORBIDDEN);
+    }
+
+    /**
+     * send activation url to user's email
+     * @param user user need to active
+     */
+    private void sendActivationEmail(User user){
+        String url = this.activeUrl + "?token=" + tokenKeyService.createToken(user).replace(SecurityConstants.TOKEN_PREFIX,"");
+        mailService.sendSimpleMail(user.getEmail(),"Active your account of ConnecTi",url);
+    }
+
+    /**
+     * active the user
+     *
+     * @param userId user id of user need to active
+     */
+    @Override
+    public void activePendingUser(Integer userId) {
+        UpdateWrapper<User> wrapper = new UpdateWrapper<>();
+        wrapper.eq("id",userId).set("status", Status.ACTIVE.getStatus());
+        try {
+            update(wrapper);
+        }
+        catch (Exception e){
+            throw new UserNotExistException();
+        }
     }
 }
