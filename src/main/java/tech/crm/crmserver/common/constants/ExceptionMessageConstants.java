@@ -7,7 +7,7 @@ package tech.crm.crmserver.common.constants;
  * @author Lingxiao Li
  * @since 2021-09-18
  */
-public class ExceptionMessageConstants {
+public final class ExceptionMessageConstants {
 
     //exception messages
     public static final String DEPARTMENT_ALREADY_EXIST_EXCEPTION = "Department already exist.";
@@ -24,6 +24,7 @@ public class ExceptionMessageConstants {
 
     public static final String USER_ALREADY_EXIST_EXCEPTION  = "Same email already exist!";
     public static final String USER_NOT_EXIST_EXCEPTION  = "User do not exists!";
+    public static final String USER_NOT_ACTIVE_EXCEPTION  = "This account is not active!";
     public static final String USER_ALREADY_IN_DEPARTMENT_EXCEPTION  = "This user already in the department!";
     public static final String USER_ALREADY_IN_ORGANIZATION_EXCEPTION  = "This user already in the organization!";
     public static final String USER_NOT_IN_DEPARTMENT_EXCEPTION  = "You are not a member of this department!";

@@ -28,7 +28,10 @@ spring:
           starttls:
             enable: true
             required: true
+    #send email from which mail
     from: connecti.yyds@gmail.com
+    #url for active account
+    active: https://comp30022-yyds.herokuapp.com/verify
     default-encoding: utf-8
 
 

@@ -72,11 +72,7 @@ public class UserController {
         User user = userService.fromUserRegisterDTO(userRegisterDTO);
         //check whether there is same email already exist
         userService.register(user);
-        //return token
-        String token = tokenKeyService.createToken(user);
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.set(SecurityConstants.TOKEN_HEADER, token);
-        return ResponseResult.suc("successfully sign up!","",httpHeaders);
+        return ResponseResult.suc("successfully sign up!");
     }
 
     /**
@@ -120,6 +116,12 @@ public class UserController {
     public ResponseResult<Object> updateUserDetail(@RequestBody UserUpdateDTO userUpdateDTO){
         userService.updateUser(userUpdateDTO);
         return ResponseResult.suc("Successfully update user detail");
+    }
+
+    @PostMapping("/verify")
+    public ResponseResult<Object> verifyEmail(){
+        userService.activePendingUser(userService.getId());
+        return ResponseResult.suc("Successfully active user account");
     }
 
 }
