@@ -18,6 +18,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import tech.crm.crmserver.common.constants.EmailConstants;
 import tech.crm.crmserver.common.constants.TimeZoneConstants;
 import tech.crm.crmserver.common.constants.SecurityConstants;
 import tech.crm.crmserver.common.enums.Status;
@@ -61,10 +62,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Autowired
     private TokenKeyService tokenKeyService;
 
+    /**
+     * the verify url prefix defined in property
+     */
     @Value("${spring.mail.active}")
-    private String activeUrl;
+    public String verifyUrl;
 
-    private static String EMAIL_TITLE = "Your new Password for ConnecTi";
 
     /**
      * Verify whether the email and password is correct
@@ -207,7 +210,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         wrapper.set("password",encryptPassword);
         update(wrapper);
         //send email
-        mailService.sendSimpleMail(email,EMAIL_TITLE,rawPassword);
+        mailService.sendSimpleMail(email, EmailConstants.EMAIL_RESET_PASSWORD_TITLE, rawPassword);
     }
 
     /**
@@ -253,8 +256,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             updateWrapper.set("password",encodePassword);
             //clean token and notify the user
             tokenKeyService.deleteTokenByUser(getId());
-            mailService.sendSimpleMail(getById(getId()).getEmail(),"Safety Notice",
-                    "Your password for ConnecTi has been changed");
+            mailService.sendSimpleMail(getById(getId()).getEmail(), EmailConstants.SAFETY_NOTICE,
+                    EmailConstants.SAFETY_NOTICE_CONTENT);
         }
 
         //update to database
@@ -283,8 +286,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      * @param user user need to active
      */
     private void sendActivationEmail(User user){
-        String url = this.activeUrl + "?token=" + tokenKeyService.createToken(user).replace(SecurityConstants.TOKEN_PREFIX,"");
-        mailService.sendSimpleMail(user.getEmail(),"Active your account of ConnecTi",url);
+        String url = this.verifyUrl + "?token=" + tokenKeyService.createToken(user).replace(SecurityConstants.TOKEN_PREFIX,"");
+        mailService.sendSimpleMail(user.getEmail(), EmailConstants.ACTIVE_ACCOUNT_TITLE, url);
     }
 
     /**
