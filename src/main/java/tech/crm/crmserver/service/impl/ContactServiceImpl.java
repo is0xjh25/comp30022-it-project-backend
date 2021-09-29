@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import tech.crm.crmserver.common.constants.TimeZoneConstants;
 import tech.crm.crmserver.common.enums.PermissionLevel;
 import tech.crm.crmserver.common.enums.Status;
 import tech.crm.crmserver.common.utils.NullAwareBeanUtilsBean;
@@ -189,7 +190,7 @@ public class ContactServiceImpl extends ServiceImpl<ContactMapper, Contact> impl
         NullAwareBeanUtilsBean.copyProperties(contact, contactDTO);
         LocalDate birthday = contactDTO.getBirthday();
         if(birthday != null){
-            contactDTO.setAge(birthday.until(LocalDate.now()).getYears());
+            contactDTO.setAge(birthday.until(LocalDate.now(TimeZoneConstants.ZONE)).getYears());
         }
         return contactDTO;
     }

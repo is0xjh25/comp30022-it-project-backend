@@ -83,4 +83,17 @@ public interface UserService extends IService<User> {
      * @param userUpdateDTO user update information
      */
     public void updateUser(UserUpdateDTO userUpdateDTO);
+
+    /**
+     * check whether the user status is pending<br/>
+     * if the status is pending, resend verify email and throw error
+     * @param user user whose status is pending
+     */
+    public void dealPendingUser(User user);
+
+    /**
+     * active the user
+     * @param userId user id of user need to active
+     */
+    public void activePendingUser(Integer userId);
 }
