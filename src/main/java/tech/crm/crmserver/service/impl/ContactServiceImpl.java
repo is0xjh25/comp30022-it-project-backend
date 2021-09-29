@@ -371,6 +371,11 @@ public class ContactServiceImpl extends ServiceImpl<ContactMapper, Contact> impl
         if (!permissionService.ifPermissionLevelSatisfied(userId, PermissionLevel.DELETE, contact.getDepartmentId())) {
             throw new NotEnoughPermissionException();
         }
+        //delete related recent_content & attend
+        ArrayList<Contact> contactArrayList = new ArrayList<>();
+        contactArrayList.add(contact);
+        deleteRelatedByContactList(contactArrayList);
+
         return removeById(contactId);
 
     }
