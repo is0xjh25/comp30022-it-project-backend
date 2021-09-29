@@ -109,68 +109,14 @@ public class UserControllerTest {
 
     }
 
-    /**
-     * register with correct input
-     */
-    @Test
-    @Transactional
-    @Order(4)
-    public void registerTest() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.post("/user")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{\n" +
-                        "    \"email\": \"lingxiao2@student.unimelb.edu.au\",\n" +
-                        "    \"first_name\": \"lingxiao\",\n" +
-                        "    \"last_name\": \"li\",\n" +
-                        "    \"password\": \"123456\",\n" +
-                        "    \"phone\": \"188188\"\n" +
-                        "}"))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.header().exists(SecurityConstants.TOKEN_HEADER))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.msg").value("successfully sign up!"));
 
-        //get user to check whether insert data into database
-        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post("/user/login")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{\n" +
-                        "    \"email\": \"lingxiao2@student.unimelb.edu.au\",\n" +
-                        "    \"password\": \"123456\"\n" +
-                        "}"))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andReturn();
-
-        String token = mvcResult.getResponse().getHeader(SecurityConstants.TOKEN_HEADER);
-
-        mvc.perform(MockMvcRequestBuilders.get("/user").header(SecurityConstants.TOKEN_HEADER,token))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.data.email").value("lingxiao2@student.unimelb.edu.au"));
-    }
-
-    /**
-     * register using exist email
-     */
-    @Test
-    @Order(5)
-    public void registerExistUserTest() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.post("/user")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{\n" +
-                        "    \"email\": \"lingxiao1@student.unimelb.edu.au\",\n" +
-                        "    \"first_name\": \"lingxiao\",\n" +
-                        "    \"last_name\": \"li\",\n" +
-                        "    \"password\": \"123456\",\n" +
-                        "    \"phone\": \"188188\"\n" +
-                        "}"))
-                .andExpect(MockMvcResultMatchers.status().is(HttpStatus.BAD_REQUEST.value()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.msg").value("Same email already exist!"));
-    }
 
 
     /**
      * get current user with token
      */
     @Test
-    @Order(6)
+    @Order(4)
     public void getUserTest() throws Exception {
         mvc.perform(MockMvcRequestBuilders.get("/user").header(SecurityConstants.TOKEN_HEADER,token))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -182,7 +128,7 @@ public class UserControllerTest {
      * logout with token
      */
     @Test
-    @Order(7)
+    @Order(5)
     public void logoutTest() throws Exception {
         mvc.perform(MockMvcRequestBuilders.post("/user/logout").header(SecurityConstants.TOKEN_HEADER,token))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -193,7 +139,7 @@ public class UserControllerTest {
      * update user details with token
      */
     @Test
-    @Order(8)
+    @Order(6)
     @Transactional
     public void updateUserDetail()throws Exception{
         mvc.perform(MockMvcRequestBuilders.put("/user").header(SecurityConstants.TOKEN_HEADER,token)
