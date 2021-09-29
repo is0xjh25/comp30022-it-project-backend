@@ -31,11 +31,16 @@ This is the backend for team yyds of comp30022 It Project, a personal CRM websit
 ### Environment
 download [java runtime environment(JRE) 8](https://www.oracle.com/java/technologies/downloads/#java8)
 
+download [MySQL](https://dev.mysql.com/downloads/installer/)
+
 Then go to [release](https://github.com/is0xjh25/comp30022-it-project-backend/releases) and choose the latest release.
 
 ### Source
-Go to assert and download the java package(.jar)
-![image](https://user-images.githubusercontent.com/71265122/134913809-5631de25-8731-4534-978a-f3e84fb362a0.png)
+Go to assert and download the java package(.jar) and the `first.sql`
+
+![image](https://user-images.githubusercontent.com/71265122/135340804-e8d9a0ce-644a-43ca-8af3-408682c46ecf.png)
+
+Use `first.sql` to create MySQL database.
 
 Then open a terminal at java package's file and run the java package by
 ```
