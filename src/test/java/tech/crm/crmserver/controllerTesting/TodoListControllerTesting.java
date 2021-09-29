@@ -89,7 +89,7 @@ public class TodoListControllerTesting {
      * @throws Exception
      */
     @Test
-    @Order(1)
+    @Order(2)
     public void testBQueryNewTodoListData() throws Exception {
 
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get("/toDoList").param("topNTodoListData", String.valueOf(2)).header(SecurityConstants.TOKEN_HEADER,token))
