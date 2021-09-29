@@ -79,4 +79,12 @@ public interface ToDoListService extends IService<ToDoList> {
      * @return if the update is successful
      */
     public boolean updateTodoList(ToDoList todoList);
+
+    /**
+     * Delete a todoList
+     *
+     * @param todoListId the todolist to be deleted
+     * @return if the todolist is deleted successfully
+     */
+    public boolean deleteTodoListByTodoListId(Integer todoListId);
 }

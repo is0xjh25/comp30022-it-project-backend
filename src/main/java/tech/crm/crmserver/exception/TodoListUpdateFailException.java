@@ -8,11 +8,11 @@ import tech.crm.crmserver.common.response.ResponseResult;
  *  The Exception When can not update todoList to database
  * </p>
  *
- * @author Kaiyuan
+ * @author Kaiyuan Zheng
  * @since 2021-09-29
  */
 public class TodoListUpdateFailException extends BaseException {
     public TodoListUpdateFailException() {
-        super(ResponseResult.fail(ExceptionMessageConstants.TODOLIST_FAIL_ADDED_EXCEPTION));
+        super(ResponseResult.fail(ExceptionMessageConstants.TODOLIST_UPDATE_FAIL_EXCEPTION));
     }
 }

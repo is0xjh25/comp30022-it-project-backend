@@ -40,8 +40,9 @@ public final class ExceptionMessageConstants {
 
     public static final String TODOLIST_FAIL_ADDED_EXCEPTION = "Fail to add a todoList data";
     public static final String TODOLIST_UPDATE_FAIL_EXCEPTION = "Fail to update the todolist";
-    public static final String TODOLIST_NOT_EXIST_EXCEPTION = "Fail to update the todolist, todolist not exist";
-    public static final String TODOLIST_INACTIVE_EXCEPTION = "Fail to update the todolist, todolist inactive";
+    public static final String TODOLIST_NOT_EXIST_EXCEPTION = "Fail to perform the operation, todolist not exist";
+    public static final String TODOLIST_INACTIVE_EXCEPTION = "Fail to perform the operation, todolist inactive";
+    public static final String TODOLIST_DELETE_FAIL_EXCEPTION = "Fail to delete the todolist";
 
 
 

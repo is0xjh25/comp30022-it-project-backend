@@ -149,4 +149,22 @@ public class ToDoListServiceImpl extends ServiceImpl<ToDoListMapper, ToDoList> i
         NullAwareBeanUtilsBean.copyProperties(todoListUpdateDTO, todoList);
         return todoList;
     }
+
+    /**
+     * Delete a todoList
+     *
+     * @param todoListId the todolist to be deleted
+     * @return if the todolist is deleted successfully
+     */
+    @Override
+    public boolean deleteTodoListByTodoListId(Integer todoListId) {
+        ToDoList todolist = toDoListService.getById(todoListId);
+
+        // check if the target todolist exists or not
+        if (todolist == null || todolist.getStatus().equals(ToDoListStatus.DELETED)){
+            throw new ToDoListNotExistException();
+        }
+
+        return removeById(todoListId);
+    }
 }

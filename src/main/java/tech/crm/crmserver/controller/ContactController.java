@@ -120,7 +120,7 @@ public class ContactController {
      * Delete a contact's into
      *
      * @param contactId the details of contact to delete
-     * @return ResponseResult about if the delete success, or why it fail
+     * @return ResponseResult about if delete success, or why it fails
      */
     @DeleteMapping
     public ResponseResult<Object> deleteContact(@RequestParam("contact_id") Integer contactId) {

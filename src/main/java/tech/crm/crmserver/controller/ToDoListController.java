@@ -26,7 +26,7 @@ import java.util.List;
  * @since 2021-08-23
  */
 @RestController
-@RequestMapping("/toDoList")
+@RequestMapping("/todoList")
 public class ToDoListController {
 
     @Autowired
@@ -82,6 +82,21 @@ public class ToDoListController {
             throw new TodoListUpdateFailException();
         }
         return ResponseResult.suc("Update todolist success");
+    }
+
+    /**
+     * Delete an existing todolist for a user
+     *
+     * @param todoListId the todoList to be deleted
+     * @return ResponseResult about if delete is successful, or why it fails
+     */
+    public ResponseResult<Object> deleteTodoList(@RequestParam("todoList_id") Integer todoListId) {
+        boolean deleteSuccess = false;
+        deleteSuccess = toDoListService.deleteTodoListByTodoListId(todoListId);
+        if (!deleteSuccess) {
+            throw new TodoListDeleteFailException();
+        }
+        return ResponseResult.suc("Delete todolist success");
     }
 }
 

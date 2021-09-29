@@ -8,7 +8,7 @@ import tech.crm.crmserver.common.response.ResponseResult;
  *  The Exception When the update target todoList is inactive
  * </p>
  *
- * @author Kaiyuan
+ * @author Kaiyuan Zheng
  * @since 2021-09-29
  */
 public class ToDoListInactiveException extends BaseException {
