@@ -12,6 +12,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.stereotype.Service;
 import tech.crm.crmserver.common.constants.SecurityConstants;
+import tech.crm.crmserver.common.constants.TimeZoneConstants;
 import tech.crm.crmserver.dao.TokenKey;
 import tech.crm.crmserver.dao.User;
 import tech.crm.crmserver.mapper.TokenKeyMapper;
@@ -62,7 +63,7 @@ public class TokenKeyServiceImpl extends ServiceImpl<TokenKeyMapper, TokenKey> i
         TokenKey tokenKey = new TokenKey();
         tokenKey.setJwtKey(key);
         tokenKey.setUserId(user_id);
-        tokenKey.setExpiredTime(LocalDateTime.now().plusSeconds(expiration));
+        tokenKey.setExpiredTime(LocalDateTime.now(TimeZoneConstants.ZONE).plusSeconds(expiration));
         this.save(tokenKey);
         QueryWrapper<TokenKey> wrapper = new QueryWrapper<>();
         wrapper.eq("jwt_key",key);
@@ -109,7 +110,7 @@ public class TokenKeyServiceImpl extends ServiceImpl<TokenKeyMapper, TokenKey> i
      * Delete the invalid token key in the database
      */
     public void deleteInvalidToken(){
-        LocalDateTime current = LocalDateTime.now();
+        LocalDateTime current = LocalDateTime.now(TimeZoneConstants.ZONE);
         QueryWrapper<TokenKey> wrapper = new QueryWrapper<>();
         wrapper.le("expired_time",current);
         remove(wrapper);

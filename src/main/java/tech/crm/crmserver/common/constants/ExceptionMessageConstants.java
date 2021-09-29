@@ -7,7 +7,7 @@ package tech.crm.crmserver.common.constants;
  * @author Lingxiao Li
  * @since 2021-09-18
  */
-public class ExceptionMessageConstants {
+public final class ExceptionMessageConstants {
 
     //exception messages
     public static final String DEPARTMENT_ALREADY_EXIST_EXCEPTION = "Department already exist.";
