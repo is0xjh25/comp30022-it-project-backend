@@ -1,16 +1,17 @@
 package tech.crm.crmserver.controllerTesting;
 
-import org.junit.Before;
-import org.junit.FixMethodOrder;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.MethodSorters;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -24,11 +25,11 @@ import tech.crm.crmserver.dto.LoginRequest;
 import tech.crm.crmserver.service.PermissionService;
 import tech.crm.crmserver.service.UserService;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class PermissionControllerTesting {
 
     @Autowired
@@ -52,7 +53,7 @@ public class PermissionControllerTesting {
     /**
      * login the owner, manager and member of the department(id=1) before test
      */
-    @Before
+    @BeforeEach
     public void loginBeforeTest(){
         //login the owner
         departmentOwnerToken = userService.login(new LoginRequest("lingxiao1@student.unimelb.edu.au","123456"));
@@ -70,6 +71,7 @@ public class PermissionControllerTesting {
      */
     @Test
     @Transactional
+    @Order(1)
     public void deleteMemberByOwnerTest() throws Exception{
         //member has the permission before
         Integer userId = 4;
@@ -94,6 +96,7 @@ public class PermissionControllerTesting {
      */
     @Test
     @Transactional
+    @Order(2)
     public void deleteMemberByManagerTest() throws Exception{
         //member has the permission before
         Integer userId = 4;
@@ -119,6 +122,7 @@ public class PermissionControllerTesting {
      */
     @Test
     @Transactional
+    @Order(3)
     public void deleteMemberByMemberTest() throws Exception{
         //member has the permission before
         Integer userId = 5;
@@ -144,6 +148,7 @@ public class PermissionControllerTesting {
      */
     @Test
     @Transactional
+    @Order(4)
     public void deleteManagerByManagerTest() throws Exception{
         //member has the permission before
         Integer userId = 6;
@@ -169,6 +174,7 @@ public class PermissionControllerTesting {
      */
     @Test
     @Transactional
+    @Order(5)
     public void updatePermissionByOwnerTest() throws Exception{
         //member has the permission before
         Integer userId = 5;
@@ -196,6 +202,7 @@ public class PermissionControllerTesting {
      */
     @Test
     @Transactional
+    @Order(6)
     public void updatePermissionByManagerTest() throws Exception{
         //member has the permission before
         Integer userId = 5;
@@ -224,6 +231,7 @@ public class PermissionControllerTesting {
      */
     @Test
     @Transactional
+    @Order(7)
     public void updatePermissionByMemberTest() throws Exception{
         //member has the permission before
         Integer userId = 5;
@@ -252,6 +260,7 @@ public class PermissionControllerTesting {
      */
     @Test
     @Transactional
+    @Order(8)
     public void updatePermissionByStrangerTest() throws Exception{
         //member has the permission before
         Integer userId = 5;
@@ -280,6 +289,7 @@ public class PermissionControllerTesting {
      */
     @Test
     @Transactional
+    @Order(9)
     public void updatePermissionByOwnerToOwnerTest() throws Exception{
         //member has the permission before
         Integer userId = 5;
@@ -307,6 +317,7 @@ public class PermissionControllerTesting {
      */
     @Test
     @Transactional
+    @Order(10)
     public void updatePermissionByOwnerOfStrangerTest() throws Exception{
         //member has the permission before
         Integer userId = 6;
@@ -336,6 +347,7 @@ public class PermissionControllerTesting {
      * @param token the token of user who execute the deletion
      */
     @Transactional
+    @Order(11)
     public ResultActions deleteMember(Integer userId, Integer departmentId, String token) throws Exception{
         ResultActions resultActions = mvc.perform(MockMvcRequestBuilders.delete("/permission")
                 .header(SecurityConstants.TOKEN_HEADER, token)
@@ -354,6 +366,7 @@ public class PermissionControllerTesting {
      * @param permissionLevel update to permissionLevel
      */
     @Transactional
+    @Order(12)
     public ResultActions updatePermission(Integer userId, Integer departmentId, String token, Integer permissionLevel) throws Exception{
         ResultActions resultActions = mvc.perform(MockMvcRequestBuilders.put("/permission")
                 .header(SecurityConstants.TOKEN_HEADER, token)

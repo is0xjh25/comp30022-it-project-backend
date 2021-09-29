@@ -7,6 +7,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import tech.crm.crmserver.common.constants.SecurityConstants;
 import tech.crm.crmserver.service.TokenKeyService;
+import tech.crm.crmserver.service.UserService;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -24,12 +25,15 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
     private final TokenKeyService tokenKeyService;
 
+    private final UserService userService;
+
     /**
      * Constructor.
      */
-    public JwtAuthorizationFilter(AuthenticationManager authenticationManager, TokenKeyService tokenKeyService) {
+    public JwtAuthorizationFilter(AuthenticationManager authenticationManager, TokenKeyService tokenKeyService, UserService userService) {
         super(authenticationManager);
         this.tokenKeyService = tokenKeyService;
+        this.userService = userService;
     }
 
     /**
@@ -53,6 +57,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
         UsernamePasswordAuthenticationToken authentication = null;
         try {
             authentication = tokenKeyService.getAuthentication(tokenValue);
+            userService.updateRecentActivity((Integer) authentication.getPrincipal());
         } catch (Exception e) {
             logger.error("Invalid jwt : " + e.getMessage());
         }

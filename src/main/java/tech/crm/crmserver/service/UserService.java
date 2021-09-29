@@ -1,9 +1,10 @@
 package tech.crm.crmserver.service;
 
-import tech.crm.crmserver.dao.User;
 import com.baomidou.mybatisplus.extension.service.IService;
+import tech.crm.crmserver.dao.User;
 import tech.crm.crmserver.dto.LoginRequest;
-import tech.crm.crmserver.dto.UserDTO;
+import tech.crm.crmserver.dto.UserRegisterDTO;
+import tech.crm.crmserver.dto.UserUpdateDTO;
 
 /**
  * <p>
@@ -39,12 +40,12 @@ public interface UserService extends IService<User> {
     public User register(User user);
 
     /**
-     * Transfer a userDTO to user class
+     * Transfer a UserRegisterDTO to user class
      *
-     * @param userDTO userDTO class
+     * @param userRegisterDTO userDTO class
      * @return user class
      */
-    public User fromUserDTO(UserDTO userDTO);
+    public User fromUserRegisterDTO(UserRegisterDTO userRegisterDTO);
 
     /**
      * Check whether the encoded of current Password matches the password
@@ -65,8 +66,21 @@ public interface UserService extends IService<User> {
 
     /**
      * generate a random password and store encrypted password into database <br/>
-     * then send the password to the email
+     * then send the password to the email<br/>
+     * and delete all the token of this user in database
      * @param email the email of user who needs reset password
      */
     public void resetPassword(String email);
+
+    /**
+     * update the recent activity time of user
+     * @param userId user id
+     */
+    public void updateRecentActivity(Integer userId);
+
+    /**
+     * update the not null properties in userUpdateDTO
+     * @param userUpdateDTO user update information
+     */
+    public void updateUser(UserUpdateDTO userUpdateDTO);
 }

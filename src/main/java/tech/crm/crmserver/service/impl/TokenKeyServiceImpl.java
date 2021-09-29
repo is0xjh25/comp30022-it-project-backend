@@ -1,27 +1,22 @@
 package tech.crm.crmserver.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
 import tech.crm.crmserver.common.constants.SecurityConstants;
 import tech.crm.crmserver.dao.TokenKey;
 import tech.crm.crmserver.dao.User;
-import tech.crm.crmserver.dto.LoginRequest;
 import tech.crm.crmserver.mapper.TokenKeyMapper;
 import tech.crm.crmserver.security.JwtSigningKeyResolver;
 import tech.crm.crmserver.service.TokenKeyService;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import org.springframework.stereotype.Service;
-import tech.crm.crmserver.service.UserService;
 
 import javax.crypto.SecretKey;
 import javax.xml.bind.DatatypeConverter;
@@ -120,6 +115,16 @@ public class TokenKeyServiceImpl extends ServiceImpl<TokenKeyMapper, TokenKey> i
         remove(wrapper);
     }
 
+    /**
+     * delete all the token of this user in database
+     *
+     * @param userId the id of user
+     */
+    @Override
+    public void deleteTokenByUser(Integer userId) {
+        QueryWrapper<TokenKey> wrapper = new QueryWrapper<TokenKey>().eq("user_id",userId);
+        baseMapper.delete(wrapper);
+    }
 
     /**
      * Get the Claims of the token

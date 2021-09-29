@@ -1,29 +1,31 @@
 package tech.crm.crmserver.controllerTesting;
 
-import org.junit.Before;
-import org.junit.FixMethodOrder;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.MethodSorters;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.transaction.annotation.Transactional;
 import tech.crm.crmserver.common.constants.ExceptionMessageConstants;
 import tech.crm.crmserver.common.constants.SecurityConstants;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class OrganizationControllerTest {
 
     @Autowired
@@ -35,11 +37,8 @@ public class OrganizationControllerTest {
      * login before test
      * @throws Exception
      */
-    @Before
+    @BeforeEach
     public void loginTest() throws Exception {
-        if(token != null){
-            return;
-        }
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post("/user/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\n" +
@@ -57,6 +56,7 @@ public class OrganizationControllerTest {
      * @throws Exception
      */
     @Test
+    @Order(1)
     public void testAmyOrganization() throws Exception {
         mvc.perform(MockMvcRequestBuilders.get("/organization/myOrganization").header(SecurityConstants.TOKEN_HEADER,token))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -72,6 +72,7 @@ public class OrganizationControllerTest {
      * @throws Exception
      */
     @Test
+    @Order(2)
     public void testBcreateOrganization() throws Exception {
         mvc.perform(MockMvcRequestBuilders.post("/organization").param("organization_name", "TestingOrganization").header(SecurityConstants.TOKEN_HEADER,token))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -95,6 +96,7 @@ public class OrganizationControllerTest {
      * @throws Exception
      */
     @Test
+    @Order(3)
     public void testCgetOrganizationById() throws Exception {
         mvc.perform(MockMvcRequestBuilders.get("/organization").param("organization_id", "1").header(SecurityConstants.TOKEN_HEADER,token))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -112,6 +114,7 @@ public class OrganizationControllerTest {
      * @throws Exception
      */
     @Test
+    @Order(4)
     public void testDgetOrganizationByName() throws Exception {
         mvc.perform(MockMvcRequestBuilders.get("/organization/name").param("organization_name", "TestingOrganization").header(SecurityConstants.TOKEN_HEADER,token))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -129,6 +132,8 @@ public class OrganizationControllerTest {
      *  @throws Exception
      */
     @Test
+    @Order(5)
+    @Transactional
     public void testEdeleteOrganizationById() throws Exception {
         // Delete the organization which is owned by user
         mvc.perform(MockMvcRequestBuilders.delete("/organization").param("organization_id", "1").header(SecurityConstants.TOKEN_HEADER,token))
@@ -153,6 +158,7 @@ public class OrganizationControllerTest {
      *  @throws Exception
      */
     @Test
+    @Order(6)
     public void testFJoinOrganization() throws Exception {
         // Join an organization created by other
         mvc.perform(MockMvcRequestBuilders.post("/organization/join").param("organization_id", "2").header(SecurityConstants.TOKEN_HEADER,token))
@@ -178,6 +184,7 @@ public class OrganizationControllerTest {
      *  @throws Exception
      */
     @Test
+    @Order(7)
     public void testGFindDepartmentByOrganizationId() throws Exception {
         // Join an organization created by other
         mvc.perform(MockMvcRequestBuilders.get("/organization/departments").param("organization_id", "2").header(SecurityConstants.TOKEN_HEADER,token))
@@ -186,9 +193,8 @@ public class OrganizationControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.msg").value("success"));
 
         mvc.perform(MockMvcRequestBuilders.get("/organization/departments").param("organization_id", "100").header(SecurityConstants.TOKEN_HEADER,token))
-                .andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andDo(MockMvcResultHandlers.print())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.msg").value("No departments data"));
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andDo(MockMvcResultHandlers.print());
     }
 
     /**
@@ -196,6 +202,7 @@ public class OrganizationControllerTest {
      *  @throws Exception
      */
     @Test
+    @Order(8)
     public void testHCreateDepartment() throws Exception {
         // Create department of the organization create by other
         mvc.perform(MockMvcRequestBuilders.post("/organization/department").param("organization_id", "2").param("department_name", "department of test").header(SecurityConstants.TOKEN_HEADER,token))

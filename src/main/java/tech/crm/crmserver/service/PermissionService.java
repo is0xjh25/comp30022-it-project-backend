@@ -1,10 +1,9 @@
 package tech.crm.crmserver.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import org.springframework.web.bind.annotation.RequestParam;
+import com.baomidou.mybatisplus.extension.service.IService;
 import tech.crm.crmserver.common.enums.PermissionLevel;
 import tech.crm.crmserver.dao.Permission;
-import com.baomidou.mybatisplus.extension.service.IService;
 import tech.crm.crmserver.dto.DepartmentDTO;
 import tech.crm.crmserver.dto.UserPermissionDTO;
 
@@ -125,4 +124,15 @@ public interface PermissionService extends IService<Permission> {
      * @param departmentId the departmentId to delete
      */
     public void deleteMember(Integer userId, Integer departmentId);
+
+    /**
+     * Check if the permission for a user in a department is satisfied requirement
+     *
+     * @param userId
+     * @param permissionLevel
+     * @param departmentId
+     * @return a boolean value to represent if the user's permission in this department is greater or equal than
+     * the required permissionLevel
+     */
+    public boolean ifPermissionLevelSatisfied(Integer userId, PermissionLevel permissionLevel, Integer departmentId);
 }

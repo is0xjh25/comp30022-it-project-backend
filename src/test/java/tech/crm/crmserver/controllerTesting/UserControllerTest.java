@@ -2,18 +2,19 @@ package tech.crm.crmserver.controllerTesting;
 
 
 
-import org.junit.Before;
-import org.junit.FixMethodOrder;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.MethodSorters;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -21,11 +22,11 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.transaction.annotation.Transactional;
 import tech.crm.crmserver.common.constants.SecurityConstants;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class UserControllerTest {
 
 
@@ -39,11 +40,8 @@ public class UserControllerTest {
     /**
      * login before test
      */
-    @Before
+    @BeforeEach
     public void loginTest() throws Exception {
-        if(token != null){
-            return;
-        }
 
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post("/user/login")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -61,6 +59,7 @@ public class UserControllerTest {
      * login with invalid email
      */
     @Test
+    @Order(1)
     public void loginInvalidEmailTest() throws Exception {
 
         mvc.perform(MockMvcRequestBuilders.post("/user/login")
@@ -78,6 +77,7 @@ public class UserControllerTest {
      * login with incorrect email
      */
     @Test
+    @Order(2)
     public void loginIncorrectEmailTest() throws Exception {
 
         mvc.perform(MockMvcRequestBuilders.post("/user/login")
@@ -95,6 +95,7 @@ public class UserControllerTest {
      * login with incorrect password
      */
     @Test
+    @Order(3)
     public void loginIncorrectPasswordTest() throws Exception {
 
         mvc.perform(MockMvcRequestBuilders.post("/user/login")
@@ -113,6 +114,7 @@ public class UserControllerTest {
      */
     @Test
     @Transactional
+    @Order(4)
     public void registerTest() throws Exception {
         mvc.perform(MockMvcRequestBuilders.post("/user")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -148,6 +150,7 @@ public class UserControllerTest {
      * register using exist email
      */
     @Test
+    @Order(5)
     public void registerExistUserTest() throws Exception {
         mvc.perform(MockMvcRequestBuilders.post("/user")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -167,6 +170,7 @@ public class UserControllerTest {
      * get current user with token
      */
     @Test
+    @Order(6)
     public void getUserTest() throws Exception {
         mvc.perform(MockMvcRequestBuilders.get("/user").header(SecurityConstants.TOKEN_HEADER,token))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -178,10 +182,36 @@ public class UserControllerTest {
      * logout with token
      */
     @Test
+    @Order(7)
     public void logoutTest() throws Exception {
         mvc.perform(MockMvcRequestBuilders.post("/user/logout").header(SecurityConstants.TOKEN_HEADER,token))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.msg").value("successfully logout!"));
+    }
+
+    /**
+     * update user details with token
+     */
+    @Test
+    @Order(8)
+    @Transactional
+    public void updateUserDetail()throws Exception{
+        mvc.perform(MockMvcRequestBuilders.put("/user").header(SecurityConstants.TOKEN_HEADER,token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\n" +
+                        "    \"first_name\": \"lingxiao1\",\n" +
+                        "    \"last_name\": \"li\",\n" +
+                        "    \"phone\": \"188188\",\n" +
+                        "    \"website\": \"https://comp30022-yyds.herokuapp.com/\",\n" +
+                        "    \"description\": \"unimelb cs studnet\"\n" +
+                        "}"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.msg").value("Successfully update user detail"));
+
+        mvc.perform(MockMvcRequestBuilders.get("/user").header(SecurityConstants.TOKEN_HEADER,token))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.email").value("lingxiao1@student.unimelb.edu.au"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.first_name").value("lingxiao1"));
     }
 
 

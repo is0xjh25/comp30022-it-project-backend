@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 
 /**
  * <p>
@@ -13,7 +12,7 @@ import org.springframework.http.ResponseEntity;
  *
  * @author Lingxiao
  * @since 2021-08-30
- * @param <T>
+ * @param <T> the data of response
  */
 
 @AllArgsConstructor

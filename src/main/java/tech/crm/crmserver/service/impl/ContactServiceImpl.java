@@ -2,22 +2,26 @@ package tech.crm.crmserver.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import tech.crm.crmserver.common.enums.PermissionLevel;
+import tech.crm.crmserver.common.enums.Status;
 import tech.crm.crmserver.common.utils.NullAwareBeanUtilsBean;
 import tech.crm.crmserver.dao.Contact;
 import tech.crm.crmserver.dao.Permission;
 import tech.crm.crmserver.dto.ContactCreateDTO;
 import tech.crm.crmserver.dto.ContactDTO;
 import tech.crm.crmserver.dto.ContactUpdateDTO;
+import tech.crm.crmserver.exception.*;
 import tech.crm.crmserver.mapper.ContactMapper;
 import tech.crm.crmserver.service.*;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -44,6 +48,9 @@ public class ContactServiceImpl extends ServiceImpl<ContactMapper, Contact> impl
 
     @Autowired
     public DepartmentService departmentService;
+
+    @Autowired
+    public ContactService contactService;
 
     /**
      * Delete the Contact by departmentId<br/>
@@ -107,11 +114,11 @@ public class ContactServiceImpl extends ServiceImpl<ContactMapper, Contact> impl
      * @return a list of match contact
      */
     @Override
-    public Page<Contact> getContactByOrgIdAndDepartmentId(Page<Contact> page, Integer organizationId, Integer departmentId, Integer userId) {
+    public Page<ContactDTO> getContactByOrgIdAndDepartmentId(Page<ContactDTO> page, Integer organizationId, Integer departmentId, Integer userId) {
 
         QueryWrapper<Contact> queryWrapper = new QueryWrapper<>();
         Page<Contact> contacts = new Page<>();
-        // The department that the user joined
+        // User's joined department
         List<Permission> permissionList = permissionService.getPermissionByUserId(userId, PermissionLevel.DISPLAY);
         List<Integer> departmentIdJoinList = new ArrayList<>();
         for (Permission permission : permissionList) {
@@ -120,7 +127,7 @@ public class ContactServiceImpl extends ServiceImpl<ContactMapper, Contact> impl
 
         if (departmentId == null) {
 
-            // The department in the organization
+            // Org's department
             List<Integer> departmentIdList = departmentService.getDepartmentIdByOrganization(organizationId);
 
             List<Integer> departmentInOrgAndJoin = new ArrayList<>();
@@ -133,11 +140,11 @@ public class ContactServiceImpl extends ServiceImpl<ContactMapper, Contact> impl
             for (Integer department : departmentInOrgAndJoin) {
                 queryWrapper.or().eq("department_id", department);
             }
-            page = contactMapper.selectPage(page, queryWrapper);
+            page = contactMapper.getContactDTOByDepartmentId(page, queryWrapper);
         } else {
             if (departmentIdJoinList.contains(departmentId)) {
                 queryWrapper.eq("department_id", departmentId);
-                page = contactMapper.selectPage(page, queryWrapper);
+                page = contactMapper.getContactDTOByDepartmentId(page, queryWrapper);
             }
         }
 
@@ -188,7 +195,7 @@ public class ContactServiceImpl extends ServiceImpl<ContactMapper, Contact> impl
     }
 
     /**
-     * Transfer List<Contact> to List<ContactDTO>
+     * Transfer List of Contact to List of ContactDTO
      *
      * @param contacts a list of contacts
      * @return a list of ContactDTO instances transferred
@@ -200,6 +207,35 @@ public class ContactServiceImpl extends ServiceImpl<ContactMapper, Contact> impl
             contactDTOList.add(ContactToContactDTO(contact));
         }
         return contactDTOList;
+    }
+
+    /**
+     * search contacts in department by contact key
+     * will not check the permission
+     * @param page         the configuration of the page
+     * @param departmentId the departmentId to search contact
+     * @param searchKey    search key
+     * @return
+     */
+    @Override
+    public Page<ContactDTO> searchContactDTO(Page<ContactDTO> page, Integer departmentId, String searchKey) {
+        Map<String,String> map = new HashMap<>();
+        map.put("email",searchKey);
+        map.put("first_name",searchKey);
+        map.put("last_name",searchKey);
+        map.put("gender",searchKey);
+        map.put("organization",searchKey);
+        map.put("description",searchKey);
+        //to the true wrapper
+        QueryWrapper<Contact> wrapper = new QueryWrapper<>();
+        wrapper.eq("department_id",departmentId).and(i -> {
+            //add conditions into a wrapper
+            for(Map.Entry<String,String> entry : map.entrySet()){
+                i.or().like(entry.getKey(),entry.getValue());
+            }
+        });
+        page = baseMapper.getContactDTOByDepartmentId(page,wrapper);
+        return page;
     }
 
     /**
@@ -263,5 +299,78 @@ public class ContactServiceImpl extends ServiceImpl<ContactMapper, Contact> impl
             return true;
         };
         return false;
+    }
+
+    /**
+     * Create contact based on contactDTO
+     *
+     * @param contactDTO all the information need to create contact
+     * @return if create success
+     */
+    @Override
+    public boolean createContactByContactDTO(ContactCreateDTO contactDTO, Integer userId) {
+        // Verify departmentID is valid
+        if (!departmentService.checkIfValidDepartmentId(contactDTO.getDepartmentId())) {
+            throw new DepartmentNotExistException();
+        }
+
+        if (!permissionService.ifPermissionLevelSatisfied(userId, PermissionLevel.UPDATE, contactDTO.getDepartmentId())) {
+            throw new NotEnoughPermissionException();
+        }
+
+        // check if the same contact already exists
+        List<Contact> contacts = contactService.getContactBasedOnSomeConditionFromDB(contactDTO.getDepartmentId(),contactDTO.getEmail(), null, null, null, null, null, null, null);
+        if (contacts.size() > 0) {
+            throw new ContactAlreadyExistException();
+        }
+
+        Contact newContact = contactService.fromContactCreateDTO(contactDTO);
+        return save(newContact);
+    }
+
+    /**
+     * Update contact based on contactUpdateDTO
+     *
+     * @param contactDTO all the information need to update contact
+     * @return if update success
+     */
+    public boolean updateContactByContactDTO(ContactUpdateDTO contactDTO, Integer userId) {
+        Contact newContact = contactService.fromContactUpdateDTO(contactDTO);
+
+        Contact oldContact = contactService.getById(newContact.getId());
+        if(oldContact == null || oldContact.getStatus().equals(Status.DELETED)){
+            throw new ContactNotExistException();
+        }
+
+        // Verify departmentID is valid
+        if (!departmentService.checkIfValidDepartmentId(oldContact.getDepartmentId())) {
+            throw new DepartmentNotExistException();
+        }
+
+        // Verify permissionLevel
+        if (!permissionService.ifPermissionLevelSatisfied(userId, PermissionLevel.UPDATE, oldContact.getDepartmentId())) {
+            throw new NotEnoughPermissionException();
+        }
+       return contactService.updateContact(newContact);
+    }
+
+    /**
+     * Delete contact based on contactId
+     *
+     * @param contactId the id of the contact to delete
+     * @return if delete success
+     */
+    public boolean deleteContactByContactId(Integer contactId, Integer userId) {
+        Contact contact = contactService.getById(contactId);
+
+        if (contact == null || contact.getStatus().equals(Status.DELETED)) {
+            throw new ContactNotExistException();
+        }
+        // Verify permissionLevel, the permissionLevel here is delete
+        if (!permissionService.ifPermissionLevelSatisfied(userId, PermissionLevel.DELETE, contact.getDepartmentId())) {
+            throw new NotEnoughPermissionException();
+        }
+        return removeById(contactId);
+
     }
 }

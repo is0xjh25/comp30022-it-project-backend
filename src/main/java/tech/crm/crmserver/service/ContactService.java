@@ -1,8 +1,8 @@
 package tech.crm.crmserver.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import tech.crm.crmserver.dao.Contact;
 import com.baomidou.mybatisplus.extension.service.IService;
+import tech.crm.crmserver.dao.Contact;
 import tech.crm.crmserver.dto.ContactCreateDTO;
 import tech.crm.crmserver.dto.ContactDTO;
 import tech.crm.crmserver.dto.ContactUpdateDTO;
@@ -46,7 +46,7 @@ public interface ContactService extends IService<Contact> {
      * @param userId the userId to search contact
      * @return a list of match contact
      */
-    public Page<Contact> getContactByOrgIdAndDepartmentId(Page<Contact> page, Integer organizationId, Integer departmentId, Integer userId);
+    public Page<ContactDTO> getContactByOrgIdAndDepartmentId(Page<ContactDTO> page, Integer organizationId, Integer departmentId, Integer userId);
 
     /**
      * Transfer ContactCreateDTO to contact
@@ -73,12 +73,45 @@ public interface ContactService extends IService<Contact> {
     public ContactDTO ContactToContactDTO(Contact contact);
 
     /**
-     * Transfer List<Contact> to List<ContactDTO>
+     * Transfer List of Contact to List of ContactDTO
      *
      * @param contacts a list of contacts
      * @return a list of ContactDTO instances transferred
      */
     public List<ContactDTO> ContactToContactDTO(List<Contact> contacts);
+
+    /**
+     * search contacts in department by contact key
+     * @param page the configuration of the page
+     * @param departmentId the departmentId to search contact
+     * @param searchKey search key
+     * @return
+     */
+    public Page<ContactDTO> searchContactDTO(Page<ContactDTO> page, Integer departmentId, String searchKey);
+
+    /**
+     * Create contact based on contactDTO
+     *
+     * @param contactDTO all the information need to create contact
+     * @return if create success
+     */
+    public boolean createContactByContactDTO(ContactCreateDTO contactDTO, Integer userId);
+
+    /**
+     * Update contact based on contactUpdateDTO
+     *
+     * @param contactDTO all the information need to update contact
+     * @return if update success
+     */
+    public boolean updateContactByContactDTO(ContactUpdateDTO contactDTO, Integer userId);
+
+    /**
+     * Delete contact based on contactId
+     *
+     * @param contactId the id of the contact to delete
+     * @return if delete success
+     */
+    public boolean deleteContactByContactId(Integer contactId, Integer userId);
 
     /**
      * Search contact based on some condition

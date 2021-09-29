@@ -2,10 +2,11 @@ package tech.crm.crmserver.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
 import tech.crm.crmserver.common.enums.PermissionLevel;
-import tech.crm.crmserver.common.response.ResponseResult;
 import tech.crm.crmserver.dao.Organization;
 import tech.crm.crmserver.dao.Permission;
 import tech.crm.crmserver.dto.DepartmentDTO;
@@ -17,8 +18,6 @@ import tech.crm.crmserver.mapper.PermissionMapper;
 import tech.crm.crmserver.service.DepartmentService;
 import tech.crm.crmserver.service.OrganizationService;
 import tech.crm.crmserver.service.PermissionService;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import org.springframework.stereotype.Service;
 import tech.crm.crmserver.service.UserService;
 
 import java.util.ArrayList;
@@ -303,5 +302,23 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
             }
         }
         return null;
+    }
+
+    /**
+     * Check if the permission for a user in a department is satisfied requirement
+     *
+     * @param userId
+     * @param permissionLevel
+     * @param departmentId
+     * @return a boolean value to represent if the user's permission in this department is greater or equal than
+     * the required permissionLevel
+     */
+    @Override
+    public boolean ifPermissionLevelSatisfied(Integer userId, PermissionLevel permissionLevel, Integer departmentId) {
+        Permission myPermission = findPermission(departmentId, userId);
+        if (myPermission == null || myPermission.getAuthorityLevel().getLevel() < permissionLevel.getLevel()) {
+            return false;
+        }
+        return true;
     }
 }

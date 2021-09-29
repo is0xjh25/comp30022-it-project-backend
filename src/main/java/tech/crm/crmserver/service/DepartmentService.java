@@ -1,8 +1,7 @@
 package tech.crm.crmserver.service;
 
-import org.springframework.web.bind.annotation.RequestParam;
-import tech.crm.crmserver.dao.Department;
 import com.baomidou.mybatisplus.extension.service.IService;
+import tech.crm.crmserver.dao.Department;
 
 import java.util.List;
 
@@ -57,5 +56,14 @@ public interface DepartmentService extends IService<Department> {
      * @param name the name of the department
      */
     public void createDepartment( Integer orgId, String name);
+
+    /**
+     * Check if department is exits and active
+     *
+     * @param departmentId
+     * @return if the department with the input departmentId is exits and the status is active
+     */
+    public boolean checkIfValidDepartmentId(Integer departmentId);
+
 
 }

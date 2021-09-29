@@ -1,16 +1,12 @@
 package tech.crm.crmserver.controller;
 
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
 import tech.crm.crmserver.common.enums.PermissionLevel;
 import tech.crm.crmserver.common.response.ResponseResult;
-import tech.crm.crmserver.common.utils.NullAwareBeanUtilsBean;
 import tech.crm.crmserver.dao.Contact;
-import tech.crm.crmserver.dao.Department;
 import tech.crm.crmserver.dao.Permission;
 import tech.crm.crmserver.dto.ContactCreateDTO;
 import tech.crm.crmserver.dto.ContactDTO;
@@ -22,10 +18,6 @@ import tech.crm.crmserver.service.PermissionService;
 import tech.crm.crmserver.service.UserService;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * <p>
@@ -86,15 +78,8 @@ public class ContactController {
             throw new OrganizationNotExistException();
         }
 
-        Page<Contact> contacts = contactService.getContactByOrgIdAndDepartmentId(new Page<>(current, size), organizationId, departmentId, userId);
+        Page<ContactDTO> contactDTOs = contactService.getContactByOrgIdAndDepartmentId(new Page<>(current, size), organizationId, departmentId, userId);
         //transfer into ContactDTO
-        List<Contact> records = contacts.getRecords();
-        List<ContactDTO> recordDTOs = new ArrayList<>();
-        for(Contact contact: records){
-            recordDTOs.add(contactService.ContactToContactDTO(contact));
-        }
-        Page<ContactDTO> contactDTOs = new Page<>(contacts.getCurrent(),contacts.getSize(),contacts.getTotal());
-        contactDTOs.setRecords(recordDTOs);
         return ResponseResult.suc("success", contactDTOs);
     }
 
@@ -106,34 +91,9 @@ public class ContactController {
      */
     @PostMapping()
     public ResponseResult<Object> createNewCustomer(@RequestBody @Valid ContactCreateDTO contactCreateDTO) {
-        // read in the customer details
-        Contact newContact = contactService.fromContactCreateDTO(contactCreateDTO);
-
-        Integer departmentId = newContact.getDepartmentId();
-        Department department = departmentService.getById(departmentId);
-        if (department == null) {
-            throw new DepartmentNotExistException();
-        }
-        Integer departmentAddTo = department.getId();
-
-        // check the user's permission level
-        Integer userID = userService.getId();
-        Permission myPermission = permissionService.findPermission(departmentAddTo, userID);
-        if (myPermission == null || myPermission.getAuthorityLevel().getLevel() < PermissionLevel.UPDATE.getLevel()) {
-            throw new NotEnoughPermissionException();
-        }
-
-        // check if the same contact already exists
-        List<Contact> contacts = contactService.getContactBasedOnSomeConditionFromDB(departmentAddTo,newContact.getEmail(), null, null, null, null, null, null, null);
-        if (contacts.size() > 0) {
-            throw new ContactAlreadyExistException();
-        }
         boolean addSucc = false;
-        try {
-            addSucc = contactService.save(newContact);
-        } catch (Exception e) {
-            throw new ContactFailAddedException();
-        }
+        // All the verify would be down in here
+        addSucc = contactService.createContactByContactDTO(contactCreateDTO, userService.getId());
         if (!addSucc) {
             throw new ContactFailAddedException();
         }
@@ -148,30 +108,12 @@ public class ContactController {
      */
     @PutMapping
     public ResponseResult<Object> updateContact(@RequestBody @Valid ContactUpdateDTO contactDTO) {
-        // For updating, it must have id
-        Contact newContact = contactService.fromContactUpdateDTO(contactDTO);
-        Contact oldContact = contactService.getById(newContact.getId());
-        if(oldContact == null){
-            throw new ContactNotExistException();
+        boolean updateSucc = false;
+        updateSucc = contactService.updateContactByContactDTO(contactDTO, userService.getId());
+        if (!updateSucc) {
+            throw new ContactFailUpdateException();
         }
-        Integer departmentId = oldContact.getDepartmentId();
-        Department department = departmentService.getById(departmentId);
-        if (department == null) {
-            throw new DepartmentNotExistException();
-        }
-        Integer departmentAddTo = department.getId();
-
-        // check the user's permission level
-        Integer userID = userService.getId();
-        Permission myPermission = permissionService.findPermission(departmentAddTo, userID);
-        if (myPermission == null || myPermission.getAuthorityLevel().getLevel() < PermissionLevel.UPDATE.getLevel()) {
-            throw new NotEnoughPermissionException();
-        }
-
-        if (contactService.updateContact(newContact)) {
-            return ResponseResult.suc("update a new contact success");
-        }
-        throw new ContactFailUpdateException();
+        return ResponseResult.suc("Updating contact success");
     }
 
     /**
@@ -183,20 +125,12 @@ public class ContactController {
     @DeleteMapping
     public ResponseResult<Object> deleteContact(@RequestParam("contact_id") Integer contactId) {
 
-        Contact contact = contactService.getById(contactId);
-        Integer departmentId = contact.getDepartmentId();
-
-        // check the user's permission level
-        Integer userID = userService.getId();
-        Permission myPermission = permissionService.findPermission(departmentId, userID);
-        if (myPermission == null || myPermission.getAuthorityLevel().getLevel() < PermissionLevel.DELETE.getLevel()) {
-            throw new NotEnoughPermissionException();
+        boolean deleteSucc = false;
+        deleteSucc = contactService.deleteContactByContactId(contactId, userService.getId());
+        if (!deleteSucc) {
+            throw new ContactFailDeleteException();
         }
-
-        if (contactService.removeById(contactId)) {
-            return ResponseResult.suc("delete a new contact success");
-        }
-        throw new ContactFailDeleteException();
+        return ResponseResult.suc("Deleting contact success");
     }
 
     /**
@@ -206,31 +140,15 @@ public class ContactController {
      */
     @GetMapping("/search")
     public ResponseResult<Object> searchContact(@RequestParam("department_id") Integer departmentId,
-                                                @RequestParam("search_key") String searchKey){
+                                                @RequestParam("search_key") String searchKey,
+                                                @RequestParam("size") Integer size,
+                                                @RequestParam("current") Integer current){
         Permission myPermission = permissionService.findPermission(departmentId, userService.getId());
         if (myPermission == null || myPermission.getAuthorityLevel().getLevel() < PermissionLevel.DISPLAY.getLevel()) {
             throw new NotEnoughPermissionException();
         }
-        Map<String,String> map = new HashMap<>();
-        map.put("email",searchKey);
-        map.put("first_name",searchKey);
-        map.put("last_name",searchKey);
-        map.put("gender",searchKey);
-        map.put("organization",searchKey);
-        map.put("description",searchKey);
-        QueryWrapper<Contact> wrapper;
-        List<ContactDTO> contacts = new ArrayList<>();
-        for(Map.Entry<String,String> entry : map.entrySet()){
-            wrapper = new QueryWrapper<>();
-            wrapper.eq("department_id",departmentId);
-            wrapper.like(entry.getKey(),entry.getValue());
-            contacts.addAll(contactService.ContactToContactDTO(contactService.list(wrapper)));
-        }
-
-        if(contacts.isEmpty()){
-            throw new ContactNotFoundException();
-        }
-        return ResponseResult.suc("success",contacts);
+        Page<ContactDTO> contactDTOPage = contactService.searchContactDTO(new Page<>(current, size), departmentId, searchKey);
+        return ResponseResult.suc("success",contactDTOPage);
     }
 }
 

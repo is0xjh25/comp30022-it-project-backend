@@ -1,10 +1,10 @@
 package tech.crm.crmserver.mapper;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
-import tech.crm.crmserver.dao.Organization;
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.springframework.stereotype.Repository;
+import tech.crm.crmserver.dao.Organization;
 
 import java.util.List;
 

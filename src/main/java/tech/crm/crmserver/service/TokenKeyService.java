@@ -1,10 +1,9 @@
 package tech.crm.crmserver.service;
 
+import com.baomidou.mybatisplus.extension.service.IService;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import tech.crm.crmserver.dao.TokenKey;
-import com.baomidou.mybatisplus.extension.service.IService;
 import tech.crm.crmserver.dao.User;
-import tech.crm.crmserver.dto.LoginRequest;
 
 /**
  * <p>
@@ -44,5 +43,11 @@ public interface TokenKeyService extends IService<TokenKey> {
      * Delete the invalid token key in the database
      */
     public void deleteInvalidToken();
+
+    /**
+     * delete all the token of this user in database
+     * @param userId the id of user
+     */
+    public void deleteTokenByUser(Integer userId);
 
 }
