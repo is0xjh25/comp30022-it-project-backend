@@ -1,8 +1,14 @@
 package tech.crm.crmserver.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
 import tech.crm.crmserver.dao.ToDoList;
+import tech.crm.crmserver.dto.UserPermissionDTO;
+
+import java.util.List;
 
 /**
  * <p>
@@ -14,5 +20,11 @@ import tech.crm.crmserver.dao.ToDoList;
  */
 @Repository
 public interface ToDoListMapper extends BaseMapper<ToDoList> {
+
+    @Select("SELECT * " +
+            "FROM to_do_list " +
+            "WHERE user_id = #{userId} " +
+            "ORDER BY FIELD(status,'active','done','deleted')")
+    public List<ToDoList> getTodoListDataByUserId(@Param("userId") Integer userId);
 
 }
