@@ -38,6 +38,8 @@ public final class ExceptionMessageConstants {
 
     public static final String ID_NOT_EXIST_EXCEPTION  = "Id can not be null!";
 
+    public static final String TODOLIST_FAIL_ADDED_EXCEPTION = "Fail to add a todoList data";
+
 
 
     private ExceptionMessageConstants() {
