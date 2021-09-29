@@ -18,6 +18,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import tech.crm.crmserver.common.constants.TimeZoneConstants;
 import tech.crm.crmserver.common.constants.SecurityConstants;
 import tech.crm.crmserver.common.enums.Status;
 import tech.crm.crmserver.common.utils.NullAwareBeanUtilsBean;
@@ -35,6 +36,7 @@ import tech.crm.crmserver.service.TokenKeyService;
 import tech.crm.crmserver.service.UserService;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -218,7 +220,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         //update recent activity
         UpdateWrapper<User> wrapper = new UpdateWrapper<>();
         wrapper.eq("id", userId)
-                .set("recent_activity", LocalDateTime.now());
+                .set("recent_activity", LocalDateTime.now(TimeZoneConstants.ZONE));
         try {
             update(wrapper);
         }
