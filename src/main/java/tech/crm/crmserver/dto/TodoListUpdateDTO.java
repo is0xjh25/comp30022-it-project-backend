@@ -14,6 +14,14 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * <p>
+ *  DTO for update todoList form
+ * </p>
+ *
+ * @author Kaiyuan Zheng
+ * @since 2021-09-29
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
