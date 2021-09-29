@@ -39,6 +39,14 @@ public interface ToDoListService extends IService<ToDoList> {
     public List<ToDoList> queryToDoListByUserId(Integer userId, ToDoListStatus toDoListStatus);
 
     /**
+     * Query all the todoList data of a user
+     *
+     * @param userId the id of the user to match
+     * @return a list of todoList belongTo this user
+     */
+    public List<ToDoList> queryToDoListByUserId(Integer userId);
+
+    /**
      * Create todoList for a user
      *
      * @param userId the id of the user to match

@@ -42,13 +42,11 @@ public class ToDoListController {
     @GetMapping
     public ResponseResult<Object> getAllTodoListData(@RequestParam("topNTodoListData") Integer topNTodoListData) {
         Integer userId = userService.getId();
-        List<ToDoList> toDoListsActive = toDoListService.queryToDoListByUserId(userId, ToDoListStatus.ACTIVE);
-        List<ToDoList> toDoListsDone = toDoListService.queryToDoListByUserId(userId, ToDoListStatus.DONE);
-        toDoListsActive.addAll(toDoListsDone);
-        if (toDoListsActive.size() > topNTodoListData) {
-            toDoListsActive.subList(0, topNTodoListData);
+        List<ToDoList> toDoList = toDoListService.queryToDoListByUserId(userId);
+        if (topNTodoListData == -1 && toDoList.size() > topNTodoListData) {
+            toDoList.subList(0, topNTodoListData);
         }
-        return ResponseResult.suc("Query user's todoList", toDoListsActive);
+        return ResponseResult.suc("Query user's todoList", toDoList);
     }
 
     /**

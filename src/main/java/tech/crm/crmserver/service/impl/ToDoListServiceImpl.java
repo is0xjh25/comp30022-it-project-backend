@@ -71,6 +71,17 @@ public class ToDoListServiceImpl extends ServiceImpl<ToDoListMapper, ToDoList> i
         return toDoListMapper.selectList(queryWrapper);
     }
 
+    /**
+     * Query all the todoList data of a user
+     *
+     * @param userId the id of the user to match
+     * @return a list of todoList belongTo this user
+     */
+    @Override
+    public List<ToDoList> queryToDoListByUserId(Integer userId) {
+        return toDoListMapper.getTodoListDataByUserId(userId);
+    }
+
     @Override
     public boolean createTodoList(Integer userId, TodoListCreateDTO todoListCreateDTO) {
         ToDoList toDoList = new ToDoList();
