@@ -72,11 +72,10 @@ public interface EventService extends IService<Event> {
 
     /**
      * delete a contact from event
-     * @param userId the id of user
-     * @param contactId the id of contact
-     * @param eventId the id of event
+     * @param userId    the user of this event
+     * @param attendId the id of attend
      */
-    public void deleteContact(Integer userId, Integer contactId, Integer eventId);
+    public void deleteContact(Integer userId, Integer attendId);
 
     /**
      * delete a contact from event

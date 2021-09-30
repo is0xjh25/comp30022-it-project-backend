@@ -8,6 +8,8 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tech.crm.crmserver.common.constants.EmailConstants;
+import tech.crm.crmserver.common.enums.PermissionLevel;
+import tech.crm.crmserver.dao.*;
 import tech.crm.crmserver.common.enums.ToDoListStatus;
 import tech.crm.crmserver.common.utils.NullAwareBeanUtilsBean;
 import tech.crm.crmserver.dao.Attend;
@@ -23,10 +25,12 @@ import tech.crm.crmserver.exception.FailToAddContactToEventException;
 import tech.crm.crmserver.exception.FailToDeleteContactToEventException;
 import tech.crm.crmserver.exception.NotEnoughPermissionException;
 import tech.crm.crmserver.mapper.ContactMapper;
+import tech.crm.crmserver.exception.*;
 import tech.crm.crmserver.mapper.EventMapper;
 import tech.crm.crmserver.service.AttendService;
 import tech.crm.crmserver.service.ContactService;
 import tech.crm.crmserver.service.EventService;
+import tech.crm.crmserver.service.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -50,6 +54,15 @@ public class EventServiceImpl extends ServiceImpl<EventMapper, Event> implements
 
     @Autowired
     private AttendService attendService;
+
+    @Autowired
+    private ContactService contactService;
+
+    @Autowired
+    public DepartmentService departmentService;
+
+    @Autowired
+    public PermissionService permissionService;
 
     @Autowired
     private ContactMapper contactMapper;
@@ -182,6 +195,19 @@ public class EventServiceImpl extends ServiceImpl<EventMapper, Event> implements
         //check user
         checkUser(userId,eventId);
 
+        //check whether user has the permission to view the contact
+        Contact contact = contactService.getById(contactId);
+        if(contact == null){
+            throw new ContactNotExistException();
+        }
+        Department department = departmentService.getById(contact.getDepartmentId());
+        if(department == null){
+            throw new DepartmentNotExistException();
+        }
+        if(!permissionService.ifPermissionLevelSatisfied(userId, PermissionLevel.DISPLAY,department.getId())){
+            throw new NotEnoughPermissionException();
+        }
+
         Attend attend = new Attend();
         attend.setContactId(contactId);
         attend.setEventId(eventId);
@@ -194,25 +220,23 @@ public class EventServiceImpl extends ServiceImpl<EventMapper, Event> implements
     /**
      * delete a contact from event
      *
-     * @param userId    the id of user
-     * @param contactId the id of contact
-     * @param eventId   the id of event
+     * @param userId   the user of this event
+     * @param attendId the id of attend
      */
     @Override
-    public void deleteContact(Integer userId, Integer contactId, Integer eventId) {
-        //check user
-        checkUser(userId,eventId);
+    public void deleteContact(Integer userId, Integer attendId) {
+        Attend attend = attendService.getById(attendId);
 
-        QueryWrapper<Attend> wrapper = new QueryWrapper<>();
-        wrapper.eq("contact_id",contactId)
-                .eq("event_id",eventId);
-        if(!attendService.remove(wrapper)){
+        //check user
+        checkUser(userId,attend.getEventId());
+
+        if(!attendService.removeById(attendId)){
             throw new FailToDeleteContactToEventException();
         }
     }
 
     /**
-     * delete a contact from event
+     * get event details
      * @param eventId the id of event
      * @return the eventAttendDTO include all the information like the contact of this event
      */
