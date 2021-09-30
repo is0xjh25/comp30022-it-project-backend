@@ -16,6 +16,7 @@ import tech.crm.crmserver.service.EventService;
 import tech.crm.crmserver.service.UserService;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -114,12 +115,12 @@ public class EventController {
 
     /**
      * delete a contact from event
-     * @param eventContactDTO contact id and event id
+     * @param attendId attend id
      * @return ResponseResult contain all information about if add is success or fail
      */
     @DeleteMapping("/contact")
-    public ResponseResult<Object> deleteContact(@RequestBody EventContactDTO eventContactDTO){
-        eventService.deleteContact(userService.getId(),eventContactDTO.getContactId(),eventContactDTO.getEventId());
+    public ResponseResult<Object> deleteContact(Integer attendId){
+        eventService.deleteContact(userService.getId(), attendId);
         return ResponseResult.suc("Delete contact success");
     }
 }

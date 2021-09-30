@@ -203,19 +203,17 @@ public class EventServiceImpl extends ServiceImpl<EventMapper, Event> implements
     /**
      * delete a contact from event
      *
-     * @param userId    the id of user
-     * @param contactId the id of contact
-     * @param eventId   the id of event
+     * @param userId   the user of this event
+     * @param attendId the id of attend
      */
     @Override
-    public void deleteContact(Integer userId, Integer contactId, Integer eventId) {
-        //check user
-        checkUser(userId,eventId);
+    public void deleteContact(Integer userId, Integer attendId) {
+        Attend attend = attendService.getById(attendId);
 
-        QueryWrapper<Attend> wrapper = new QueryWrapper<>();
-        wrapper.eq("contact_id",contactId)
-                .eq("event_id",eventId);
-        if(!attendService.remove(wrapper)){
+        //check user
+        checkUser(userId,attend.getEventId());
+
+        if(!attendService.removeById(attendId)){
             throw new FailToDeleteContactToEventException();
         }
     }
