@@ -1,11 +1,13 @@
 package tech.crm.crmserver.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import tech.crm.crmserver.common.enums.ToDoListStatus;
 import tech.crm.crmserver.dao.Event;
 import tech.crm.crmserver.dao.ToDoList;
 import tech.crm.crmserver.dto.EventsDTO;
 import tech.crm.crmserver.dto.EventsUpdateDTO;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -47,5 +49,16 @@ public interface EventService extends IService<Event> {
      * @param eventId the id of the event to delete
      */
     public void deleteEvent(Integer eventId, Integer userId);
+
+    /**
+     * Query event by some condition
+     * @param eventId the id of the event to query
+     * @param userId the user id of the event to query
+     * @param startTime the start time of the event to query
+     * @param finishTIme the finish time of the event to query
+     * @param toDoListStatus the status of the event to query
+     * @return a list of match event
+     */
+    public List<Event> queryEvent(Integer eventId, Integer userId, LocalDateTime startTime, LocalDateTime finishTIme, ToDoListStatus status, String description);
 
 }

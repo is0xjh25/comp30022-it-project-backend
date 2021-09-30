@@ -5,20 +5,20 @@ SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
 
 -- -----------------------------------------------------
--- Schema testdb
+-- Schema testdb2
 -- -----------------------------------------------------
 
 -- -----------------------------------------------------
--- Schema testdb
+-- Schema testdb2
 -- -----------------------------------------------------
-DROP SCHEMA IF EXISTS `testdb`;
-CREATE SCHEMA `testdb` DEFAULT CHARACTER SET utf8 ;
-USE `testdb` ;
+DROP SCHEMA IF EXISTS `testdb2`;
+CREATE SCHEMA `testdb2` DEFAULT CHARACTER SET utf8 ;
+USE `testdb2` ;
 
 -- -----------------------------------------------------
--- Table `testdb`.`user`
+-- Table `testdb2`.`user`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `testdb`.`user` (
+CREATE TABLE IF NOT EXISTS `testdb2`.`user` (
                                                `id` INT NOT NULL AUTO_INCREMENT,
                                                `email` VARCHAR(255) NOT NULL,
                                                `password` VARCHAR(255) NOT NULL,
@@ -37,9 +37,9 @@ CREATE TABLE IF NOT EXISTS `testdb`.`user` (
 
 
 -- -----------------------------------------------------
--- Table `testdb`.`organization`
+-- Table `testdb2`.`organization`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `testdb`.`organization` (
+CREATE TABLE IF NOT EXISTS `testdb2`.`organization` (
                                                        `id` INT NOT NULL AUTO_INCREMENT,
                                                        `name` VARCHAR(255) NOT NULL,
                                                        `owner` INT NOT NULL,
@@ -50,16 +50,16 @@ CREATE TABLE IF NOT EXISTS `testdb`.`organization` (
                                                        INDEX `fk_orgnization_client_idx` (`owner` ASC) ,
                                                        CONSTRAINT `fk_orgnization_client`
                                                            FOREIGN KEY (`owner`)
-                                                               REFERENCES `testdb`.`user` (`id`)
+                                                               REFERENCES `testdb2`.`user` (`id`)
                                                                ON DELETE NO ACTION
                                                                ON UPDATE NO ACTION)
     ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `testdb`.`department`
+-- Table `testdb2`.`department`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `testdb`.`department` (
+CREATE TABLE IF NOT EXISTS `testdb2`.`department` (
                                                      `id` INT NOT NULL AUTO_INCREMENT,
                                                      `name` VARCHAR(255) NOT NULL,
                                                      `organization_id` INT NOT NULL,
@@ -69,16 +69,16 @@ CREATE TABLE IF NOT EXISTS `testdb`.`department` (
                                                      INDEX `fk_department_orgnization1_idx` (`organization_id` ASC) ,
                                                      CONSTRAINT `fk_department_orgnization1`
                                                          FOREIGN KEY (`organization_id`)
-                                                             REFERENCES `testdb`.`organization` (`id`)
+                                                             REFERENCES `testdb2`.`organization` (`id`)
                                                              ON DELETE NO ACTION
                                                              ON UPDATE NO ACTION)
     ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `testdb`.`contact`
+-- Table `testdb2`.`contact`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `testdb`.`contact` (
+CREATE TABLE IF NOT EXISTS `testdb2`.`contact` (
                                                   `id` INT NOT NULL AUTO_INCREMENT,
                                                   `department_id` INT NOT NULL,
                                                   `email` VARCHAR(255) NOT NULL,
@@ -98,16 +98,16 @@ CREATE TABLE IF NOT EXISTS `testdb`.`contact` (
                                                   INDEX `fk_customer_department1_idx` (`department_id` ASC) ,
                                                   CONSTRAINT `fk_customer_department1`
                                                       FOREIGN KEY (`department_id`)
-                                                          REFERENCES `testdb`.`department` (`id`)
+                                                          REFERENCES `testdb2`.`department` (`id`)
                                                           ON DELETE NO ACTION
                                                           ON UPDATE NO ACTION)
     ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `testdb`.`event`
+-- Table `testdb2`.`event`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `testdb`.`event` (
+CREATE TABLE IF NOT EXISTS `testdb2`.`event` (
                                                 `id` INT NOT NULL AUTO_INCREMENT,
                                                 `user_id` INT NOT NULL,
                                                 `start_time` DATETIME NOT NULL,
@@ -119,16 +119,16 @@ CREATE TABLE IF NOT EXISTS `testdb`.`event` (
                                                 INDEX `fk_order_client1_idx` (`user_id` ASC) ,
                                                 CONSTRAINT `fk_order_client10`
                                                     FOREIGN KEY (`user_id`)
-                                                        REFERENCES `testdb`.`user` (`id`)
+                                                        REFERENCES `testdb2`.`user` (`id`)
                                                         ON DELETE NO ACTION
                                                         ON UPDATE NO ACTION)
     ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `testdb`.`attend`
+-- Table `testdb2`.`attend`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `testdb`.`attend` (
+CREATE TABLE IF NOT EXISTS `testdb2`.`attend` (
                                                  `id` INT NOT NULL AUTO_INCREMENT,
                                                  `event_id` INT NOT NULL,
                                                  `contact_id` INT NOT NULL,
@@ -138,21 +138,21 @@ CREATE TABLE IF NOT EXISTS `testdb`.`attend` (
                                                  INDEX `fk_attend_customer1_idx` (`contact_id` ASC) ,
                                                  CONSTRAINT `fk_attend_event1`
                                                      FOREIGN KEY (`event_id`)
-                                                         REFERENCES `testdb`.`event` (`id`)
+                                                         REFERENCES `testdb2`.`event` (`id`)
                                                          ON DELETE NO ACTION
                                                          ON UPDATE NO ACTION,
                                                  CONSTRAINT `fk_attend_customer1`
                                                      FOREIGN KEY (`contact_id`)
-                                                         REFERENCES `testdb`.`contact` (`id`)
+                                                         REFERENCES `testdb2`.`contact` (`id`)
                                                          ON DELETE NO ACTION
                                                          ON UPDATE NO ACTION)
     ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `testdb`.`belong_to`
+-- Table `testdb2`.`belong_to`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `testdb`.`belong_to` (
+CREATE TABLE IF NOT EXISTS `testdb2`.`belong_to` (
                                                     `id` INT NOT NULL AUTO_INCREMENT,
                                                     `user_id` INT NOT NULL,
                                                     `organization_id` INT NOT NULL,
@@ -163,21 +163,21 @@ CREATE TABLE IF NOT EXISTS `testdb`.`belong_to` (
                                                     UNIQUE INDEX `id_UNIQUE` (`id` ASC) ,
                                                     CONSTRAINT `fk_belong_to_client1`
                                                         FOREIGN KEY (`user_id`)
-                                                            REFERENCES `testdb`.`user` (`id`)
+                                                            REFERENCES `testdb2`.`user` (`id`)
                                                             ON DELETE NO ACTION
                                                             ON UPDATE NO ACTION,
                                                     CONSTRAINT `fk_belong_to_orgnization1`
                                                         FOREIGN KEY (`organization_id`)
-                                                            REFERENCES `testdb`.`organization` (`id`)
+                                                            REFERENCES `testdb2`.`organization` (`id`)
                                                             ON DELETE NO ACTION
                                                             ON UPDATE NO ACTION)
     ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `testdb`.`permission`
+-- Table `testdb2`.`permission`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `testdb`.`permission` (
+CREATE TABLE IF NOT EXISTS `testdb2`.`permission` (
                                                      `id` INT NOT NULL AUTO_INCREMENT,
                                                      `user_id` INT NOT NULL,
                                                      `department_id` INT NOT NULL,
@@ -189,21 +189,21 @@ CREATE TABLE IF NOT EXISTS `testdb`.`permission` (
                                                      INDEX `fk_belong_to_copy1_department1_idx` (`department_id` ASC) ,
                                                      CONSTRAINT `fk_belong_to_client10`
                                                          FOREIGN KEY (`user_id`)
-                                                             REFERENCES `testdb`.`user` (`id`)
+                                                             REFERENCES `testdb2`.`user` (`id`)
                                                              ON DELETE NO ACTION
                                                              ON UPDATE NO ACTION,
                                                      CONSTRAINT `fk_belong_to_copy1_department1`
                                                          FOREIGN KEY (`department_id`)
-                                                             REFERENCES `testdb`.`department` (`id`)
+                                                             REFERENCES `testdb2`.`department` (`id`)
                                                              ON DELETE NO ACTION
                                                              ON UPDATE NO ACTION)
     ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `testdb`.`to_do_list`
+-- Table `testdb2`.`to_do_list`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `testdb`.`to_do_list` (
+CREATE TABLE IF NOT EXISTS `testdb2`.`to_do_list` (
                                                      `id` INT NOT NULL AUTO_INCREMENT,
                                                      `user_id` INT NOT NULL,
                                                      `date_time` DATETIME NOT NULL,
@@ -214,16 +214,16 @@ CREATE TABLE IF NOT EXISTS `testdb`.`to_do_list` (
                                                      INDEX `fk_order_client1_idx` (`user_id` ASC) ,
                                                      CONSTRAINT `fk_order_client100`
                                                          FOREIGN KEY (`user_id`)
-                                                             REFERENCES `testdb`.`user` (`id`)
+                                                             REFERENCES `testdb2`.`user` (`id`)
                                                              ON DELETE NO ACTION
                                                              ON UPDATE NO ACTION)
     ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `testdb`.`recent_contact`
+-- Table `testdb2`.`recent_contact`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `testdb`.`recent_contact` (
+CREATE TABLE IF NOT EXISTS `testdb2`.`recent_contact` (
                                                          `contact_id` INT NOT NULL,
                                                          `user_id` INT NOT NULL,
                                                          `last_contact` DATETIME NOT NULL,
@@ -232,21 +232,21 @@ CREATE TABLE IF NOT EXISTS `testdb`.`recent_contact` (
                                                          PRIMARY KEY (`contact_id`, `user_id`),
                                                          CONSTRAINT `fk_order_customer10`
                                                              FOREIGN KEY (`contact_id`)
-                                                                 REFERENCES `testdb`.`contact` (`id`)
+                                                                 REFERENCES `testdb2`.`contact` (`id`)
                                                                  ON DELETE NO ACTION
                                                                  ON UPDATE NO ACTION,
                                                          CONSTRAINT `fk_order_client11`
                                                              FOREIGN KEY (`user_id`)
-                                                                 REFERENCES `testdb`.`user` (`id`)
+                                                                 REFERENCES `testdb2`.`user` (`id`)
                                                                  ON DELETE NO ACTION
                                                                  ON UPDATE NO ACTION)
     ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `testdb`.`token_key`
+-- Table `testdb2`.`token_key`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `testdb`.`token_key` (
+CREATE TABLE IF NOT EXISTS `testdb2`.`token_key` (
                                                     `id` INT NOT NULL AUTO_INCREMENT,
                                                     `user_id` INT NOT NULL,
                                                     `jwt_key` VARCHAR(255) NOT NULL,
@@ -256,7 +256,7 @@ CREATE TABLE IF NOT EXISTS `testdb`.`token_key` (
                                                     INDEX `fk_token_user1_idx` (`user_id` ASC) ,
                                                     CONSTRAINT `fk_token_user1`
                                                         FOREIGN KEY (`user_id`)
-                                                            REFERENCES `testdb`.`user` (`id`)
+                                                            REFERENCES `testdb2`.`user` (`id`)
                                                             ON DELETE NO ACTION
                                                             ON UPDATE NO ACTION)
     ENGINE = InnoDB;
