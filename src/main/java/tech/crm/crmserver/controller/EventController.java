@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import tech.crm.crmserver.common.response.ResponseResult;
 import tech.crm.crmserver.dao.Event;
 import tech.crm.crmserver.dto.EventsDTO;
+import tech.crm.crmserver.dto.EventsUpdateDTO;
 import tech.crm.crmserver.exception.EventsFailAddedException;
 import tech.crm.crmserver.service.EventService;
 import tech.crm.crmserver.service.UserService;
@@ -57,5 +58,18 @@ public class EventController {
         }
         return ResponseResult.suc("Adding event success");
     }
+
+    /**
+     * Update the events by id
+     *
+     * @param eventsUpdateDTO the update information
+     * @return ResponseResult contain all infomation about if creatation is success or fail
+     */
+    @PutMapping
+    public ResponseResult<Object> updateEvents(@RequestBody @Valid EventsUpdateDTO eventsUpdateDTO){
+        eventService.updateEvent(userService.getId(),eventsUpdateDTO);
+        return ResponseResult.suc("Update event success");
+    }
+
 }
 
