@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import tech.crm.crmserver.common.enums.ToDoListStatus;
 import tech.crm.crmserver.dao.Event;
 import tech.crm.crmserver.dao.ToDoList;
+import tech.crm.crmserver.dto.EventAttendDTO;
 import tech.crm.crmserver.dto.EventsDTO;
 import tech.crm.crmserver.dto.EventsUpdateDTO;
 
@@ -76,5 +77,12 @@ public interface EventService extends IService<Event> {
      * @param eventId the id of event
      */
     public void deleteContact(Integer userId, Integer contactId, Integer eventId);
+
+    /**
+     * delete a contact from event
+     * @param eventId the id of event
+     * @return the eventAttendDTO include all the information like the contact of this event
+     */
+    public EventAttendDTO getEventById(Integer eventId);
 
 }

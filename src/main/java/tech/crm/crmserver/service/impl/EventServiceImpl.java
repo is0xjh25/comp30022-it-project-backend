@@ -9,19 +9,28 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tech.crm.crmserver.common.constants.EmailConstants;
 import tech.crm.crmserver.common.enums.ToDoListStatus;
+import tech.crm.crmserver.common.utils.NullAwareBeanUtilsBean;
 import tech.crm.crmserver.dao.Attend;
+import tech.crm.crmserver.dao.Contact;
 import tech.crm.crmserver.dao.Event;
 import tech.crm.crmserver.dao.User;
+import tech.crm.crmserver.dto.ContactAttendDTO;
+import tech.crm.crmserver.dto.EventAttendDTO;
 import tech.crm.crmserver.dto.EventsDTO;
 import tech.crm.crmserver.dto.EventsUpdateDTO;
+import tech.crm.crmserver.exception.EventsFailQueryException;
 import tech.crm.crmserver.exception.FailToAddContactToEventException;
 import tech.crm.crmserver.exception.FailToDeleteContactToEventException;
 import tech.crm.crmserver.exception.NotEnoughPermissionException;
+import tech.crm.crmserver.mapper.ContactMapper;
 import tech.crm.crmserver.mapper.EventMapper;
 import tech.crm.crmserver.service.AttendService;
+import tech.crm.crmserver.service.ContactService;
 import tech.crm.crmserver.service.EventService;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -41,6 +50,9 @@ public class EventServiceImpl extends ServiceImpl<EventMapper, Event> implements
 
     @Autowired
     private AttendService attendService;
+
+    @Autowired
+    private ContactMapper contactMapper;
 
 
     /**
@@ -197,5 +209,49 @@ public class EventServiceImpl extends ServiceImpl<EventMapper, Event> implements
         if(!attendService.remove(wrapper)){
             throw new FailToDeleteContactToEventException();
         }
+    }
+
+    /**
+     * delete a contact from event
+     * @param eventId the id of event
+     * @return the eventAttendDTO include all the information like the contact of this event
+     */
+    @Override
+    public EventAttendDTO getEventById(Integer eventId) {
+        Event event = getById(eventId);
+        if (event == null) {
+            throw new EventsFailQueryException();
+        }
+        List<Attend> attendList = attendService.getAttendByEventId(eventId);
+        Map<Integer, Integer> contactAttendMap = new HashMap<>();
+
+        for (Attend attend : attendList) {
+            contactAttendMap.put(attend.getContactId(), attend.getId());
+        }
+
+        List<Integer> contactIdList = new ArrayList<>();
+        for (Attend attend : attendList) {
+            contactIdList.add(attend.getContactId());
+        }
+        List<Contact> contactList = new ArrayList<>();
+        if (contactIdList.size() != 0) {
+            contactList = contactMapper.selectBatchIds(contactIdList);
+        }
+        List<ContactAttendDTO> contactAttendDTOList = new ArrayList<>();
+        for (Contact contact : contactList) {
+            ContactAttendDTO contactAttendDTO = new ContactAttendDTO();
+            NullAwareBeanUtilsBean.copyProperties(contact, contactAttendDTO);
+            contactAttendDTO.setAttendId(contactAttendMap.get(contact.getId()));
+            contactAttendDTOList.add(contactAttendDTO);
+        }
+        EventAttendDTO eventAttendDTO = new EventAttendDTO();
+        eventAttendDTO.setId(event.getId());
+        eventAttendDTO.setUserId(event.getUserId());
+        eventAttendDTO.setDescription(event.getDescription());
+        eventAttendDTO.setStartTime(event.getStartTime());
+        eventAttendDTO.setFinishTime(event.getFinishTime());
+        eventAttendDTO.setStatus(event.getStatus());
+        eventAttendDTO.setContactList(contactAttendDTOList);
+        return eventAttendDTO;
     }
 }

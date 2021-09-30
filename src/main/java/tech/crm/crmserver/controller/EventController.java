@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import tech.crm.crmserver.common.response.ResponseResult;
 import tech.crm.crmserver.dao.Event;
+import tech.crm.crmserver.dto.EventAttendDTO;
 import tech.crm.crmserver.dto.EventsDTO;
 import tech.crm.crmserver.dto.EventsUpdateDTO;
 import tech.crm.crmserver.exception.EventsFailAddedException;
@@ -40,10 +41,7 @@ public class EventController {
 
     @GetMapping
     public ResponseResult<Object> getEventById(@RequestParam("event_id") Integer eventId) {
-        Event event = eventService.getById(eventId);
-        if (event == null) {
-            throw new EventsFailQueryException();
-        }
+        EventAttendDTO event = eventService.getEventById(eventId);
         return ResponseResult.suc("Get event details success", event);
     }
 
