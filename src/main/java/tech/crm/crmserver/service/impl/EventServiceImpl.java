@@ -42,9 +42,6 @@ public class EventServiceImpl extends ServiceImpl<EventMapper, Event> implements
     private AttendService attendService;
 
     @Autowired
-    private ContactService contactService;
-
-    @Autowired
     public DepartmentService departmentService;
 
     @Autowired
@@ -59,6 +56,9 @@ public class EventServiceImpl extends ServiceImpl<EventMapper, Event> implements
     private void checkUser(Integer userId, Integer eventId) {
         //check user
         Event event = baseMapper.selectById(eventId);
+        if(event == null){
+            throw new EventsNotExistException();
+        }
         if(!event.getUserId().equals(userId)){
             throw new NotEnoughPermissionException();
         }
@@ -179,15 +179,8 @@ public class EventServiceImpl extends ServiceImpl<EventMapper, Event> implements
         checkUser(userId,eventId);
 
         //check whether user has the permission to view the contact
-        Contact contact = contactService.getById(contactId);
-        if(contact == null){
-            throw new ContactNotExistException();
-        }
-        Department department = departmentService.getById(contact.getDepartmentId());
-        if(department == null){
-            throw new DepartmentNotExistException();
-        }
-        if(!permissionService.ifPermissionLevelSatisfied(userId, PermissionLevel.DISPLAY,department.getId())){
+        Permission permission = permissionService.getPermissionByUserIdAndContactId(userId, contactId);
+        if(permission == null || permission.getAuthorityLevel().equals(PermissionLevel.PENDING)){
             throw new NotEnoughPermissionException();
         }
 

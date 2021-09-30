@@ -2,7 +2,6 @@ package tech.crm.crmserver.controller;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import tech.crm.crmserver.common.response.ResponseResult;
 import tech.crm.crmserver.dao.Event;
@@ -11,12 +10,11 @@ import tech.crm.crmserver.dto.EventsDTO;
 import tech.crm.crmserver.dto.EventsUpdateDTO;
 import tech.crm.crmserver.exception.EventsFailAddedException;
 import tech.crm.crmserver.service.AttendService;
-import tech.crm.crmserver.exception.EventsFailQueryException;
+import tech.crm.crmserver.exception.EventsNotExistException;
 import tech.crm.crmserver.service.EventService;
 import tech.crm.crmserver.service.UserService;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -45,7 +43,7 @@ public class EventController {
     public ResponseResult<Object> getEventById(@RequestParam("event_id") Integer eventId) {
         Event event = eventService.getById(eventId);
         if (event == null) {
-            throw new EventsFailQueryException();
+            throw new EventsNotExistException();
         }
         return ResponseResult.suc("Get event details success", event);
     }
