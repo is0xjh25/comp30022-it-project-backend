@@ -83,15 +83,16 @@ public class EventController {
     }
 
 
-//    /**
-//     * Delete a events
-//     *
-//     * @param eventId the event id to delete
-//     * @return ResponseResult contain if delete success or not
-//     */
-//    @DeleteMapping
-//    public ResponseResult<Object> deleteEventsById(@RequestParam Integer eventId) {
-//
-//    }
+    /**
+     * Delete a events
+     *
+     * @param eventId the event id to delete
+     * @return ResponseResult contain if delete success or not
+     */
+    @DeleteMapping
+    public ResponseResult<Object> deleteEventsById(@RequestParam("event_id") Integer eventId) {
+        eventService.deleteEvent(eventId, userService.getId());
+        return ResponseResult.suc("Delete event success");
+    }
 }
 

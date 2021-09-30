@@ -42,4 +42,10 @@ public interface EventService extends IService<Event> {
      */
     public void updateEvent(Integer userId, EventsUpdateDTO eventsUpdateDTO);
 
+    /**
+     * Delete the event by eventId
+     * @param eventId the id of the event to delete
+     */
+    public void deleteEvent(Integer eventId, Integer userId);
+
 }

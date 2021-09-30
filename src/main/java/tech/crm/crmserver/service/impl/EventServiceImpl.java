@@ -13,6 +13,7 @@ import tech.crm.crmserver.dto.EventsDTO;
 import tech.crm.crmserver.dto.EventsUpdateDTO;
 import tech.crm.crmserver.exception.NotEnoughPermissionException;
 import tech.crm.crmserver.mapper.EventMapper;
+import tech.crm.crmserver.service.AttendService;
 import tech.crm.crmserver.service.EventService;
 
 import java.util.List;
@@ -31,6 +32,9 @@ public class EventServiceImpl extends ServiceImpl<EventMapper, Event> implements
 
     @Autowired
     private EventMapper eventMapper;
+
+    @Autowired
+    private AttendService attendService;
 
     /**
      * Query all the events of a user
@@ -80,5 +84,17 @@ public class EventServiceImpl extends ServiceImpl<EventMapper, Event> implements
 
         //update to database
         update(updateWrapper);
+    }
+
+    @Override
+    public void deleteEvent(Integer eventId, Integer userId) {
+        //check user
+        Event event = baseMapper.selectById(eventId);
+        if(!event.getUserId().equals(userId)){
+            throw new NotEnoughPermissionException();
+        }
+
+        attendService.deleteAttendByEventId(eventId);
+        removeById(eventId);
     }
 }

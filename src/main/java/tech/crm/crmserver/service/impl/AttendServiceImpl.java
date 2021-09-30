@@ -35,4 +35,11 @@ public class AttendServiceImpl extends ServiceImpl<AttendMapper, Attend> impleme
         wrapper.in("contact_id",contactIds);
         baseMapper.delete(wrapper);
     }
+
+    @Override
+    public void deleteAttendByEventId(Integer eventId) {
+        QueryWrapper<Attend> wrapper = new QueryWrapper<>();
+        wrapper.eq("event_id",eventId);
+        baseMapper.delete(wrapper);
+    }
 }
