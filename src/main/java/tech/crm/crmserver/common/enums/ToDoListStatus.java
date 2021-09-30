@@ -6,8 +6,8 @@ import com.fasterxml.jackson.annotation.JsonValue;
 public enum ToDoListStatus {
 
 
-    ACTIVE("active"),
-    DELETED("deleted"),
+    ACTIVE("to do"),
+    DELETED("in progress"),
     DONE("done");
 
     @EnumValue
