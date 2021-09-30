@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import tech.crm.crmserver.dao.Event;
 import tech.crm.crmserver.dao.ToDoList;
 import tech.crm.crmserver.dto.EventsDTO;
+import tech.crm.crmserver.dto.EventsUpdateDTO;
 
 import java.util.List;
 
@@ -33,5 +34,12 @@ public interface EventService extends IService<Event> {
      * @return if the creation is success or not
      */
     public boolean createNewEvent(Integer userId, EventsDTO eventsDTO);
+
+    /**
+     * update the information of a event
+     * @param userId the user of this event
+     * @param eventsUpdateDTO the update information
+     */
+    public void updateEvent(Integer userId, EventsUpdateDTO eventsUpdateDTO);
 
 }
