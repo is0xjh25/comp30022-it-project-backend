@@ -14,8 +14,9 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import tech.crm.crmserver.common.constants.SecurityConstants;
 import tech.crm.crmserver.common.enums.ToDoListStatus;
+import tech.crm.crmserver.dao.Event;
 import tech.crm.crmserver.dao.ToDoList;
-import tech.crm.crmserver.service.ToDoListService;
+import tech.crm.crmserver.service.EventService;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -26,7 +27,7 @@ import java.util.List;
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class TodoListControllerTesting {
+public class EventControllerTesting {
 
     @Autowired
     private MockMvc mvc;
@@ -34,7 +35,7 @@ public class TodoListControllerTesting {
     private static String token;
 
     @Autowired
-    private ToDoListService toDoListService;
+    private EventService eventService;
 
     /**
      * login before test
@@ -55,45 +56,26 @@ public class TodoListControllerTesting {
     }
 
     /**
-     * Testing creating todoList data for a user
+     * Testing creating event data for a user
      * @throws Exception
      */
     @Test
     @Order(1)
-    public void testAAddNewTodoListData() throws Exception {
+    public void testAAddNewEvent() throws Exception {
 
-        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post("/toDoList").header(SecurityConstants.TOKEN_HEADER,token)
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post("/event").header(SecurityConstants.TOKEN_HEADER,token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\n" +
-                        "    \"date_time\": \"2021-01-01 19:00\", \n" +
-                        "    \"description\": \"test\", \n" +
-                        "    \"status\": \"to do\" \n" +
+                        "    \"start_time\": \"2021-09-30 19:20\", \n" +
+                        "    \"finish_time\": \"2021-10-01 19:20\", \n" +
+                        "    \"description\": \"zoom meeting\" \n" +
                         "}"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn();
-        String str = "2021-01-01 19:00";
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-        LocalDateTime dateTime = LocalDateTime.parse(str, formatter);
-        List<ToDoList> test = toDoListService.queryTodoList(null, null, "test", dateTime, ToDoListStatus.TO_DO);
+
+        List<Event> test = eventService.queryEvent(null, null, null, null, null, "zoom meeting");
         assert (test.size() == 1);
         // contactId = contactBasedOnSomeConditionFromDB.get(0).getId();
         // assert (contactBasedOnSomeConditionFromDB.size() == 1);
     }
-
-    /**
-     * Testing querying todoList data for a user
-     * @throws Exception
-     */
-    @Test
-    @Order(2)
-    public void testBQueryNewTodoListData() throws Exception {
-
-        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get("/toDoList").param("topNTodoListData", String.valueOf(2)).header(SecurityConstants.TOKEN_HEADER,token))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.data").isArray())
-                .andReturn();
-        // contactId = contactBasedOnSomeConditionFromDB.get(0).getId();
-        // assert (contactBasedOnSomeConditionFromDB.size() == 1);
-    }
-
 }

@@ -1,5 +1,6 @@
 package tech.crm.crmserver.dto;
 
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,24 +12,27 @@ import java.time.LocalDateTime;
 
 /**
  * <p>
- *  DTO for TodoList
+ *  DTO for update event
  * </p>
  *
- * @author Yongfeng Qin
- * @since 2021-09-29
+ * @author Lingxiao
+ * @since 2021-09-30
  */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class TodoListCreateDTO {
+public class EventsUpdateDTO {
 
-    @NotNull(message = "Date time could not be null")
+    @NotNull(message = "Id cannot be null")
+    private Integer id;
+
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm", shape = JsonFormat.Shape.STRING)
-    private LocalDateTime dateTime;
+    private LocalDateTime startTime;
 
-    @NotNull(message = "Description could not be null")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm", shape = JsonFormat.Shape.STRING)
+    private LocalDateTime finishTime;
+
     private String description;
 
-    @NotNull(message = "Status could not be null")
     private ToDoListStatus status;
 }

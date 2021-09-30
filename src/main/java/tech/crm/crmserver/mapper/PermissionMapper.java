@@ -26,4 +26,10 @@ public interface PermissionMapper extends BaseMapper<Permission> {
             "ORDER BY FIELD(authority_level,0,5,4,3,2,1)")
     public Page<UserPermissionDTO> getPermissionInDepartmentOrdered(Page<?> page, @Param("departmentId") Integer departmentId);
 
+    @Select("SELECT *\n" +
+            "FROM `permission`\n" +
+            "WHERE `user_id` = #{userId} and `department_id` = (SELECT `department_id` FROM `contact` where id = #{contactId})")
+    public Permission getPermissionByUserIdAndContactId(@Param("userId") Integer userId,
+                                                        @Param("contactId") Integer contactId);
+
 }

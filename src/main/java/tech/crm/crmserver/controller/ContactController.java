@@ -18,6 +18,7 @@ import tech.crm.crmserver.service.PermissionService;
 import tech.crm.crmserver.service.UserService;
 
 import javax.validation.Valid;
+import java.util.List;
 
 /**
  * <p>
@@ -149,6 +150,17 @@ public class ContactController {
         }
         Page<ContactDTO> contactDTOPage = contactService.searchContactDTO(new Page<>(current, size), departmentId, searchKey);
         return ResponseResult.suc("success",contactDTOPage);
+    }
+
+    /**
+     * Search contacts by some details and search all contact of this user
+     * @param searchKey search key
+     * @return ResponseResult about if the search success, or why it fail
+     */
+    @GetMapping("/searchAll")
+    public ResponseResult<Object> searchAllContactOfUser(@RequestParam("search_key") String searchKey){
+        List<Contact> contacts = contactService.searchAllContactOfUser(userService.getId(), searchKey);
+        return ResponseResult.suc("success",contacts);
     }
 }
 
