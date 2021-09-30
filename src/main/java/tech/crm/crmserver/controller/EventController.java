@@ -111,5 +111,18 @@ public class EventController {
         eventService.addContact(userService.getId(),contactId,eventId);
         return ResponseResult.suc("Add contact success");
     }
+
+    /**
+     * delete a contact from event
+     * @param contactId the id of contact
+     * @param eventId the id of event
+     * @return ResponseResult contain all information about if add is success or fail
+     */
+    @PostMapping("/deleteContact")
+    public ResponseResult<Object> deleteContact(@RequestParam("attend_id") Integer contactId,
+                                             @RequestParam("event_id") Integer eventId){
+        eventService.addContact(userService.getId(),contactId,eventId);
+        return ResponseResult.suc("Add contact success");
+    }
 }
 

@@ -43,6 +43,12 @@ public interface EventService extends IService<Event> {
     public void updateEvent(Integer userId, EventsUpdateDTO eventsUpdateDTO);
 
     /**
+     * Delete the event by eventId
+     * @param eventId the id of the event to delete
+     */
+    public void deleteEvent(Integer eventId, Integer userId);
+
+    /**
      * add a contact to the event
      * @param userId the user of this event
      * @param contactId the id of contact
@@ -51,9 +57,11 @@ public interface EventService extends IService<Event> {
     public void addContact(Integer userId, Integer contactId, Integer eventId);
 
     /**
-     * Delete the event by eventId
-     * @param eventId the id of the event to delete
+     * delete a contact from event
+     * @param userId the id of user
+     * @param contactId the id of contact
+     * @param eventId the id of event
      */
-    public void deleteEvent(Integer eventId, Integer userId);
+    public void deleteContact(Integer userId, Integer contactId, Integer eventId);
 
 }
