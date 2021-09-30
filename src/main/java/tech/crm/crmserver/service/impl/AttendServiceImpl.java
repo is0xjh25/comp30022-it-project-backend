@@ -36,10 +36,26 @@ public class AttendServiceImpl extends ServiceImpl<AttendMapper, Attend> impleme
         baseMapper.delete(wrapper);
     }
 
+    /**
+     * delete the attend by eventId
+     *
+     * @param eventId the evenId to match those attend which to delete
+     */
     @Override
     public void deleteAttendByEventId(Integer eventId) {
         QueryWrapper<Attend> wrapper = new QueryWrapper<>();
         wrapper.eq("event_id",eventId);
         baseMapper.delete(wrapper);
+    }
+
+    /**
+     * Get attend data by eventId
+     *
+     * @param eventId the evenId to match those attend which to get
+     */
+    public List<Attend> getAttendByEventId(Integer eventId) {
+        QueryWrapper<Attend> wrapper = new QueryWrapper<>();
+        wrapper.eq("event_id",eventId);
+        return baseMapper.selectList(wrapper);
     }
 }
