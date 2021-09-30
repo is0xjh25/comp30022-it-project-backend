@@ -63,7 +63,7 @@ public class EventControllerTesting {
     @Order(1)
     public void testAAddNewEvent() throws Exception {
 
-        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post("/events").header(SecurityConstants.TOKEN_HEADER,token)
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post("/event").header(SecurityConstants.TOKEN_HEADER,token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\n" +
                         "    \"start_time\": \"2021-09-30 19:20\", \n" +
@@ -73,7 +73,7 @@ public class EventControllerTesting {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn();
 
-        List<Event> test = eventService.queryEvent(null, null, null, null, ToDoListStatus.ACTIVE, "zoom meeting");
+        List<Event> test = eventService.queryEvent(null, null, null, null, null, "zoom meeting");
         assert (test.size() == 1);
         // contactId = contactBasedOnSomeConditionFromDB.get(0).getId();
         // assert (contactBasedOnSomeConditionFromDB.size() == 1);

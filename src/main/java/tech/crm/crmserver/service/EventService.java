@@ -56,7 +56,7 @@ public interface EventService extends IService<Event> {
      * @param userId the user id of the event to query
      * @param startTime the start time of the event to query
      * @param finishTIme the finish time of the event to query
-     * @param toDoListStatus the status of the event to query
+     * @param status the status of the event to query
      * @return a list of match event
      */
     public List<Event> queryEvent(Integer eventId, Integer userId, LocalDateTime startTime, LocalDateTime finishTIme, ToDoListStatus status, String description);

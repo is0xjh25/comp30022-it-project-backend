@@ -14,11 +14,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import tech.crm.crmserver.common.constants.SecurityConstants;
 import tech.crm.crmserver.common.enums.ToDoListStatus;
-import tech.crm.crmserver.dao.Contact;
 import tech.crm.crmserver.dao.ToDoList;
-import tech.crm.crmserver.service.ContactService;
-import tech.crm.crmserver.service.DepartmentService;
-import tech.crm.crmserver.service.PermissionService;
 import tech.crm.crmserver.service.ToDoListService;
 
 import java.time.LocalDateTime;
@@ -78,7 +74,7 @@ public class TodoListControllerTesting {
         String str = "2021-01-01 19:00";
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         LocalDateTime dateTime = LocalDateTime.parse(str, formatter);
-        List<ToDoList> test = toDoListService.queryTodoList(null, null, "test", dateTime, ToDoListStatus.ACTIVE);
+        List<ToDoList> test = toDoListService.queryTodoList(null, null, "test", dateTime, ToDoListStatus.TO_DO);
         assert (test.size() == 1);
         // contactId = contactBasedOnSomeConditionFromDB.get(0).getId();
         // assert (contactBasedOnSomeConditionFromDB.size() == 1);
