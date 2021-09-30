@@ -24,7 +24,7 @@ public final class ExceptionMessageConstants {
 
     public static final String USER_ALREADY_EXIST_EXCEPTION  = "Same email already exist!";
     public static final String USER_NOT_EXIST_EXCEPTION  = "User do not exists!";
-    public static final String USER_NOT_ACTIVE_EXCEPTION  = "This account is not active!";
+    public static final String USER_NOT_ACTIVE_EXCEPTION  = "This account is not active! Please check your email!";
     public static final String USER_ALREADY_IN_DEPARTMENT_EXCEPTION  = "This user already in the department!";
     public static final String USER_ALREADY_IN_ORGANIZATION_EXCEPTION  = "This user already in the organization!";
     public static final String USER_NOT_IN_DEPARTMENT_EXCEPTION  = "You are not a member of this department!";
