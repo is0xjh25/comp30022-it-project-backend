@@ -2,9 +2,11 @@ package tech.crm.crmserver.controller;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import tech.crm.crmserver.common.response.ResponseResult;
 import tech.crm.crmserver.dao.Event;
+import tech.crm.crmserver.dto.EventContactDTO;
 import tech.crm.crmserver.dto.EventsDTO;
 import tech.crm.crmserver.dto.EventsUpdateDTO;
 import tech.crm.crmserver.exception.EventsFailAddedException;
@@ -101,28 +103,24 @@ public class EventController {
 
     /**
      * add a contact to event
-     * @param contactId the id of contact
-     * @param eventId the id of event
+     * @param eventContactDTO contact id and event id
      * @return ResponseResult contain all information about if add is success or fail
      */
-    @PostMapping("/addContact")
-    public ResponseResult<Object> addContact(@RequestParam("contact_id") Integer contactId,
-                                             @RequestParam("event_id") Integer eventId){
-        eventService.addContact(userService.getId(),contactId,eventId);
+    @PostMapping("/contact")
+    public ResponseResult<Object> addContact(@RequestBody EventContactDTO eventContactDTO){
+        eventService.addContact(userService.getId(),eventContactDTO.getContactId(),eventContactDTO.getEventId());
         return ResponseResult.suc("Add contact success");
     }
 
     /**
      * delete a contact from event
-     * @param contactId the id of contact
-     * @param eventId the id of event
+     * @param eventContactDTO contact id and event id
      * @return ResponseResult contain all information about if add is success or fail
      */
-    @PostMapping("/deleteContact")
-    public ResponseResult<Object> deleteContact(@RequestParam("attend_id") Integer contactId,
-                                             @RequestParam("event_id") Integer eventId){
-        eventService.addContact(userService.getId(),contactId,eventId);
-        return ResponseResult.suc("Add contact success");
+    @DeleteMapping("/contact")
+    public ResponseResult<Object> deleteContact(@RequestBody EventContactDTO eventContactDTO){
+        eventService.deleteContact(userService.getId(),eventContactDTO.getContactId(),eventContactDTO.getEventId());
+        return ResponseResult.suc("Delete contact success");
     }
 }
 

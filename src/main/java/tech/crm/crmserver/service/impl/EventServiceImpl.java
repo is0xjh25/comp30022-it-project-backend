@@ -8,17 +8,13 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tech.crm.crmserver.common.constants.EmailConstants;
-import tech.crm.crmserver.dao.Attend;
-import tech.crm.crmserver.dao.Event;
-import tech.crm.crmserver.dao.User;
+import tech.crm.crmserver.common.enums.PermissionLevel;
+import tech.crm.crmserver.dao.*;
 import tech.crm.crmserver.dto.EventsDTO;
 import tech.crm.crmserver.dto.EventsUpdateDTO;
-import tech.crm.crmserver.exception.FailToAddContactToEventException;
-import tech.crm.crmserver.exception.FailToDeleteContactToEventException;
-import tech.crm.crmserver.exception.NotEnoughPermissionException;
+import tech.crm.crmserver.exception.*;
 import tech.crm.crmserver.mapper.EventMapper;
-import tech.crm.crmserver.service.AttendService;
-import tech.crm.crmserver.service.EventService;
+import tech.crm.crmserver.service.*;
 
 import java.util.List;
 import java.util.Map;
@@ -39,6 +35,15 @@ public class EventServiceImpl extends ServiceImpl<EventMapper, Event> implements
 
     @Autowired
     private AttendService attendService;
+
+    @Autowired
+    private ContactService contactService;
+
+    @Autowired
+    public DepartmentService departmentService;
+
+    @Autowired
+    public PermissionService permissionService;
 
 
     /**
@@ -133,6 +138,19 @@ public class EventServiceImpl extends ServiceImpl<EventMapper, Event> implements
     public void addContact(Integer userId, Integer contactId, Integer eventId) {
         //check user
         checkUser(userId,eventId);
+
+        //check whether user has the permission to view the contact
+        Contact contact = contactService.getById(contactId);
+        if(contact == null){
+            throw new ContactNotExistException();
+        }
+        Department department = departmentService.getById(contact.getDepartmentId());
+        if(department == null){
+            throw new DepartmentNotExistException();
+        }
+        if(!permissionService.ifPermissionLevelSatisfied(userId, PermissionLevel.DISPLAY,department.getId())){
+            throw new NotEnoughPermissionException();
+        }
 
         Attend attend = new Attend();
         attend.setContactId(contactId);
