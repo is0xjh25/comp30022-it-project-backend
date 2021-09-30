@@ -42,4 +42,12 @@ public interface EventService extends IService<Event> {
      */
     public void updateEvent(Integer userId, EventsUpdateDTO eventsUpdateDTO);
 
+    /**
+     * add a contact to the event
+     * @param userId the user of this event
+     * @param contactId the id of contact
+     * @param eventId the id of event
+     */
+    public void addContact(Integer userId, Integer contactId, Integer eventId);
+
 }

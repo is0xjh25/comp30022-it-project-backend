@@ -8,6 +8,7 @@ import tech.crm.crmserver.dao.Event;
 import tech.crm.crmserver.dto.EventsDTO;
 import tech.crm.crmserver.dto.EventsUpdateDTO;
 import tech.crm.crmserver.exception.EventsFailAddedException;
+import tech.crm.crmserver.service.AttendService;
 import tech.crm.crmserver.service.EventService;
 import tech.crm.crmserver.service.UserService;
 
@@ -31,6 +32,9 @@ public class EventController {
 
     @Autowired
     public EventService eventService;
+
+    @Autowired
+    public AttendService attendService;
 
     /**
      * Get all events data for a user
@@ -69,6 +73,19 @@ public class EventController {
     public ResponseResult<Object> updateEvents(@RequestBody @Valid EventsUpdateDTO eventsUpdateDTO){
         eventService.updateEvent(userService.getId(),eventsUpdateDTO);
         return ResponseResult.suc("Update event success");
+    }
+
+    /**
+     * add a contact to event
+     * @param contactId the id of contact
+     * @param eventId the id of event
+     * @return ResponseResult contain all information about if add is success or fail
+     */
+    @PostMapping("/addContact")
+    public ResponseResult<Object> addContact(@RequestParam("contact_id") Integer contactId,
+                                             @RequestParam("event_id") Integer eventId){
+        eventService.addContact(userService.getId(),contactId,eventId);
+        return ResponseResult.suc("Add contact success");
     }
 
 }

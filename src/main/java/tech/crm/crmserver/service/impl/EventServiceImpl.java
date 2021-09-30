@@ -7,12 +7,15 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tech.crm.crmserver.common.constants.EmailConstants;
+import tech.crm.crmserver.dao.Attend;
 import tech.crm.crmserver.dao.Event;
 import tech.crm.crmserver.dao.User;
 import tech.crm.crmserver.dto.EventsDTO;
 import tech.crm.crmserver.dto.EventsUpdateDTO;
+import tech.crm.crmserver.exception.FailToAddContactToEventException;
 import tech.crm.crmserver.exception.NotEnoughPermissionException;
 import tech.crm.crmserver.mapper.EventMapper;
+import tech.crm.crmserver.service.AttendService;
 import tech.crm.crmserver.service.EventService;
 
 import java.util.List;
@@ -31,6 +34,9 @@ public class EventServiceImpl extends ServiceImpl<EventMapper, Event> implements
 
     @Autowired
     private EventMapper eventMapper;
+
+    @Autowired
+    private AttendService attendService;
 
     /**
      * Query all the events of a user
@@ -80,5 +86,29 @@ public class EventServiceImpl extends ServiceImpl<EventMapper, Event> implements
 
         //update to database
         update(updateWrapper);
+    }
+
+    /**
+     * add a contact to the event
+     *
+     * @param userId    the user of this event
+     * @param contactId the id of contact
+     * @param eventId   the id of event
+     */
+    @Override
+    public void addContact(Integer userId, Integer contactId, Integer eventId) {
+        //check user
+        Event event = baseMapper.selectById(contactId);
+        if(!event.getUserId().equals(userId)){
+            throw new NotEnoughPermissionException();
+        }
+
+        Attend attend = new Attend();
+        attend.setContactId(contactId);
+        attend.setEventId(eventId);
+
+        if(!attendService.save(attend)){
+            throw new FailToAddContactToEventException();
+        }
     }
 }
