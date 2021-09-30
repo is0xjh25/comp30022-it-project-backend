@@ -10,12 +10,17 @@ import org.springframework.stereotype.Service;
 import tech.crm.crmserver.common.constants.EmailConstants;
 import tech.crm.crmserver.common.enums.PermissionLevel;
 import tech.crm.crmserver.dao.*;
+import tech.crm.crmserver.common.enums.ToDoListStatus;
+import tech.crm.crmserver.dao.Attend;
+import tech.crm.crmserver.dao.Event;
+import tech.crm.crmserver.dao.User;
 import tech.crm.crmserver.dto.EventsDTO;
 import tech.crm.crmserver.dto.EventsUpdateDTO;
 import tech.crm.crmserver.exception.*;
 import tech.crm.crmserver.mapper.EventMapper;
 import tech.crm.crmserver.service.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -125,6 +130,40 @@ public class EventServiceImpl extends ServiceImpl<EventMapper, Event> implements
 
         attendService.deleteAttendByEventId(eventId);
         removeById(eventId);
+    }
+
+    /**
+     * Query event by some condition
+     * @param eventId the id of the event to query
+     * @param userId the user id of the event to query
+     * @param startTime the start time of the event to query
+     * @param finishTIme the finish time of the event to query
+     * @param status the status of the event to query
+     * @param description the description of the event
+     * @return a list of match event
+     */
+    @Override
+    public List<Event> queryEvent(Integer eventId, Integer userId, LocalDateTime startTime, LocalDateTime finishTIme, ToDoListStatus status, String description) {
+        QueryWrapper<Event> eventQueryWrapper = new QueryWrapper<>();
+        if (eventId != null) {
+            eventQueryWrapper.eq("id", eventId);
+        }
+        if (userId != null) {
+            eventQueryWrapper.eq("user_id", userId);
+        }
+        if (startTime != null) {
+            eventQueryWrapper.eq("start_time", startTime);
+        }
+        if (finishTIme != null) {
+            eventQueryWrapper.eq("finish_time", finishTIme);
+        }
+        if (status != null) {
+            eventQueryWrapper.eq("status", status.getStatus());
+        }
+        if (description != null) {
+            eventQueryWrapper.eq("description", description);
+        }
+        return eventMapper.selectList(eventQueryWrapper);
     }
 
     /**
