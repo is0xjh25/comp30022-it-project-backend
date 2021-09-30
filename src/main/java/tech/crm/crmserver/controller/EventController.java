@@ -7,6 +7,7 @@ import tech.crm.crmserver.common.response.ResponseResult;
 import tech.crm.crmserver.dao.Event;
 import tech.crm.crmserver.dto.EventsDTO;
 import tech.crm.crmserver.exception.EventsFailAddedException;
+import tech.crm.crmserver.exception.EventsFailQueryException;
 import tech.crm.crmserver.service.EventService;
 import tech.crm.crmserver.service.UserService;
 
@@ -31,12 +32,21 @@ public class EventController {
     @Autowired
     public EventService eventService;
 
+    @GetMapping
+    public ResponseResult<Object> getEventById(@RequestParam("event_id") Integer eventId) {
+        Event event = eventService.getById(eventId);
+        if (event == null) {
+            throw new EventsFailQueryException();
+        }
+        return ResponseResult.suc("Get event details success", event);
+    }
+
     /**
      * Get all events data for a user
      *
      * @return ResponseResult contain all the data about user's events
      */
-    @GetMapping
+    @GetMapping("/myEvents")
     public ResponseResult<Object> getAllEventByUserId() {
         List<Event> events = eventService.queryEventByUserId(userService.getId());
         return ResponseResult.suc("Query user's events success", events);
@@ -45,6 +55,7 @@ public class EventController {
     /**
      * Create new events
      *
+     * @param eventsDTO the dto entity of event, it contains start time, end time, description
      * @return ResponseResult contain all infomation about if creatation is success or fail
      */
     @PostMapping
@@ -57,5 +68,16 @@ public class EventController {
         }
         return ResponseResult.suc("Adding event success");
     }
+
+//    /**
+//     * Delete a events
+//     *
+//     * @param eventId the event id to delete
+//     * @return ResponseResult contain if delete success or not
+//     */
+//    @DeleteMapping
+//    public ResponseResult<Object> deleteEventsById(@RequestParam Integer eventId) {
+//
+//    }
 }
 

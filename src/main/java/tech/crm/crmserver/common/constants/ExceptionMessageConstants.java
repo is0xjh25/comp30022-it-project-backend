@@ -40,6 +40,9 @@ public final class ExceptionMessageConstants {
 
     public static final String TODOLIST_FAIL_ADDED_EXCEPTION = "Fail to add a todoList data";
 
+    public static final String EVENT_FAIL_ADDED_EXXCEPTION = "Fail to add a event data";
+    public static final String EVENT_FAIL_QUERY_EXXCEPTION = "Fail to get a event data by id";
+
 
 
     private ExceptionMessageConstants() {

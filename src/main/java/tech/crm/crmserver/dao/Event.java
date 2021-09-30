@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import tech.crm.crmserver.common.enums.Status;
+import tech.crm.crmserver.common.enums.ToDoListStatus;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -40,7 +41,5 @@ public class Event implements Serializable {
 
     private String description;
 
-    private Status status;
-
-
+    private ToDoListStatus status;
 }

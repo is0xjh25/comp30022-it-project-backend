@@ -9,6 +9,14 @@ import lombok.NoArgsConstructor;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
+/**
+ * <p>
+ *  DTO for Event
+ * </p>
+ *
+ * @author Yongfeng Qin
+ * @since 2021-09-30
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
