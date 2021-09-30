@@ -9,6 +9,14 @@ import tech.crm.crmserver.common.enums.ToDoListStatus;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
+/**
+ * <p>
+ *  DTO for TodoList
+ * </p>
+ *
+ * @author Yongfeng Qin
+ * @since 2021-09-29
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

@@ -98,8 +98,8 @@ public class EventServiceImpl extends ServiceImpl<EventMapper, Event> implements
     @Override
     public void addContact(Integer userId, Integer contactId, Integer eventId) {
         //check user
-        Event event = baseMapper.selectById(contactId);
-        if(!event.getUserId().equals(userId)){
+        Event event = baseMapper.selectById(eventId);
+        if (!event.getUserId().equals(userId)) {
             throw new NotEnoughPermissionException();
         }
 
@@ -107,8 +107,26 @@ public class EventServiceImpl extends ServiceImpl<EventMapper, Event> implements
         attend.setContactId(contactId);
         attend.setEventId(eventId);
 
-        if(!attendService.save(attend)){
+        if (!attendService.save(attend)) {
             throw new FailToAddContactToEventException();
         }
+    }
+
+
+    /**
+     * Delete the event by eventId
+     * 
+     * @param eventId the id of the event to delete
+     */
+    @Override
+    public void deleteEvent(Integer eventId, Integer userId) {
+        //check user
+        Event event = baseMapper.selectById(eventId);
+        if(!event.getUserId().equals(userId)){
+            throw new NotEnoughPermissionException();
+        }
+
+        attendService.deleteAttendByEventId(eventId);
+        removeById(eventId);
     }
 }

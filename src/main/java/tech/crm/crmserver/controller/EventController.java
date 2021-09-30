@@ -9,6 +9,7 @@ import tech.crm.crmserver.dto.EventsDTO;
 import tech.crm.crmserver.dto.EventsUpdateDTO;
 import tech.crm.crmserver.exception.EventsFailAddedException;
 import tech.crm.crmserver.service.AttendService;
+import tech.crm.crmserver.exception.EventsFailQueryException;
 import tech.crm.crmserver.service.EventService;
 import tech.crm.crmserver.service.UserService;
 
@@ -33,15 +34,25 @@ public class EventController {
     @Autowired
     public EventService eventService;
 
+
     @Autowired
     public AttendService attendService;
+
+    @GetMapping
+    public ResponseResult<Object> getEventById(@RequestParam("event_id") Integer eventId) {
+        Event event = eventService.getById(eventId);
+        if (event == null) {
+            throw new EventsFailQueryException();
+        }
+        return ResponseResult.suc("Get event details success", event);
+    }
 
     /**
      * Get all events data for a user
      *
      * @return ResponseResult contain all the data about user's events
      */
-    @GetMapping
+    @GetMapping("/myEvents")
     public ResponseResult<Object> getAllEventByUserId() {
         List<Event> events = eventService.queryEventByUserId(userService.getId());
         return ResponseResult.suc("Query user's events success", events);
@@ -50,7 +61,8 @@ public class EventController {
     /**
      * Create new events
      *
-     * @return ResponseResult contain all information about if creation is success or fail
+     * @param eventsDTO the dto entity of event, it contains start time, end time, description
+     * @return ResponseResult contain all infomation about if creatation is success or fail
      */
     @PostMapping
     public ResponseResult<Object> createEvents(@RequestBody @Valid EventsDTO eventsDTO) {
@@ -76,6 +88,18 @@ public class EventController {
     }
 
     /**
+     * Delete a events
+     *
+     * @param eventId the event id to delete
+     * @return ResponseResult contain if delete success or not
+     */
+    @DeleteMapping
+    public ResponseResult<Object> deleteEventsById(@RequestParam("event_id") Integer eventId) {
+        eventService.deleteEvent(eventId, userService.getId());
+        return ResponseResult.suc("Delete event success");
+    }
+
+    /**
      * add a contact to event
      * @param contactId the id of contact
      * @param eventId the id of event
@@ -87,6 +111,5 @@ public class EventController {
         eventService.addContact(userService.getId(),contactId,eventId);
         return ResponseResult.suc("Add contact success");
     }
-
 }
 
