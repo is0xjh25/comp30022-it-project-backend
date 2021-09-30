@@ -67,7 +67,7 @@ public class TodoListControllerTesting {
                 .content("{\n" +
                         "    \"date_time\": \"2021-01-01 19:00\", \n" +
                         "    \"description\": \"test\", \n" +
-                        "    \"status\": \"active\" \n" +
+                        "    \"status\": \"to do\" \n" +
                         "}"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn();

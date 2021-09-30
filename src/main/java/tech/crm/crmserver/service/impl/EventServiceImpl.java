@@ -20,7 +20,6 @@ import tech.crm.crmserver.dto.ContactAttendDTO;
 import tech.crm.crmserver.dto.EventAttendDTO;
 import tech.crm.crmserver.dto.EventsDTO;
 import tech.crm.crmserver.dto.EventsUpdateDTO;
-import tech.crm.crmserver.exception.EventsFailQueryException;
 import tech.crm.crmserver.exception.FailToAddContactToEventException;
 import tech.crm.crmserver.exception.FailToDeleteContactToEventException;
 import tech.crm.crmserver.exception.NotEnoughPermissionException;
@@ -237,7 +236,7 @@ public class EventServiceImpl extends ServiceImpl<EventMapper, Event> implements
     public EventAttendDTO getEventById(Integer eventId) {
         Event event = getById(eventId);
         if (event == null) {
-            throw new EventsFailQueryException();
+            throw new EventsNotExistException();
         }
         List<Attend> attendList = attendService.getAttendByEventId(eventId);
         Map<Integer, Integer> contactAttendMap = new HashMap<>();
