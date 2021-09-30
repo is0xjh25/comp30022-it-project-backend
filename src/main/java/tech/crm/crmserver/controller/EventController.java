@@ -46,7 +46,7 @@ public class EventController {
     /**
      * Create new events
      *
-     * @return ResponseResult contain all infomation about if creatation is success or fail
+     * @return ResponseResult contain all information about if creation is success or fail
      */
     @PostMapping
     public ResponseResult<Object> createEvents(@RequestBody @Valid EventsDTO eventsDTO) {
@@ -63,7 +63,7 @@ public class EventController {
      * Update the events by id
      *
      * @param eventsUpdateDTO the update information
-     * @return ResponseResult contain all infomation about if creatation is success or fail
+     * @return ResponseResult contain all information about if update is success or fail
      */
     @PutMapping
     public ResponseResult<Object> updateEvents(@RequestBody @Valid EventsUpdateDTO eventsUpdateDTO){
