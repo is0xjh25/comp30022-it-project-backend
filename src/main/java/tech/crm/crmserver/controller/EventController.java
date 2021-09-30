@@ -8,6 +8,7 @@ import tech.crm.crmserver.dao.Event;
 import tech.crm.crmserver.dto.EventsDTO;
 import tech.crm.crmserver.dto.EventsUpdateDTO;
 import tech.crm.crmserver.exception.EventsFailAddedException;
+import tech.crm.crmserver.service.AttendService;
 import tech.crm.crmserver.exception.EventsFailQueryException;
 import tech.crm.crmserver.service.EventService;
 import tech.crm.crmserver.service.UserService;
@@ -32,6 +33,10 @@ public class EventController {
 
     @Autowired
     public EventService eventService;
+
+
+    @Autowired
+    public AttendService attendService;
 
     @GetMapping
     public ResponseResult<Object> getEventById(@RequestParam("event_id") Integer eventId) {
@@ -82,7 +87,6 @@ public class EventController {
         return ResponseResult.suc("Update event success");
     }
 
-
     /**
      * Delete a events
      *
@@ -93,6 +97,32 @@ public class EventController {
     public ResponseResult<Object> deleteEventsById(@RequestParam("event_id") Integer eventId) {
         eventService.deleteEvent(eventId, userService.getId());
         return ResponseResult.suc("Delete event success");
+    }
+
+    /**
+     * add a contact to event
+     * @param contactId the id of contact
+     * @param eventId the id of event
+     * @return ResponseResult contain all information about if add is success or fail
+     */
+    @PostMapping("/addContact")
+    public ResponseResult<Object> addContact(@RequestParam("contact_id") Integer contactId,
+                                             @RequestParam("event_id") Integer eventId){
+        eventService.addContact(userService.getId(),contactId,eventId);
+        return ResponseResult.suc("Add contact success");
+    }
+
+    /**
+     * delete a contact from event
+     * @param contactId the id of contact
+     * @param eventId the id of event
+     * @return ResponseResult contain all information about if add is success or fail
+     */
+    @PostMapping("/deleteContact")
+    public ResponseResult<Object> deleteContact(@RequestParam("attend_id") Integer contactId,
+                                             @RequestParam("event_id") Integer eventId){
+        eventService.addContact(userService.getId(),contactId,eventId);
+        return ResponseResult.suc("Add contact success");
     }
 }
 

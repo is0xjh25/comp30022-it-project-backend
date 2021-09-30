@@ -211,6 +211,25 @@ public class ContactServiceImpl extends ServiceImpl<ContactMapper, Contact> impl
     }
 
     /**
+     * put search key into map
+     * @param searchKey search key
+     * @return search map
+     */
+    private Map<String,String> searchMap(String searchKey){
+        if(searchKey == null){
+            return null;
+        }
+        Map<String,String> map = new HashMap<>();
+        map.put("email",searchKey);
+        map.put("first_name",searchKey);
+        map.put("last_name",searchKey);
+        map.put("gender",searchKey);
+        map.put("organization",searchKey);
+        map.put("description",searchKey);
+        return map;
+    }
+
+    /**
      * search contacts in department by contact key
      * will not check the permission
      * @param page         the configuration of the page
@@ -220,13 +239,7 @@ public class ContactServiceImpl extends ServiceImpl<ContactMapper, Contact> impl
      */
     @Override
     public Page<ContactDTO> searchContactDTO(Page<ContactDTO> page, Integer departmentId, String searchKey) {
-        Map<String,String> map = new HashMap<>();
-        map.put("email",searchKey);
-        map.put("first_name",searchKey);
-        map.put("last_name",searchKey);
-        map.put("gender",searchKey);
-        map.put("organization",searchKey);
-        map.put("description",searchKey);
+        Map<String, String> map = searchMap(searchKey);
         //to the true wrapper
         QueryWrapper<Contact> wrapper = new QueryWrapper<>();
         wrapper.eq("department_id",departmentId).and(i -> {
@@ -237,6 +250,37 @@ public class ContactServiceImpl extends ServiceImpl<ContactMapper, Contact> impl
         });
         page = baseMapper.getContactDTOByDepartmentId(page,wrapper);
         return page;
+    }
+
+    /**
+     * search contacts of user by contact key
+     *
+     * @param userId    the id of user
+     * @param searchKey search key
+     * @return all contacts of this user satisfy the searchKey
+     */
+    @Override
+    public List<Contact> searchAllContactOfUser(Integer userId, String searchKey) {
+        //get departments
+        List<Permission> permissionList = permissionService.getPermissionByUserId(userId, PermissionLevel.DISPLAY);
+        if (permissionList.isEmpty()) {
+            throw new UserNotInDepartmentException();
+        }
+        List<Integer> departmentIdList = new ArrayList<>();
+        for (Permission p: permissionList){
+            departmentIdList.add(p.getDepartmentId());
+        }
+        Map<String, String> map = searchMap(searchKey);
+        //to the true wrapper
+        QueryWrapper<Contact> wrapper = new QueryWrapper<>();
+        wrapper.in("department_id",departmentIdList).and(i -> {
+            //add conditions into a wrapper
+            for(Map.Entry<String,String> entry : map.entrySet()){
+                i.or().like(entry.getKey(),entry.getValue());
+            }
+        });
+        List<Contact> contactList = baseMapper.selectList(wrapper);
+        return contactList;
     }
 
     /**

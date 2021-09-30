@@ -61,4 +61,20 @@ public interface EventService extends IService<Event> {
      */
     public List<Event> queryEvent(Integer eventId, Integer userId, LocalDateTime startTime, LocalDateTime finishTIme, ToDoListStatus status, String description);
 
+    /**
+     * add a contact to the event
+     * @param userId the user of this event
+     * @param contactId the id of contact
+     * @param eventId the id of event
+     */
+    public void addContact(Integer userId, Integer contactId, Integer eventId);
+
+    /**
+     * delete a contact from event
+     * @param userId the id of user
+     * @param contactId the id of contact
+     * @param eventId the id of event
+     */
+    public void deleteContact(Integer userId, Integer contactId, Integer eventId);
+
 }

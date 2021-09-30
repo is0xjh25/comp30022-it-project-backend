@@ -85,9 +85,17 @@ public interface ContactService extends IService<Contact> {
      * @param page the configuration of the page
      * @param departmentId the departmentId to search contact
      * @param searchKey search key
-     * @return
+     * @return certain page of ContactDTO
      */
     public Page<ContactDTO> searchContactDTO(Page<ContactDTO> page, Integer departmentId, String searchKey);
+
+    /**
+     * search contacts of user by contact key
+     * @param userId the id of user
+     * @param searchKey search key
+     * @return all contacts of this user satisfy the searchKey
+     */
+    public List<Contact> searchAllContactOfUser(Integer userId, String searchKey);
 
     /**
      * Create contact based on contactDTO

@@ -14,6 +14,6 @@ import tech.crm.crmserver.common.response.ResponseResult;
 public class EventsFailQueryException extends BaseException{
 
     public EventsFailQueryException() {
-        super(ResponseResult.fail(ExceptionMessageConstants.EVENT_FAIL_ADDED_EXXCEPTION));
+        super(ResponseResult.fail(ExceptionMessageConstants.EVENT_FAIL_QUERY_EXCEPTION));
     }
 }

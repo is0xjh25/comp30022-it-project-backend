@@ -27,7 +27,7 @@ public final class ExceptionMessageConstants {
     public static final String USER_NOT_ACTIVE_EXCEPTION  = "This account is not active! Please check your email!";
     public static final String USER_ALREADY_IN_DEPARTMENT_EXCEPTION  = "This user already in the department!";
     public static final String USER_ALREADY_IN_ORGANIZATION_EXCEPTION  = "This user already in the organization!";
-    public static final String USER_NOT_IN_DEPARTMENT_EXCEPTION  = "You are not a member of this department!";
+    public static final String USER_NOT_IN_DEPARTMENT_EXCEPTION  = "You are not a member of the department!";
 
     public static final String CONTACT_NOT_EXIST_EXCEPTION  = "Contact do not exist!";
     public static final String CONTACT_NOT_FOUND_EXCEPTION  = "No match contact is found!";
@@ -40,10 +40,10 @@ public final class ExceptionMessageConstants {
 
     public static final String TODOLIST_FAIL_ADDED_EXCEPTION = "Fail to add a todoList data";
 
-    public static final String EVENT_FAIL_ADDED_EXXCEPTION = "Fail to add a event data";
-    public static final String EVENT_FAIL_QUERY_EXXCEPTION = "Fail to get a event data by id";
-
-
+    public static final String FAIL_TO_ADD_CONTACT_TO_EVENT_EXCEPTION = "Fail to add the contact to event!";
+    public static final String FAIL_TO_DELETE_CONTACT_TO_EVENT_EXCEPTION = "Fail to delete the contact to event!";
+    public static final String EVENT_FAIL_ADDED_EXCEPTION = "Fail to add a event data";
+    public static final String EVENT_FAIL_QUERY_EXCEPTION = "Fail to get a event data by id";
 
     private ExceptionMessageConstants() {
     }
