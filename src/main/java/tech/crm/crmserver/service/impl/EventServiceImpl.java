@@ -263,4 +263,23 @@ public class EventServiceImpl extends ServiceImpl<EventMapper, Event> implements
         eventAttendDTO.setContactList(contactAttendDTOList);
         return eventAttendDTO;
     }
+
+    /**
+     * Query all the events of a user based on time period
+     *
+     * @param userId the id of the user to match
+     * @return a list of events belongs to the user
+     */
+    public List<Event> queryEventByUserIdAndTimePeriod(Integer userId, LocalDateTime startTimeBegin, LocalDateTime startTimeEnd) {
+        List<Event> eventList = eventMapper.getEventsByUserId(userId);
+        List<Event> eventListRequired = new ArrayList<>();
+        for (Event event : eventList) {
+            if (event.getStartTime().isAfter(startTimeBegin) && event.getStartTime().isBefore(startTimeEnd)) {
+                eventListRequired.add(event);
+            } else if (event.getStartTime().isEqual(startTimeBegin) || event.getStartTime().isEqual(startTimeEnd)) {
+                eventListRequired.add(event);
+            }
+        }
+        return eventListRequired;
+    }
 }

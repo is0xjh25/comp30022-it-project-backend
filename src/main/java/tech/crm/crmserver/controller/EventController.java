@@ -16,6 +16,8 @@ import tech.crm.crmserver.service.EventService;
 import tech.crm.crmserver.service.UserService;
 
 import javax.validation.Valid;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 /**
@@ -54,6 +56,22 @@ public class EventController {
     @GetMapping("/myEvents")
     public ResponseResult<Object> getAllEventByUserId() {
         List<Event> events = eventService.queryEventByUserId(userService.getId());
+        return ResponseResult.suc("Query user's events success", events);
+    }
+
+    /**
+     * Get all events data for a user based on time
+     *
+     * @param startTimeBegin the start of the startTime for the event
+     * @param startTimeEnd the end of the startTime for the event
+     * @return ResponseResult contain all the data about user's events
+     */
+    @GetMapping("/myEventsByTime")
+    public ResponseResult<Object> getAllEventByUserId(@RequestParam("start_Time_Begin") String startTimeBegin, @RequestParam("start_Time_End") String startTimeEnd) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        LocalDateTime dateTimeStart = LocalDateTime.parse(startTimeBegin, formatter);
+        LocalDateTime dateTimeFinish = LocalDateTime.parse(startTimeEnd, formatter);
+        List<Event> events = eventService.queryEventByUserIdAndTimePeriod(userService.getId(), dateTimeStart, dateTimeFinish);
         return ResponseResult.suc("Query user's events success", events);
     }
 

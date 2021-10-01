@@ -30,6 +30,14 @@ public interface EventService extends IService<Event> {
     public List<Event> queryEventByUserId(Integer userId);
 
     /**
+     * Query all the events of a user based on time period
+     *
+     * @param userId the id of the user to match
+     * @return a list of events belongs to the user
+     */
+    public List<Event> queryEventByUserIdAndTimePeriod(Integer userId, LocalDateTime startTimeBegin, LocalDateTime startTimeEnd);
+
+    /**
      * Create a new event relate to the user
      *
      * @param userId the id of the user who create this event
