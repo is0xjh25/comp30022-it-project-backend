@@ -5,19 +5,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import tech.crm.crmserver.common.response.ResponseResult;
 import tech.crm.crmserver.dao.Event;
-import tech.crm.crmserver.dto.EventAttendDTO;
-import tech.crm.crmserver.dto.EventContactDTO;
-import tech.crm.crmserver.dto.EventsDTO;
-import tech.crm.crmserver.dto.EventsUpdateDTO;
+import tech.crm.crmserver.dto.*;
 import tech.crm.crmserver.exception.EventsFailAddedException;
 import tech.crm.crmserver.service.AttendService;
-import tech.crm.crmserver.exception.EventsNotExistException;
 import tech.crm.crmserver.service.EventService;
 import tech.crm.crmserver.service.UserService;
 
 import javax.validation.Valid;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 /**
@@ -60,18 +55,14 @@ public class EventController {
     }
 
     /**
-     * Get all events data for a user based on time
+     * Get events data for a user among given time
      *
-     * @param startTimeBegin the start of the startTime for the event
-     * @param startTimeEnd the end of the startTime for the event
      * @return ResponseResult contain all the data about user's events
      */
-    @GetMapping("/myEventsByTime")
-    public ResponseResult<Object> getAllEventByUserId(@RequestParam("start_Time_Begin") String startTimeBegin, @RequestParam("start_Time_End") String startTimeEnd) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-        LocalDateTime dateTimeStart = LocalDateTime.parse(startTimeBegin, formatter);
-        LocalDateTime dateTimeFinish = LocalDateTime.parse(startTimeEnd, formatter);
-        List<Event> events = eventService.queryEventByUserIdAndTimePeriod(userService.getId(), dateTimeStart, dateTimeFinish);
+    @GetMapping("/between")
+    public ResponseResult<Object> getEventByUserIdAndTime(@RequestParam("start_time")LocalDateTime startTime,
+                                                          @RequestParam("finish_time")LocalDateTime finishTime) {
+        List<Event> events = eventService.getEventBetweenTime(userService.getId(),startTime,finishTime);
         return ResponseResult.suc("Query user's events success", events);
     }
 
