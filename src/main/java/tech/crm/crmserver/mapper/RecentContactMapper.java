@@ -23,12 +23,14 @@ public interface RecentContactMapper extends BaseMapper<RecentContact> {
 
     @Select("SELECT contact.*, recent_contact.last_contact\n" +
             "FROM (SELECT contact_id, last_contact FROM recent_contact WHERE user_id = #{userId} ORDER BY last_contact DESC LIMIT #{limit}) recent_contact\n" +
-            "LEFT JOIN contact on recent_contact.contact_id = contact.id")
+            "LEFT JOIN contact on recent_contact.contact_id = contact.id \n" +
+            "ORDER BY last_contact DESC ")
     public List<RecentContactDTO> getRecentContactDTOByUserIdLimit(@Param("userId") Integer userId,
                                                               @Param("limit") Integer limit);
 
     @Select("SELECT contact.*, recent_contact.last_contact\n" +
-            "FROM (SELECT contact_id, last_contact FROM recent_contact WHERE user_id = #{userId} ORDER BY last_contact DESC) recent_contact\n" +
-            "LEFT JOIN contact on recent_contact.contact_id = contact.id")
+            "FROM (SELECT contact_id, last_contact FROM recent_contact WHERE user_id = #{userId} ) recent_contact\n" +
+            "LEFT JOIN contact on recent_contact.contact_id = contact.id\n" +
+            "ORDER BY last_contact DESC ")
     public List<RecentContactDTO> getRecentContactDTOByUserId(@Param("userId") Integer userId);
 }
