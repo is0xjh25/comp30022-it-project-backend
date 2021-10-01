@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
@@ -34,19 +33,7 @@ public class RecentContactDTO {
 
     private String lastName;
 
-    private String phone;
-
-    private String description;
-
     private String gender;
-
-    private LocalDate birthday;
-
-    private Integer age;
-
-    private String address;
-
-    private String organization;
 
     private String customerType;
 
