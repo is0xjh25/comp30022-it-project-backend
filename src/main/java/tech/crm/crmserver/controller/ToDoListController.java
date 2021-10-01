@@ -1,8 +1,19 @@
 package tech.crm.crmserver.controller;
 
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.apache.ibatis.annotations.Param;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+import tech.crm.crmserver.common.enums.ToDoListStatus;
+import tech.crm.crmserver.common.response.ResponseResult;
+import tech.crm.crmserver.dao.ToDoList;
+import tech.crm.crmserver.dto.TodoListCreateDTO;
+import tech.crm.crmserver.exception.TodoListFailAddedException;
+import tech.crm.crmserver.service.ToDoListService;
+import tech.crm.crmserver.service.UserService;
+
+import javax.validation.Valid;
+import java.util.List;
 
 /**
  * <p>
@@ -16,5 +27,43 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/toDoList")
 public class ToDoListController {
 
+    @Autowired
+    private ToDoListService toDoListService;
+
+    @Autowired
+    private UserService userService;
+
+    /**
+     * Get all todoList data for a user
+     *
+     * @param topNTodoListData the first n todoList data
+     * @return ResponseResult contain all the data about user's todoList
+     */
+    @GetMapping
+    public ResponseResult<Object> getAllTodoListData(@RequestParam("topNTodoListData") Integer topNTodoListData) {
+        Integer userId = userService.getId();
+        List<ToDoList> toDoList = toDoListService.queryToDoListByUserId(userId);
+        if (topNTodoListData == -1 && toDoList.size() > topNTodoListData) {
+            toDoList.subList(0, topNTodoListData);
+        }
+        return ResponseResult.suc("Query user's todoList", toDoList);
+    }
+
+    /**
+     * Create new todoList data for a suer
+     *
+     * @param todoListCreateDTO the data of the todoList to create
+     * @return ResponseResult contain if the creation is success
+     */
+    @PostMapping
+    public ResponseResult<Object> createTodoList(@RequestBody @Valid TodoListCreateDTO todoListCreateDTO) {
+        Integer userId = userService.getId();
+        boolean isCreateSuccess = false;
+        isCreateSuccess = toDoListService.createTodoList(userId, todoListCreateDTO);
+        if (!isCreateSuccess) {
+            throw new TodoListFailAddedException();
+        }
+        return ResponseResult.suc("Adding todoList data success");
+    }
 }
 

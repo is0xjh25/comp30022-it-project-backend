@@ -45,7 +45,7 @@ public class BelongToServiceImpl extends ServiceImpl<BelongToMapper, BelongTo> i
     public boolean insertNewBelongTo(Integer organizationId, Integer userId) {
         // First, make sure this user and this organization do not have recorded belong to relationship
         // Then insert this belongTo relationship
-        List<BelongTo> belongToList = queryBelongToRelation(null, organizationId, userId, BelongToStatus.ACTIVE);
+        List<BelongTo> belongToList = queryBelongToRelation(null, userId, organizationId, BelongToStatus.ACTIVE);
         if (belongToList.size() == 0) {
             BelongTo belongTo = new BelongTo();
             belongTo.setOrganizationId(organizationId);

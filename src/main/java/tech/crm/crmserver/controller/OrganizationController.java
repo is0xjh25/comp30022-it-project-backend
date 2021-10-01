@@ -202,7 +202,7 @@ public class OrganizationController {
      * Join a organization
      *
      * @param organizationId the id of organization user want to join
-     * @return ResponseResult with mag
+     * @return ResponseResult with msg
      */
     @PostMapping("/join")
     public ResponseResult<Object> joinOrganization(@RequestParam("organization_id") Integer organizationId) {
@@ -218,6 +218,20 @@ public class OrganizationController {
         } else {
             throw new OrganizationNotExistException();
         }
+        return ResponseResult.suc("success");
+    }
+
+    /**
+     * transfer the owner of the organization to another user in organization<br/>
+     * only the owner of the organization has the permission to do that
+     * @param organizationId id of the organization
+     * @param to new owner of organization
+     * @return ResponseResult with msg
+     */
+    @PutMapping("/transfer")
+    public ResponseResult<Object> transferOwnershipOfOrganization(@RequestParam("organization_id") Integer organizationId,
+                                                                  @RequestParam("new_owner") Integer to){
+        organizationService.transferOwnershipOfOrganization(organizationId,userService.getId(),to);
         return ResponseResult.suc("success");
     }
 }

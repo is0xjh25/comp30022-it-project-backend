@@ -32,12 +32,6 @@ public class ContactControllerTests {
     private static String token;
 
     @Autowired
-    private PermissionService permissionService;
-
-    @Autowired
-    private DepartmentService departmentService;
-
-    @Autowired
     private ContactService contactService;
 
     private int contactId = 10;

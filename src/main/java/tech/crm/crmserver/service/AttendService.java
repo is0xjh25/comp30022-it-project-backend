@@ -22,4 +22,18 @@ public interface AttendService extends IService<Attend> {
      */
     public void deleteAttendByContactIds(List<Integer> contactIds);
 
+    /**
+     * delete the attend by eventId
+     *
+     * @param eventId the evenId to match those attend which to delete
+     */
+    public void deleteAttendByEventId(Integer eventId);
+
+    /**
+     * Get attend data by eventId
+     *
+     * @param eventId the evenId to match those attend which to get
+     */
+    public List<Attend> getAttendByEventId(Integer eventId);
+
 }

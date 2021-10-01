@@ -218,4 +218,32 @@ public class OrganizationControllerTest {
 
 
     }
+
+    /**
+     * Test transfer ownership
+     *  @throws Exception
+     */
+    @Test
+    @Order(9)
+    @Transactional
+    public void testTransferOwnership() throws Exception {
+        // transfer ownership
+        mvc.perform(MockMvcRequestBuilders.put("/organization/transfer")
+                .param("organization_id", "1")
+                .param("new_owner", "6")
+                .header(SecurityConstants.TOKEN_HEADER,token))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.msg").value("success"));
+
+        // check whether transfer the ownership
+        mvc.perform(MockMvcRequestBuilders.get("/organization")
+                .param("organization_id", "1")
+                .header(SecurityConstants.TOKEN_HEADER,token))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.owner").value("6"));
+
+
+    }
 }
