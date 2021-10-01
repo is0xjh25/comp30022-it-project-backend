@@ -8,9 +8,11 @@ import tech.crm.crmserver.common.enums.ToDoListStatus;
 import tech.crm.crmserver.common.response.ResponseResult;
 import tech.crm.crmserver.dao.ToDoList;
 import tech.crm.crmserver.dto.TodoListCreateDTO;
+import tech.crm.crmserver.dto.TodoListUpdateDTO;
 import tech.crm.crmserver.exception.TodoListFailAddedException;
 import tech.crm.crmserver.service.ToDoListService;
 import tech.crm.crmserver.service.UserService;
+import tech.crm.crmserver.exception.*;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -24,7 +26,7 @@ import java.util.List;
  * @since 2021-08-23
  */
 @RestController
-@RequestMapping("/toDoList")
+@RequestMapping("/todoList")
 public class ToDoListController {
 
     @Autowired
@@ -50,10 +52,10 @@ public class ToDoListController {
     }
 
     /**
-     * Create new todoList data for a suer
+     * Create new todoList data for a user
      *
      * @param todoListCreateDTO the data of the todoList to create
-     * @return ResponseResult contain if the creation is success
+     * @return ResponseResult contain if the creation is a success
      */
     @PostMapping
     public ResponseResult<Object> createTodoList(@RequestBody @Valid TodoListCreateDTO todoListCreateDTO) {
@@ -64,6 +66,37 @@ public class ToDoListController {
             throw new TodoListFailAddedException();
         }
         return ResponseResult.suc("Adding todoList data success");
+    }
+
+    /**
+     * Update an existing todolist for a user
+     *
+     * @param todoListDTO the details of the updated todolist
+     * @return ResponseResult about if the update succeeds, or why it fails
+     */
+    @PutMapping
+    public ResponseResult<Object> updateTodoList(@RequestBody @Valid TodoListUpdateDTO todoListDTO) {
+        boolean updateSuccess = false;
+        updateSuccess = toDoListService.updateTodoListByTodoListDTO(todoListDTO, userService.getId());
+        if (!updateSuccess) {
+            throw new TodoListUpdateFailException();
+        }
+        return ResponseResult.suc("Update todolist success");
+    }
+
+    /**
+     * Delete an existing todolist for a user
+     *
+     * @param todoListId the todoList to be deleted
+     * @return ResponseResult about if delete is successful, or why it fails
+     */
+    public ResponseResult<Object> deleteTodoList(@RequestParam("todoList_id") Integer todoListId) {
+        boolean deleteSuccess = false;
+        deleteSuccess = toDoListService.deleteTodoListByTodoListId(todoListId, userService.getId());
+        if (!deleteSuccess) {
+            throw new TodoListDeleteFailException();
+        }
+        return ResponseResult.suc("Delete todolist success");
     }
 }
 

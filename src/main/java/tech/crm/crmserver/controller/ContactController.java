@@ -112,7 +112,7 @@ public class ContactController {
      * Update a contact's into
      *
      * @param contactDTO the details of contact to update
-     * @return ResponseResult about if the update success, or why it fail
+     * @return ResponseResult about if the update succeeds, or why it fails
      */
     @PutMapping
     public ResponseResult<Object> updateContact(@RequestBody @Valid ContactUpdateDTO contactDTO) {
@@ -128,7 +128,7 @@ public class ContactController {
      * Delete a contact's into
      *
      * @param contactId the details of contact to delete
-     * @return ResponseResult about if the delete success, or why it fail
+     * @return ResponseResult about if delete success, or why it fails
      */
     @DeleteMapping
     public ResponseResult<Object> deleteContact(@RequestParam("contact_id") Integer contactId) {
