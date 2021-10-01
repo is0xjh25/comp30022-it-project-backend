@@ -7,9 +7,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import tech.crm.crmserver.common.enums.PermissionLevel;
 import tech.crm.crmserver.common.response.ResponseResult;
+import tech.crm.crmserver.dao.Department;
+import tech.crm.crmserver.dao.Organization;
 import tech.crm.crmserver.dao.Permission;
 import tech.crm.crmserver.dto.UserPermissionDTO;
+import tech.crm.crmserver.exception.DepartmentNotExistException;
 import tech.crm.crmserver.exception.NotEnoughPermissionException;
+import tech.crm.crmserver.exception.OrganizationNotExistException;
 import tech.crm.crmserver.exception.UserNotInDepartmentException;
 import tech.crm.crmserver.service.DepartmentService;
 import tech.crm.crmserver.service.PermissionService;
@@ -87,6 +91,27 @@ public class DepartmentController {
     public ResponseResult<Object> deleteDepartment(@RequestParam("department_id") Integer departmentId){
         departmentService.deleteDepartmentByDepartmentId(departmentId);
         return ResponseResult.suc("Successfully delete the department!");
+    }
+
+    /**
+     * search member in department
+     * @param departmentId the id of department
+     * @param searchKey search key
+     * @param size the size of the page
+     * @param current the value of current page
+     * @return ResponseResult with msg
+     */
+    @GetMapping("/searchMember")
+    public ResponseResult<Object> searchMemberInOrganization(@RequestParam("department_id") Integer departmentId,
+                                                             @RequestParam("search_key") String searchKey,
+                                                             @RequestParam("size") Integer size,
+                                                             @RequestParam("current") Integer current){
+        //check permission
+        if(!permissionService.ifPermissionLevelSatisfied(userService.getId(),PermissionLevel.DISPLAY,departmentId)){
+            throw new NotEnoughPermissionException();
+        }
+        Page<UserPermissionDTO> userPermissionDTOPage = departmentService.searchMember(new Page<>(current, size), departmentId, searchKey);
+        return ResponseResult.suc("success",userPermissionDTOPage);
     }
 
 }
