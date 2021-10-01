@@ -16,10 +16,7 @@ import tech.crm.crmserver.dao.Attend;
 import tech.crm.crmserver.dao.Contact;
 import tech.crm.crmserver.dao.Event;
 import tech.crm.crmserver.dao.User;
-import tech.crm.crmserver.dto.ContactAttendDTO;
-import tech.crm.crmserver.dto.EventAttendDTO;
-import tech.crm.crmserver.dto.EventsDTO;
-import tech.crm.crmserver.dto.EventsUpdateDTO;
+import tech.crm.crmserver.dto.*;
 import tech.crm.crmserver.exception.FailToAddContactToEventException;
 import tech.crm.crmserver.exception.FailToDeleteContactToEventException;
 import tech.crm.crmserver.exception.NotEnoughPermissionException;
@@ -280,10 +277,25 @@ public class EventServiceImpl extends ServiceImpl<EventMapper, Event> implements
      * get start time of event of this user
      *
      * @param userId the id of user
+     * @param startTime start of given time
+     * @param finishTime end of given time
      * @return the start time list of event of this user
      */
     @Override
-    public List<LocalDateTime> getStartTimeByUserId(Integer userId) {
-        return baseMapper.getStartTime(userId);
+    public List<LocalDateTime> getStartTimeByUserId(Integer userId, LocalDateTime startTime, LocalDateTime finishTime) {
+        return baseMapper.getStartTime(userId,startTime,finishTime);
+    }
+
+    /**
+     * return the statistic information
+     *
+     * @param userId     the id of user
+     * @param startTime  start of given time
+     * @param finishTime end of given time
+     * @return the statistic information
+     */
+    @Override
+    public TaskStatDTO getStat(Integer userId, LocalDateTime startTime, LocalDateTime finishTime) {
+        return baseMapper.getStat(userId,startTime,finishTime);
     }
 }

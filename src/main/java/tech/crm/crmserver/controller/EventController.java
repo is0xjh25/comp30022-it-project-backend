@@ -134,9 +134,21 @@ public class EventController {
      * @return ResponseResult contain the start time list of event of this user
      */
     @GetMapping("/startTimes")
-    public ResponseResult<Object> getStartTime(){
-        List<LocalDateTime> timeList = eventService.getStartTimeByUserId(userService.getId());
+    public ResponseResult<Object> getStartTime(@RequestParam("start_time")LocalDateTime startTime,
+                                               @RequestParam("finish_time")LocalDateTime finishTime){
+        List<LocalDateTime> timeList = eventService.getStartTimeByUserId(userService.getId(),startTime,finishTime);
         return ResponseResult.suc("Successfully get the start times", timeList);
+    }
+
+    /**
+     * get statistic information of events for this user
+     * @return ResponseResult contain the start time list of events of this user
+     */
+    @GetMapping("/statistic")
+    public ResponseResult<Object> getStat(@RequestParam("start_time")LocalDateTime startTime,
+                                          @RequestParam("finish_time")LocalDateTime finishTime){
+        TaskStatDTO stat = eventService.getStat(userService.getId(), startTime, finishTime);
+        return ResponseResult.suc("Successfully get the statistic information", stat);
     }
 }
 

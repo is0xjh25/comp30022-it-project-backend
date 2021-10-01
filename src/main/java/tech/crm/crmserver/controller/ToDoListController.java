@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import tech.crm.crmserver.common.enums.ToDoListStatus;
 import tech.crm.crmserver.common.response.ResponseResult;
 import tech.crm.crmserver.dao.ToDoList;
+import tech.crm.crmserver.dto.TaskStatDTO;
 import tech.crm.crmserver.dto.TodoListCreateDTO;
 import tech.crm.crmserver.dto.TodoListUpdateDTO;
 import tech.crm.crmserver.exception.TodoListFailAddedException;
@@ -15,6 +16,7 @@ import tech.crm.crmserver.service.UserService;
 import tech.crm.crmserver.exception.*;
 
 import javax.validation.Valid;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -26,7 +28,7 @@ import java.util.List;
  * @since 2021-08-23
  */
 @RestController
-@RequestMapping("/todoList")
+@RequestMapping("/toDoList")
 public class ToDoListController {
 
     @Autowired
@@ -98,6 +100,17 @@ public class ToDoListController {
             throw new TodoListDeleteFailException();
         }
         return ResponseResult.suc("Delete todolist success");
+    }
+
+    /**
+     * get statistic information of to do list for this user
+     * @return ResponseResult contain the start time list of to do lists of this user
+     */
+    @GetMapping("/statistic")
+    public ResponseResult<Object> getStat(@RequestParam("start_time") LocalDateTime startTime,
+                                          @RequestParam("finish_time")LocalDateTime finishTime){
+        TaskStatDTO stat = toDoListService.getStat(userService.getId(), startTime, finishTime);
+        return ResponseResult.suc("Successfully get the statistic information", stat);
     }
 }
 
