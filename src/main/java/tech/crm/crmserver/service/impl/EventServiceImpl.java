@@ -119,19 +119,12 @@ public class EventServiceImpl extends ServiceImpl<EventMapper, Event> implements
         //check user
         checkUser(userId,eventsUpdateDTO.getId());
 
-        UpdateWrapper<Event> updateWrapper = new UpdateWrapper<>();
-        updateWrapper.eq("id",eventsUpdateDTO.getId());
-        Map<String, String> map = new ObjectMapper().convertValue(eventsUpdateDTO, Map.class);
-        //translate to underscore
-        PropertyNamingStrategy.SnakeCaseStrategy snakeCaseStrategy = new PropertyNamingStrategy.SnakeCaseStrategy();
-        for(Map.Entry<String,String> entry : map.entrySet()){
-            if(entry.getValue() != null && !entry.getKey().equals("id")){
-                updateWrapper.set(snakeCaseStrategy.translate(entry.getKey()),entry.getValue());
-            }
-        }
+        Event event = new Event();
+        NullAwareBeanUtilsBean.copyProperties(eventsUpdateDTO,event);
+        System.out.println(event);
 
         //update to database
-        update(updateWrapper);
+        updateById(event);
     }
 
     /**
