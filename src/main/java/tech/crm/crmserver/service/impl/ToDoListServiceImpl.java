@@ -108,6 +108,10 @@ public class ToDoListServiceImpl extends ServiceImpl<ToDoListMapper, ToDoList> i
     @Override
     public boolean updateTodoListByTodoListDTO(TodoListUpdateDTO todoListDTO, Integer userId) {
         ToDoList newTodo = toDoListService.fromTodoListUpdateDTO(todoListDTO);
+        if (!newTodo.getUserId().equals(userId)) {
+            throw new NotEnoughPermissionException();
+        }
+
         ToDoList oldTodo = toDoListService.getById(newTodo.getId());
 
         // check if the target todolist exists or not
@@ -157,8 +161,11 @@ public class ToDoListServiceImpl extends ServiceImpl<ToDoListMapper, ToDoList> i
      * @return if the todolist is deleted successfully
      */
     @Override
-    public boolean deleteTodoListByTodoListId(Integer todoListId) {
+    public boolean deleteTodoListByTodoListId(Integer todoListId, Integer userId) {
         ToDoList todolist = toDoListService.getById(todoListId);
+        if (!todolist.getUserId().equals(userId)) {
+            throw new NotEnoughPermissionException();
+        }
 
         // check if the target todolist exists or not
         if (todolist == null){

@@ -92,7 +92,7 @@ public class ToDoListController {
      */
     public ResponseResult<Object> deleteTodoList(@RequestParam("todoList_id") Integer todoListId) {
         boolean deleteSuccess = false;
-        deleteSuccess = toDoListService.deleteTodoListByTodoListId(todoListId);
+        deleteSuccess = toDoListService.deleteTodoListByTodoListId(todoListId, userService.getId());
         if (!deleteSuccess) {
             throw new TodoListDeleteFailException();
         }
