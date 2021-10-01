@@ -6,6 +6,8 @@ spring:
     password: comp30022-
   mvc:
     log-resolved-exception: true
+    format:
+      date-time: yyyy-MM-dd HH:mm
 
 
   #jackson

@@ -146,13 +146,13 @@ public class EventServiceImpl extends ServiceImpl<EventMapper, Event> implements
      * @param eventId the id of the event to query
      * @param userId the user id of the event to query
      * @param startTime the start time of the event to query
-     * @param finishTIme the finish time of the event to query
+     * @param finishTime the finish time of the event to query
      * @param status the status of the event to query
      * @param description the description of the event
      * @return a list of match event
      */
     @Override
-    public List<Event> queryEvent(Integer eventId, Integer userId, LocalDateTime startTime, LocalDateTime finishTIme, ToDoListStatus status, String description) {
+    public List<Event> queryEvent(Integer eventId, Integer userId, LocalDateTime startTime, LocalDateTime finishTime, ToDoListStatus status, String description) {
         QueryWrapper<Event> eventQueryWrapper = new QueryWrapper<>();
         if (eventId != null) {
             eventQueryWrapper.eq("id", eventId);
@@ -163,8 +163,8 @@ public class EventServiceImpl extends ServiceImpl<EventMapper, Event> implements
         if (startTime != null) {
             eventQueryWrapper.eq("start_time", startTime);
         }
-        if (finishTIme != null) {
-            eventQueryWrapper.eq("finish_time", finishTIme);
+        if (finishTime != null) {
+            eventQueryWrapper.eq("finish_time", finishTime);
         }
         if (status != null) {
             eventQueryWrapper.eq("status", status.getStatus());
@@ -262,5 +262,17 @@ public class EventServiceImpl extends ServiceImpl<EventMapper, Event> implements
         eventAttendDTO.setStatus(event.getStatus());
         eventAttendDTO.setContactList(contactAttendDTOList);
         return eventAttendDTO;
+    }
+
+    /**
+     * Get events data for a user among given time
+     * @param userId the id of user
+     * @param startTime start of given time
+     * @param finishTime end of given time
+     * @return the list of event
+     */
+    @Override
+    public List<Event> getEventBetweenTime(Integer userId, LocalDateTime startTime, LocalDateTime finishTime) {
+        return baseMapper.getEventsBetween(userId,startTime,finishTime);
     }
 }

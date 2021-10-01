@@ -5,17 +5,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import tech.crm.crmserver.common.response.ResponseResult;
 import tech.crm.crmserver.dao.Event;
-import tech.crm.crmserver.dto.EventAttendDTO;
-import tech.crm.crmserver.dto.EventContactDTO;
-import tech.crm.crmserver.dto.EventsDTO;
-import tech.crm.crmserver.dto.EventsUpdateDTO;
+import tech.crm.crmserver.dto.*;
 import tech.crm.crmserver.exception.EventsFailAddedException;
 import tech.crm.crmserver.service.AttendService;
-import tech.crm.crmserver.exception.EventsNotExistException;
 import tech.crm.crmserver.service.EventService;
 import tech.crm.crmserver.service.UserService;
 
 import javax.validation.Valid;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -54,6 +51,18 @@ public class EventController {
     @GetMapping("/myEvents")
     public ResponseResult<Object> getAllEventByUserId() {
         List<Event> events = eventService.queryEventByUserId(userService.getId());
+        return ResponseResult.suc("Query user's events success", events);
+    }
+
+    /**
+     * Get events data for a user among given time
+     *
+     * @return ResponseResult contain all the data about user's events
+     */
+    @GetMapping("/between")
+    public ResponseResult<Object> getEventByUserIdAndTime(@RequestParam("start_time")LocalDateTime startTime,
+                                                          @RequestParam("finish_time")LocalDateTime finishTime) {
+        List<Event> events = eventService.getEventBetweenTime(userService.getId(),startTime,finishTime);
         return ResponseResult.suc("Query user's events success", events);
     }
 
@@ -115,7 +124,7 @@ public class EventController {
      * @return ResponseResult contain all information about if add is success or fail
      */
     @DeleteMapping("/contact")
-    public ResponseResult<Object> deleteContact(Integer attendId){
+    public ResponseResult<Object> deleteContact(@RequestParam("attend_id") Integer attendId){
         eventService.deleteContact(userService.getId(), attendId);
         return ResponseResult.suc("Delete contact success");
     }

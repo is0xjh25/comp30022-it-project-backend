@@ -56,11 +56,11 @@ public interface EventService extends IService<Event> {
      * @param eventId the id of the event to query
      * @param userId the user id of the event to query
      * @param startTime the start time of the event to query
-     * @param finishTIme the finish time of the event to query
+     * @param finishTime the finish time of the event to query
      * @param status the status of the event to query
      * @return a list of match event
      */
-    public List<Event> queryEvent(Integer eventId, Integer userId, LocalDateTime startTime, LocalDateTime finishTIme, ToDoListStatus status, String description);
+    public List<Event> queryEvent(Integer eventId, Integer userId, LocalDateTime startTime, LocalDateTime finishTime, ToDoListStatus status, String description);
 
     /**
      * add a contact to the event
@@ -83,5 +83,14 @@ public interface EventService extends IService<Event> {
      * @return the eventAttendDTO include all the information like the contact of this event
      */
     public EventAttendDTO getEventById(Integer eventId);
+
+    /**
+     * Get events data for a user among given time
+     * @param userId the id of user
+     * @param startTime start of given time
+     * @param finishTime end of given time
+     * @return the list of event
+     */
+    public List<Event> getEventBetweenTime(Integer userId, LocalDateTime startTime, LocalDateTime finishTime);
 
 }
