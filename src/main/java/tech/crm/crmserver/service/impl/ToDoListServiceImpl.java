@@ -119,11 +119,6 @@ public class ToDoListServiceImpl extends ServiceImpl<ToDoListMapper, ToDoList> i
             throw new ToDoListNotExistException();
         }
 
-        // check if the target todolist is active
-        if (oldTodo.getStatus().equals(ToDoListStatus.DONE)) {
-            throw new ToDoListInactiveException();
-        }
-
         return toDoListService.updateTodoList(newTodo);
     }
 
