@@ -128,5 +128,15 @@ public class EventController {
         eventService.deleteContact(userService.getId(), attendId);
         return ResponseResult.suc("Delete contact success");
     }
+
+    /**
+     * get start time of all the events of this user
+     * @return ResponseResult contain the start time list of event of this user
+     */
+    @GetMapping("/startTimes")
+    public ResponseResult<Object> getStartTime(){
+        List<LocalDateTime> timeList = eventService.getStartTimeByUserId(userService.getId());
+        return ResponseResult.suc("Successfully get the start times", timeList);
+    }
 }
 

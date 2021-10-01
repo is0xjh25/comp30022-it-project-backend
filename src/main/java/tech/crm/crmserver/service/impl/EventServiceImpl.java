@@ -275,4 +275,15 @@ public class EventServiceImpl extends ServiceImpl<EventMapper, Event> implements
     public List<Event> getEventBetweenTime(Integer userId, LocalDateTime startTime, LocalDateTime finishTime) {
         return baseMapper.getEventsBetween(userId,startTime,finishTime);
     }
+
+    /**
+     * get start time of event of this user
+     *
+     * @param userId the id of user
+     * @return the start time list of event of this user
+     */
+    @Override
+    public List<LocalDateTime> getStartTimeByUserId(Integer userId) {
+        return baseMapper.getStartTime(userId);
+    }
 }

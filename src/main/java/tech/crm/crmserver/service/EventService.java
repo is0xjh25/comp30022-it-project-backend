@@ -93,4 +93,10 @@ public interface EventService extends IService<Event> {
      */
     public List<Event> getEventBetweenTime(Integer userId, LocalDateTime startTime, LocalDateTime finishTime);
 
+    /**
+     * get start time of event of this user
+     * @param userId the id of user
+     * @return the start time list of event of this user
+     */
+    public List<LocalDateTime> getStartTimeByUserId(Integer userId);
 }
