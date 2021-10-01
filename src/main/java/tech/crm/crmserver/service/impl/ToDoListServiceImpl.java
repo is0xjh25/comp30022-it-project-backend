@@ -153,6 +153,7 @@ public class ToDoListServiceImpl extends ServiceImpl<ToDoListMapper, ToDoList> i
      * Delete a todoList
      *
      * @param todoListId the todolist to be deleted
+     * @param userId the user who wants to delete the todolist
      * @return if the todolist is deleted successfully
      */
     @Override

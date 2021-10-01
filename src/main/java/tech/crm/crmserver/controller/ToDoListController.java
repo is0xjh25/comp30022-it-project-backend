@@ -90,6 +90,7 @@ public class ToDoListController {
      * @param todoListId the todoList to be deleted
      * @return ResponseResult about if delete is successful, or why it fails
      */
+    @DeleteMapping
     public ResponseResult<Object> deleteTodoList(@RequestParam("todoList_id") Integer todoListId) {
         boolean deleteSuccess = false;
         deleteSuccess = toDoListService.deleteTodoListByTodoListId(todoListId, userService.getId());
