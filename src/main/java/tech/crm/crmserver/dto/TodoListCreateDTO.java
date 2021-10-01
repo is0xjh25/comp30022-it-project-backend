@@ -23,7 +23,6 @@ import java.time.LocalDateTime;
 public class TodoListCreateDTO {
 
     @NotNull(message = "Date time could not be null")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm", shape = JsonFormat.Shape.STRING)
     private LocalDateTime dateTime;
 
     @NotNull(message = "Description could not be null")
