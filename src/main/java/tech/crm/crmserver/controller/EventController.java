@@ -115,7 +115,7 @@ public class EventController {
      * @return ResponseResult contain all information about if add is success or fail
      */
     @DeleteMapping("/contact")
-    public ResponseResult<Object> deleteContact(Integer attendId){
+    public ResponseResult<Object> deleteContact(@RequestParam("attend_id") Integer attendId){
         eventService.deleteContact(userService.getId(), attendId);
         return ResponseResult.suc("Delete contact success");
     }
