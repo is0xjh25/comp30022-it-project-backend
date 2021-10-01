@@ -28,7 +28,6 @@ public class RecentContact implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-      @TableId(value = "contact_id", type = IdType.AUTO)
     private Integer contactId;
 
     private Integer userId;
