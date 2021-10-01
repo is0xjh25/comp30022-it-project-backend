@@ -1,14 +1,14 @@
 package tech.crm.crmserver.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tech.crm.crmserver.common.enums.PermissionLevel;
 import tech.crm.crmserver.common.enums.Status;
-import tech.crm.crmserver.dao.Department;
-import tech.crm.crmserver.dao.Organization;
-import tech.crm.crmserver.dao.Permission;
+import tech.crm.crmserver.dao.*;
+import tech.crm.crmserver.dto.UserPermissionDTO;
 import tech.crm.crmserver.exception.DepartmentAlreadyExistException;
 import tech.crm.crmserver.exception.NotEnoughPermissionException;
 import tech.crm.crmserver.exception.OrganizationNotExistException;
@@ -17,6 +17,7 @@ import tech.crm.crmserver.service.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -165,5 +166,28 @@ public class DepartmentServiceImpl extends ServiceImpl<DepartmentMapper, Departm
             return false;
         }
         return true;
+    }
+
+    /**
+     * search member in department by search key<br/>
+     * will not check permission
+     * @param page         the configuration of the page
+     * @param departmentId the departmentId to search member
+     * @param searchKey    search key
+     * @return certain page of ContactDTO
+     */
+    @Override
+    public Page<UserPermissionDTO> searchMember(Page<UserPermissionDTO> page, Integer departmentId, String searchKey) {
+        Map<String, String> map = UserService.searchKey(searchKey);
+        //to the true wrapper
+        QueryWrapper<User> wrapper = new QueryWrapper<>();
+        wrapper.eq("department_id",departmentId).and(i -> {
+            //add conditions into a wrapper
+            for(Map.Entry<String,String> entry : map.entrySet()){
+                i.or().like(entry.getKey(),entry.getValue());
+            }
+        });
+        page = userService.getUserPermissionDTO(page,wrapper);
+        return page;
     }
 }

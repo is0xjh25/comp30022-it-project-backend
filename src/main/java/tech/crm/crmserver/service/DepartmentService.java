@@ -1,7 +1,10 @@
 package tech.crm.crmserver.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import tech.crm.crmserver.dao.Department;
+import tech.crm.crmserver.dto.ContactDTO;
+import tech.crm.crmserver.dto.UserPermissionDTO;
 
 import java.util.List;
 
@@ -65,5 +68,13 @@ public interface DepartmentService extends IService<Department> {
      */
     public boolean checkIfValidDepartmentId(Integer departmentId);
 
+    /**
+     * search member in department by search key
+     * @param page the configuration of the page
+     * @param departmentId the departmentId to search member
+     * @param searchKey search key
+     * @return certain page of ContactDTO
+     */
+    public Page<UserPermissionDTO> searchMember(Page<UserPermissionDTO> page, Integer departmentId, String searchKey);
 
 }

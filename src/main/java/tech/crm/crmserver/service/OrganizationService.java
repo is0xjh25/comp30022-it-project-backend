@@ -1,7 +1,9 @@
 package tech.crm.crmserver.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import tech.crm.crmserver.dao.Organization;
+import tech.crm.crmserver.dto.UserPermissionDTO;
 
 import java.util.List;
 
@@ -64,4 +66,13 @@ public interface OrganizationService extends IService<Organization> {
      */
     public void transferOwnershipOfOrganization(Integer organizationId, Integer from, Integer to);
 
+    /**
+     * search member in organization by search key<br/>
+     * will not check permission
+     * @param page         the configuration of the page
+     * @param organizationId the organization id of member
+     * @param searchKey    search key
+     * @return certain page of ContactDTO
+     */
+    public Page<UserPermissionDTO> searchMember(Page<UserPermissionDTO> page, Integer organizationId, String searchKey);
 }

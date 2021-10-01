@@ -1,10 +1,19 @@
 package tech.crm.crmserver.service;
 
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.baomidou.mybatisplus.core.toolkit.Constants;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
+import org.apache.ibatis.annotations.Param;
+import tech.crm.crmserver.dao.Contact;
 import tech.crm.crmserver.dao.User;
 import tech.crm.crmserver.dto.LoginRequest;
+import tech.crm.crmserver.dto.UserPermissionDTO;
 import tech.crm.crmserver.dto.UserRegisterDTO;
 import tech.crm.crmserver.dto.UserUpdateDTO;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * <p>
@@ -15,6 +24,23 @@ import tech.crm.crmserver.dto.UserUpdateDTO;
  * @since 2021-08-23
  */
 public interface UserService extends IService<User> {
+
+    /**
+     * return the search map for search User in database
+     * @param searchKey search key
+     * @return search map
+     */
+    public static Map<String, String> searchKey(String searchKey){
+        if(searchKey == null){
+            return null;
+        }
+        Map<String,String> map = new HashMap<>();
+        map.put("email",searchKey);
+        map.put("first_name",searchKey);
+        map.put("last_name",searchKey);
+        map.put("middle_name",searchKey);
+        return map;
+    }
 
     /**
      * Verify whether the email and password is correct
@@ -96,4 +122,20 @@ public interface UserService extends IService<User> {
      * @param userId user id of user need to active
      */
     public void activePendingUser(Integer userId);
+
+    /**
+     * return page of UserPermissionDTO by wrapper from permission
+     * @param page page config
+     * @param queryWrapper wrapper
+     * @return return page of UserPermissionDTO by wrapper
+     */
+    public Page<UserPermissionDTO> getUserPermissionDTO(Page<?> page, Wrapper<User> queryWrapper);
+
+    /**
+     * return page of UserPermissionDTO by wrapper from belong to
+     * @param page page config
+     * @param queryWrapper wrapper
+     * @return return page of UserPermissionDTO by wrapper
+     */
+    public Page<UserPermissionDTO> getUserPermissionDTOInOrganization(Page<?> page, Wrapper<User> queryWrapper);
 }

@@ -1,7 +1,9 @@
 package tech.crm.crmserver.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
@@ -23,8 +25,10 @@ import tech.crm.crmserver.common.constants.TimeZoneConstants;
 import tech.crm.crmserver.common.constants.SecurityConstants;
 import tech.crm.crmserver.common.enums.Status;
 import tech.crm.crmserver.common.utils.NullAwareBeanUtilsBean;
+import tech.crm.crmserver.dao.Contact;
 import tech.crm.crmserver.dao.User;
 import tech.crm.crmserver.dto.LoginRequest;
+import tech.crm.crmserver.dto.UserPermissionDTO;
 import tech.crm.crmserver.dto.UserRegisterDTO;
 import tech.crm.crmserver.dto.UserUpdateDTO;
 import tech.crm.crmserver.exception.LoginBadCredentialsException;
@@ -37,7 +41,6 @@ import tech.crm.crmserver.service.TokenKeyService;
 import tech.crm.crmserver.service.UserService;
 
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -305,5 +308,29 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         catch (Exception e){
             throw new UserNotExistException();
         }
+    }
+
+    /**
+     * return page of UserPermissionDTO by wrapper from permission
+     *
+     * @param page         page config
+     * @param queryWrapper wrapper
+     * @return return page of UserPermissionDTO by wrapper
+     */
+    @Override
+    public Page<UserPermissionDTO> getUserPermissionDTO(Page<?> page, Wrapper<User> queryWrapper) {
+        return baseMapper.getUserPermissionDTO(page,queryWrapper);
+    }
+
+    /**
+     * return page of UserPermissionDTO by wrapper from belong to
+     *
+     * @param page         page config
+     * @param queryWrapper wrapper
+     * @return return page of UserPermissionDTO by wrapper
+     */
+    @Override
+    public Page<UserPermissionDTO> getUserPermissionDTOInOrganization(Page<?> page, Wrapper<User> queryWrapper) {
+        return baseMapper.getUserPermissionDTOInOrganization(page,queryWrapper);
     }
 }

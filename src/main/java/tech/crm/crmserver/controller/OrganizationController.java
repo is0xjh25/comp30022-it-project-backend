@@ -2,8 +2,10 @@ package tech.crm.crmserver.controller;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import tech.crm.crmserver.common.enums.PermissionLevel;
 import tech.crm.crmserver.common.enums.Status;
 import tech.crm.crmserver.common.response.ResponseResult;
 import tech.crm.crmserver.common.utils.NullAwareBeanUtilsBean;
@@ -11,8 +13,10 @@ import tech.crm.crmserver.dao.BelongTo;
 import tech.crm.crmserver.dao.Department;
 import tech.crm.crmserver.dao.Organization;
 import tech.crm.crmserver.dao.Permission;
+import tech.crm.crmserver.dto.ContactDTO;
 import tech.crm.crmserver.dto.DepartmentDTO;
 import tech.crm.crmserver.dto.OrganizationDTO;
+import tech.crm.crmserver.dto.UserPermissionDTO;
 import tech.crm.crmserver.exception.*;
 import tech.crm.crmserver.service.*;
 
@@ -234,5 +238,32 @@ public class OrganizationController {
         organizationService.transferOwnershipOfOrganization(organizationId,userService.getId(),to);
         return ResponseResult.suc("success");
     }
+
+    /**
+     * search member in organization<br/>
+     * only the owner has the permission to do this action
+     * @param organizationId the id of organization
+     * @param searchKey search key
+     * @param size the size of each page
+     * @param current the current page
+     * @return ResponseResult with msg
+     */
+    @GetMapping("/searchMember")
+    public ResponseResult<Object> searchMemberInOrganization(@RequestParam("organization_id") Integer organizationId,
+                                                             @RequestParam("search_key") String searchKey,
+                                                             @RequestParam("size") Integer size,
+                                                             @RequestParam("current") Integer current){
+        Organization organization = organizationService.getById(organizationId);
+        //check permission
+        if (organization == null){
+            throw new OrganizationNotExistException();
+        }
+        if(!organization.getOwner().equals(userService.getId())) {
+            throw new NotEnoughPermissionException();
+        }
+        Page<UserPermissionDTO> userPermissionDTOPage = organizationService.searchMember(new Page<>(current, size), organizationId, searchKey);
+        return ResponseResult.suc("success",userPermissionDTOPage);
+    }
+
 }
 

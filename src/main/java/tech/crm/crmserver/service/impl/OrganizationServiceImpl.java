@@ -2,13 +2,13 @@ package tech.crm.crmserver.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tech.crm.crmserver.common.enums.PermissionLevel;
-import tech.crm.crmserver.dao.BelongTo;
-import tech.crm.crmserver.dao.Organization;
-import tech.crm.crmserver.dao.Permission;
+import tech.crm.crmserver.dao.*;
+import tech.crm.crmserver.dto.UserPermissionDTO;
 import tech.crm.crmserver.exception.NotEnoughPermissionException;
 import tech.crm.crmserver.exception.OrganizationNotExistException;
 import tech.crm.crmserver.exception.UserNotExistException;
@@ -183,5 +183,28 @@ public class OrganizationServiceImpl extends ServiceImpl<OrganizationMapper, Org
             permissionList.add(permission);
         }
         permissionService.saveBatch(permissionList);
+    }
+
+    /**
+     * search member in organization by search key<br/>
+     * will not check permission
+     * @param page         the configuration of the page
+     * @param organizationId the organization id of member
+     * @param searchKey    search key
+     * @return certain page of ContactDTO
+     */
+    @Override
+    public Page<UserPermissionDTO> searchMember(Page<UserPermissionDTO> page, Integer organizationId, String searchKey) {
+        Map<String, String> map = UserService.searchKey(searchKey);
+        //to the true wrapper
+        QueryWrapper<User> wrapper = new QueryWrapper<>();
+        wrapper.eq("organization_id",organizationId).and(i -> {
+            //add conditions into a wrapper
+            for(Map.Entry<String,String> entry : map.entrySet()){
+                i.or().like(entry.getKey(),entry.getValue());
+            }
+        });
+        page = userService.getUserPermissionDTOInOrganization(page,wrapper);
+        return page;
     }
 }
