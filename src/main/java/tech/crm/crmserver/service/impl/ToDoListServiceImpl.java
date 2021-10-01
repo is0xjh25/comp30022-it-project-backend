@@ -111,7 +111,7 @@ public class ToDoListServiceImpl extends ServiceImpl<ToDoListMapper, ToDoList> i
         ToDoList oldTodo = toDoListService.getById(newTodo.getId());
 
         // check if the target todolist exists or not
-        if (oldTodo == null || oldTodo.getStatus().equals(ToDoListStatus.DELETED)){
+        if (oldTodo == null){
             throw new ToDoListNotExistException();
         }
 
@@ -161,7 +161,7 @@ public class ToDoListServiceImpl extends ServiceImpl<ToDoListMapper, ToDoList> i
         ToDoList todolist = toDoListService.getById(todoListId);
 
         // check if the target todolist exists or not
-        if (todolist == null || todolist.getStatus().equals(ToDoListStatus.DELETED)){
+        if (todolist == null){
             throw new ToDoListNotExistException();
         }
 
