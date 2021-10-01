@@ -33,4 +33,8 @@ public interface EventMapper extends BaseMapper<Event> {
             "((start_time > #{a} AND start_time < #{b}) OR (start_time < #{a} AND finish_time > #{b}) OR (finish_time > #{a} AND finish_time < #{b}))")
     public List<Event> getEventsBetween(@Param("userId") Integer userId, @Param("a") LocalDateTime startTime, @Param("b") LocalDateTime finishTime);
 
+    @Select("select event.start_time " +
+            "from event " +
+            "where user_id = #{userId}")
+    public List<LocalDateTime> getStartTime(@Param("userId") Integer userId);
 }
