@@ -23,11 +23,9 @@ import java.time.LocalDateTime;
 public class EventsDTO {
 
     @NotNull(message = "Start time of the event can not be null")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm", shape = JsonFormat.Shape.STRING)
     private LocalDateTime startTime;
 
     @NotNull(message = "Finish time of the event can not be null")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm", shape = JsonFormat.Shape.STRING)
     private LocalDateTime finishTime;
 
     @NotNull(message = "The description of the event can not be null")

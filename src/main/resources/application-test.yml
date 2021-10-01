@@ -11,6 +11,7 @@ spring:
   #jackson
   jackson:
     property-naming-strategy: SNAKE_CASE
+    date-format: yyyy-MM-dd HH:mm
     time-zone: GMT+10
 
   #mail config

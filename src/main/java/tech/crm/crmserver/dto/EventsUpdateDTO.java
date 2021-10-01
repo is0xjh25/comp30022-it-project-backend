@@ -25,11 +25,9 @@ public class EventsUpdateDTO {
 
     @NotNull(message = "Id cannot be null")
     private Integer id;
-
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm", shape = JsonFormat.Shape.STRING)
+    
     private LocalDateTime startTime;
 
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm", shape = JsonFormat.Shape.STRING)
     private LocalDateTime finishTime;
 
     private String description;
