@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import tech.crm.crmserver.common.enums.ToDoListStatus;
 import tech.crm.crmserver.common.utils.NullAwareBeanUtilsBean;
 import tech.crm.crmserver.dao.ToDoList;
+import tech.crm.crmserver.dto.TaskStatDTO;
 import tech.crm.crmserver.dto.TodoListCreateDTO;
 import tech.crm.crmserver.dto.TodoListUpdateDTO;
 import tech.crm.crmserver.mapper.ToDoListMapper;
@@ -169,5 +170,18 @@ public class ToDoListServiceImpl extends ServiceImpl<ToDoListMapper, ToDoList> i
         }
 
         return removeById(todoListId);
+    }
+
+    /**
+     * return the statistic information
+     *
+     * @param userId     the id of user
+     * @param startTime  start of given time
+     * @param finishTime end of given time
+     * @return the statistic information
+     */
+    @Override
+    public TaskStatDTO getStat(Integer userId, LocalDateTime startTime, LocalDateTime finishTime) {
+        return baseMapper.getStat(userId,startTime,finishTime);
     }
 }

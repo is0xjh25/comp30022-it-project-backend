@@ -1,8 +1,10 @@
 package tech.crm.crmserver.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import org.apache.ibatis.annotations.Param;
 import tech.crm.crmserver.common.enums.ToDoListStatus;
 import tech.crm.crmserver.dao.ToDoList;
+import tech.crm.crmserver.dto.TaskStatDTO;
 import tech.crm.crmserver.dto.TodoListCreateDTO;
 import tech.crm.crmserver.dto.TodoListUpdateDTO;
 
@@ -88,4 +90,13 @@ public interface ToDoListService extends IService<ToDoList> {
      * @return if the todolist is deleted successfully
      */
     public boolean deleteTodoListByTodoListId(Integer todoListId, Integer userId);
+
+    /**
+     * return the statistic information
+     * @param userId the id of user
+     * @param startTime start of given time
+     * @param finishTime end of given time
+     * @return the statistic information
+     */
+    public TaskStatDTO getStat(@Param("userId") Integer userId, LocalDateTime startTime, LocalDateTime finishTime);
 }

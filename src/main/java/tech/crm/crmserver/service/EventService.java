@@ -1,12 +1,14 @@
 package tech.crm.crmserver.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import org.apache.ibatis.annotations.Param;
 import tech.crm.crmserver.common.enums.ToDoListStatus;
 import tech.crm.crmserver.dao.Event;
 import tech.crm.crmserver.dao.ToDoList;
 import tech.crm.crmserver.dto.EventAttendDTO;
 import tech.crm.crmserver.dto.EventsDTO;
 import tech.crm.crmserver.dto.EventsUpdateDTO;
+import tech.crm.crmserver.dto.TaskStatDTO;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -96,7 +98,18 @@ public interface EventService extends IService<Event> {
     /**
      * get start time of event of this user
      * @param userId the id of user
+     * @param startTime start of given time
+     * @param finishTime end of given time
      * @return the start time list of event of this user
      */
-    public List<LocalDateTime> getStartTimeByUserId(Integer userId);
+    public List<LocalDateTime> getStartTimeByUserId(Integer userId, LocalDateTime startTime, LocalDateTime finishTime);
+
+    /**
+     * return the statistic information
+     * @param userId the id of user
+     * @param startTime start of given time
+     * @param finishTime end of given time
+     * @return the statistic information
+     */
+    public TaskStatDTO getStat(@Param("userId") Integer userId, LocalDateTime startTime, LocalDateTime finishTime);
 }
