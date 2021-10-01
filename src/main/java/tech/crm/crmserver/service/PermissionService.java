@@ -2,6 +2,7 @@ package tech.crm.crmserver.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
+import org.apache.ibatis.annotations.Param;
 import tech.crm.crmserver.common.enums.PermissionLevel;
 import tech.crm.crmserver.dao.Permission;
 import tech.crm.crmserver.dto.DepartmentDTO;
@@ -135,4 +136,12 @@ public interface PermissionService extends IService<Permission> {
      * the required permissionLevel
      */
     public boolean ifPermissionLevelSatisfied(Integer userId, PermissionLevel permissionLevel, Integer departmentId);
+
+    /**
+     * Get Permission by user id And contact id
+     * @param userId the id of user
+     * @param contactId the id of contact
+     * @return the permission or null
+     */
+    public Permission getPermissionByUserIdAndContactId(Integer userId, Integer contactId);
 }

@@ -54,4 +54,14 @@ public interface OrganizationService extends IService<Organization> {
      */
     public void deleteOrganization(Integer organizationId);
 
+    /**
+     * transfer the owner of the organization to another user in organization<br/>
+     * only the owner of the organization has the permission to do that<br/>
+     * will update the permission of departments as well
+     * @param organizationId id of the organization
+     * @param from previous owner of organization
+     * @param to new owner of organization
+     */
+    public void transferOwnershipOfOrganization(Integer organizationId, Integer from, Integer to);
+
 }

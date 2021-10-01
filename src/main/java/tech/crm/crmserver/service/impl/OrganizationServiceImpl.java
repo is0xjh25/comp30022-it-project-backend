@@ -1,18 +1,21 @@
 package tech.crm.crmserver.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import tech.crm.crmserver.common.enums.PermissionLevel;
+import tech.crm.crmserver.dao.BelongTo;
 import tech.crm.crmserver.dao.Organization;
+import tech.crm.crmserver.dao.Permission;
 import tech.crm.crmserver.exception.NotEnoughPermissionException;
 import tech.crm.crmserver.exception.OrganizationNotExistException;
+import tech.crm.crmserver.exception.UserNotExistException;
 import tech.crm.crmserver.mapper.OrganizationMapper;
-import tech.crm.crmserver.service.BelongToService;
-import tech.crm.crmserver.service.DepartmentService;
-import tech.crm.crmserver.service.OrganizationService;
-import tech.crm.crmserver.service.UserService;
+import tech.crm.crmserver.service.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,6 +42,9 @@ public class OrganizationServiceImpl extends ServiceImpl<OrganizationMapper, Org
 
     @Autowired
     public BelongToService belongToService;
+
+    @Autowired
+    public PermissionService permissionService;
 
     /**
      * Get all the organization based on userId
@@ -119,5 +125,63 @@ public class OrganizationServiceImpl extends ServiceImpl<OrganizationMapper, Org
         belongToService.deleteBelongToByOrganizationId(organizationId);
         departmentService.deleteDepartmentByOrganizationId(organizationId);
         baseMapper.deleteById(organizationId);
+    }
+
+    /**
+     * transfer the owner of the organization to another user in organization<br/>
+     * only the owner of the organization has the permission to do that<br/>
+     * will update the permission of departments as well
+     *
+     * @param organizationId id of the organization
+     * @param from           previous owner of organization
+     * @param to             new owner of organization
+     */
+    @Override
+    public void transferOwnershipOfOrganization(Integer organizationId, Integer from, Integer to) {
+        Organization organization = baseMapper.selectById(organizationId);
+        if(organization == null){
+            throw new OrganizationNotExistException();
+        }
+        //not the owner of organization
+        if(!organization.getOwner().equals(from)){
+            throw new NotEnoughPermissionException();
+        }
+        //check whether the new owner exist
+        if(userService.getById(to) == null){
+            throw new UserNotExistException();
+        }
+        //add belongTo relationship for new owner
+        belongToService.insertNewBelongTo(organizationId,to);
+
+        //transfer the ownership
+        organization.setOwner(to);
+        baseMapper.updateById(organization);
+
+        //update permissions of previous owner
+        List<Integer> departmentIdList = departmentService.getDepartmentIdByOrganization(organizationId);
+
+        //delete permission first
+        QueryWrapper<Permission> permissionDeleteWrapper = new QueryWrapper<>();
+        permissionDeleteWrapper.in("user_id",from,to)
+                .in("department_id",departmentIdList);
+        permissionService.remove(permissionDeleteWrapper);
+
+        //add permission
+        List<Permission> permissionList = new ArrayList<>();
+        for (Integer departmentId: departmentIdList) {
+            //old owner
+            Permission permission = new Permission();
+            permission.setUserId(from);
+            permission.setDepartmentId(departmentId);
+            permission.setAuthorityLevel(PermissionLevel.MANAGE);
+            permissionList.add(permission);
+            //new owner
+            permission = new Permission();
+            permission.setUserId(to);
+            permission.setDepartmentId(departmentId);
+            permission.setAuthorityLevel(PermissionLevel.OWNER);
+            permissionList.add(permission);
+        }
+        permissionService.saveBatch(permissionList);
     }
 }

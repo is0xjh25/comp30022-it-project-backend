@@ -21,18 +21,18 @@ USE `testdb` ;
 CREATE TABLE IF NOT EXISTS `testdb`.`user` (
                                                `id` INT NOT NULL AUTO_INCREMENT,
                                                `email` VARCHAR(255) NOT NULL,
-                                               `password` VARCHAR(255) NOT NULL,
-                                               `first_name` VARCHAR(45) NOT NULL,
-                                               `middle_name` VARCHAR(45) NULL,
-                                               `last_name` VARCHAR(45) NOT NULL,
-                                               `phone` VARCHAR(45) NOT NULL,
-                                               `recent_activity` DATETIME,
-                                               `website` VARCHAR(255) NULL,
-                                               `description` LONGTEXT NULL,
-                                               `status` ENUM('active', 'deleted', 'pending') NOT NULL DEFAULT 'active',
-                                               PRIMARY KEY (`id`),
-                                               UNIQUE INDEX `name_UNIQUE` (`id` ASC),
-                                               UNIQUE INDEX `email_UNIQUE` (`email` ASC))
+    `password` VARCHAR(255) NOT NULL,
+    `first_name` VARCHAR(45) NOT NULL,
+    `middle_name` VARCHAR(45) NULL,
+    `last_name` VARCHAR(45) NOT NULL,
+    `phone` VARCHAR(45) NOT NULL,
+    `recent_activity` DATETIME,
+    `website` VARCHAR(255) NULL,
+    `description` LONGTEXT NULL,
+    `status` ENUM('active', 'deleted', 'pending') NOT NULL DEFAULT 'active',
+    PRIMARY KEY (`id`),
+    UNIQUE INDEX `name_UNIQUE` (`id` ASC),
+    UNIQUE INDEX `email_UNIQUE` (`email` ASC))
     ENGINE = InnoDB;
 
 
@@ -42,17 +42,17 @@ CREATE TABLE IF NOT EXISTS `testdb`.`user` (
 CREATE TABLE IF NOT EXISTS `testdb`.`organization` (
                                                        `id` INT NOT NULL AUTO_INCREMENT,
                                                        `name` VARCHAR(255) NOT NULL,
-                                                       `owner` INT NOT NULL,
-                                                       `status` ENUM('active', 'deleted') NOT NULL DEFAULT 'active',
-                                                       PRIMARY KEY (`id`),
-                                                       UNIQUE INDEX `name_UNIQUE` (`name` ASC) ,
-                                                       UNIQUE INDEX `id_UNIQUE` (`id` ASC) ,
-                                                       INDEX `fk_orgnization_client_idx` (`owner` ASC) ,
-                                                       CONSTRAINT `fk_orgnization_client`
-                                                           FOREIGN KEY (`owner`)
-                                                               REFERENCES `testdb`.`user` (`id`)
-                                                               ON DELETE NO ACTION
-                                                               ON UPDATE NO ACTION)
+    `owner` INT NOT NULL,
+    `status` ENUM('active', 'deleted') NOT NULL DEFAULT 'active',
+    PRIMARY KEY (`id`),
+    UNIQUE INDEX `name_UNIQUE` (`name` ASC) ,
+    UNIQUE INDEX `id_UNIQUE` (`id` ASC) ,
+    INDEX `fk_orgnization_client_idx` (`owner` ASC) ,
+    CONSTRAINT `fk_orgnization_client`
+    FOREIGN KEY (`owner`)
+    REFERENCES `testdb`.`user` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
     ENGINE = InnoDB;
 
 
@@ -62,16 +62,16 @@ CREATE TABLE IF NOT EXISTS `testdb`.`organization` (
 CREATE TABLE IF NOT EXISTS `testdb`.`department` (
                                                      `id` INT NOT NULL AUTO_INCREMENT,
                                                      `name` VARCHAR(255) NOT NULL,
-                                                     `organization_id` INT NOT NULL,
-                                                     `status` ENUM('active', 'deleted') NOT NULL DEFAULT 'active',
-                                                     PRIMARY KEY (`id`),
-                                                     UNIQUE INDEX `id_UNIQUE` (`id` ASC) ,
-                                                     INDEX `fk_department_orgnization1_idx` (`organization_id` ASC) ,
-                                                     CONSTRAINT `fk_department_orgnization1`
-                                                         FOREIGN KEY (`organization_id`)
-                                                             REFERENCES `testdb`.`organization` (`id`)
-                                                             ON DELETE NO ACTION
-                                                             ON UPDATE NO ACTION)
+    `organization_id` INT NOT NULL,
+    `status` ENUM('active', 'deleted') NOT NULL DEFAULT 'active',
+    PRIMARY KEY (`id`),
+    UNIQUE INDEX `id_UNIQUE` (`id` ASC) ,
+    INDEX `fk_department_orgnization1_idx` (`organization_id` ASC) ,
+    CONSTRAINT `fk_department_orgnization1`
+    FOREIGN KEY (`organization_id`)
+    REFERENCES `testdb`.`organization` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
     ENGINE = InnoDB;
 
 
@@ -82,25 +82,25 @@ CREATE TABLE IF NOT EXISTS `testdb`.`contact` (
                                                   `id` INT NOT NULL AUTO_INCREMENT,
                                                   `department_id` INT NOT NULL,
                                                   `email` VARCHAR(255) NOT NULL,
-                                                  `first_name` VARCHAR(45) NOT NULL,
-                                                  `middle_name` VARCHAR(45) NULL,
-                                                  `last_name` VARCHAR(45) NOT NULL,
-                                                  `phone` VARCHAR(45) NULL,
-                                                  `description` LONGTEXT NULL,
-                                                  `gender` ENUM('male', 'female', 'not specified') NULL,
-                                                  `birthday` DATE NULL,
-                                                  `address` VARCHAR(255) NULL,
-                                                  `organization` VARCHAR(255) NULL,
-                                                  `customer_type` ENUM('company', 'personal') NULL,
-                                                  `status` ENUM('active', 'deleted') NOT NULL DEFAULT 'active',
-                                                  PRIMARY KEY (`id`),
-                                                  UNIQUE INDEX `name_UNIQUE` (`id` ASC) ,
-                                                  INDEX `fk_customer_department1_idx` (`department_id` ASC) ,
-                                                  CONSTRAINT `fk_customer_department1`
-                                                      FOREIGN KEY (`department_id`)
-                                                          REFERENCES `testdb`.`department` (`id`)
-                                                          ON DELETE NO ACTION
-                                                          ON UPDATE NO ACTION)
+    `first_name` VARCHAR(45) NOT NULL,
+    `middle_name` VARCHAR(45) NULL,
+    `last_name` VARCHAR(45) NOT NULL,
+    `phone` VARCHAR(45) NULL,
+    `description` LONGTEXT NULL,
+    `gender` ENUM('male', 'female', 'not specified') NULL,
+    `birthday` DATE NULL,
+    `address` VARCHAR(255) NULL,
+    `organization` VARCHAR(255) NULL,
+    `customer_type` ENUM('company', 'personal') NULL,
+    `status` ENUM('active', 'deleted') NOT NULL DEFAULT 'active',
+    PRIMARY KEY (`id`),
+    UNIQUE INDEX `name_UNIQUE` (`id` ASC) ,
+    INDEX `fk_customer_department1_idx` (`department_id` ASC) ,
+    CONSTRAINT `fk_customer_department1`
+    FOREIGN KEY (`department_id`)
+    REFERENCES `testdb`.`department` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
     ENGINE = InnoDB;
 
 
@@ -113,15 +113,15 @@ CREATE TABLE IF NOT EXISTS `testdb`.`event` (
                                                 `start_time` DATETIME NOT NULL,
                                                 `finish_time` DATETIME NOT NULL,
                                                 `description` LONGTEXT NULL,
-                                                `status` ENUM('active', 'done', 'deleted') NOT NULL DEFAULT 'active',
-                                                PRIMARY KEY (`id`),
-                                                UNIQUE INDEX `id_UNIQUE` (`id` ASC) ,
-                                                INDEX `fk_order_client1_idx` (`user_id` ASC) ,
-                                                CONSTRAINT `fk_order_client10`
-                                                    FOREIGN KEY (`user_id`)
-                                                        REFERENCES `testdb`.`user` (`id`)
-                                                        ON DELETE NO ACTION
-                                                        ON UPDATE NO ACTION)
+                                                `status` ENUM('to do', 'in progress', 'done') NOT NULL DEFAULT 'to do',
+    PRIMARY KEY (`id`),
+    UNIQUE INDEX `id_UNIQUE` (`id` ASC) ,
+    INDEX `fk_order_client1_idx` (`user_id` ASC) ,
+    CONSTRAINT `fk_order_client10`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `testdb`.`user` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
     ENGINE = InnoDB;
 
 
@@ -133,19 +133,19 @@ CREATE TABLE IF NOT EXISTS `testdb`.`attend` (
                                                  `event_id` INT NOT NULL,
                                                  `contact_id` INT NOT NULL,
                                                  PRIMARY KEY (`id`),
-                                                 UNIQUE INDEX `id_UNIQUE` (`id` ASC) ,
-                                                 INDEX `fk_attend_event1_idx` (`event_id` ASC) ,
-                                                 INDEX `fk_attend_customer1_idx` (`contact_id` ASC) ,
-                                                 CONSTRAINT `fk_attend_event1`
-                                                     FOREIGN KEY (`event_id`)
-                                                         REFERENCES `testdb`.`event` (`id`)
-                                                         ON DELETE NO ACTION
-                                                         ON UPDATE NO ACTION,
-                                                 CONSTRAINT `fk_attend_customer1`
-                                                     FOREIGN KEY (`contact_id`)
-                                                         REFERENCES `testdb`.`contact` (`id`)
-                                                         ON DELETE NO ACTION
-                                                         ON UPDATE NO ACTION)
+    UNIQUE INDEX `id_UNIQUE` (`id` ASC) ,
+    INDEX `fk_attend_event1_idx` (`event_id` ASC) ,
+    INDEX `fk_attend_customer1_idx` (`contact_id` ASC) ,
+    CONSTRAINT `fk_attend_event1`
+    FOREIGN KEY (`event_id`)
+    REFERENCES `testdb`.`event` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+    CONSTRAINT `fk_attend_customer1`
+    FOREIGN KEY (`contact_id`)
+    REFERENCES `testdb`.`contact` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
     ENGINE = InnoDB;
 
 
@@ -157,20 +157,20 @@ CREATE TABLE IF NOT EXISTS `testdb`.`belong_to` (
                                                     `user_id` INT NOT NULL,
                                                     `organization_id` INT NOT NULL,
                                                     `status` ENUM('active', 'deleted') NOT NULL DEFAULT 'active',
-                                                    INDEX `fk_belong_to_client1_idx` (`user_id` ASC) ,
-                                                    INDEX `fk_belong_to_orgnization1_idx` (`organization_id` ASC) ,
-                                                    PRIMARY KEY (`id`),
-                                                    UNIQUE INDEX `id_UNIQUE` (`id` ASC) ,
-                                                    CONSTRAINT `fk_belong_to_client1`
-                                                        FOREIGN KEY (`user_id`)
-                                                            REFERENCES `testdb`.`user` (`id`)
-                                                            ON DELETE NO ACTION
-                                                            ON UPDATE NO ACTION,
-                                                    CONSTRAINT `fk_belong_to_orgnization1`
-                                                        FOREIGN KEY (`organization_id`)
-                                                            REFERENCES `testdb`.`organization` (`id`)
-                                                            ON DELETE NO ACTION
-                                                            ON UPDATE NO ACTION)
+    INDEX `fk_belong_to_client1_idx` (`user_id` ASC) ,
+    INDEX `fk_belong_to_orgnization1_idx` (`organization_id` ASC) ,
+    PRIMARY KEY (`id`),
+    UNIQUE INDEX `id_UNIQUE` (`id` ASC) ,
+    CONSTRAINT `fk_belong_to_client1`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `testdb`.`user` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+    CONSTRAINT `fk_belong_to_orgnization1`
+    FOREIGN KEY (`organization_id`)
+    REFERENCES `testdb`.`organization` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
     ENGINE = InnoDB;
 
 
@@ -183,20 +183,20 @@ CREATE TABLE IF NOT EXISTS `testdb`.`permission` (
                                                      `department_id` INT NOT NULL,
                                                      `authority_level` INT NOT NULL DEFAULT 0,
                                                      `status` ENUM('active', 'deleted', 'pending') NOT NULL DEFAULT 'active',
-                                                     INDEX `fk_belong_to_client1_idx` (`user_id` ASC) ,
-                                                     PRIMARY KEY (`id`),
-                                                     UNIQUE INDEX `id_UNIQUE` (`id` ASC) ,
-                                                     INDEX `fk_belong_to_copy1_department1_idx` (`department_id` ASC) ,
-                                                     CONSTRAINT `fk_belong_to_client10`
-                                                         FOREIGN KEY (`user_id`)
-                                                             REFERENCES `testdb`.`user` (`id`)
-                                                             ON DELETE NO ACTION
-                                                             ON UPDATE NO ACTION,
-                                                     CONSTRAINT `fk_belong_to_copy1_department1`
-                                                         FOREIGN KEY (`department_id`)
-                                                             REFERENCES `testdb`.`department` (`id`)
-                                                             ON DELETE NO ACTION
-                                                             ON UPDATE NO ACTION)
+    INDEX `fk_belong_to_client1_idx` (`user_id` ASC) ,
+    PRIMARY KEY (`id`),
+    UNIQUE INDEX `id_UNIQUE` (`id` ASC) ,
+    INDEX `fk_belong_to_copy1_department1_idx` (`department_id` ASC) ,
+    CONSTRAINT `fk_belong_to_client10`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `testdb`.`user` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+    CONSTRAINT `fk_belong_to_copy1_department1`
+    FOREIGN KEY (`department_id`)
+    REFERENCES `testdb`.`department` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
     ENGINE = InnoDB;
 
 
@@ -208,15 +208,15 @@ CREATE TABLE IF NOT EXISTS `testdb`.`to_do_list` (
                                                      `user_id` INT NOT NULL,
                                                      `date_time` DATETIME NOT NULL,
                                                      `description` LONGTEXT NULL,
-                                                     `status` ENUM('active', 'done', 'deleted') NOT NULL DEFAULT 'active',
-                                                     PRIMARY KEY (`id`),
-                                                     UNIQUE INDEX `id_UNIQUE` (`id` ASC) ,
-                                                     INDEX `fk_order_client1_idx` (`user_id` ASC) ,
-                                                     CONSTRAINT `fk_order_client100`
-                                                         FOREIGN KEY (`user_id`)
-                                                             REFERENCES `testdb`.`user` (`id`)
-                                                             ON DELETE NO ACTION
-                                                             ON UPDATE NO ACTION)
+                                                     `status` ENUM('to do', 'in progress', 'done') NOT NULL DEFAULT 'to do',
+    PRIMARY KEY (`id`),
+    UNIQUE INDEX `id_UNIQUE` (`id` ASC) ,
+    INDEX `fk_order_client1_idx` (`user_id` ASC) ,
+    CONSTRAINT `fk_order_client100`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `testdb`.`user` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
     ENGINE = InnoDB;
 
 
@@ -228,18 +228,18 @@ CREATE TABLE IF NOT EXISTS `testdb`.`recent_contact` (
                                                          `user_id` INT NOT NULL,
                                                          `last_contact` DATETIME NOT NULL,
                                                          INDEX `fk_order_customer1_idx` (`contact_id` ASC) ,
-                                                         INDEX `fk_order_client1_idx` (`user_id` ASC) ,
-                                                         PRIMARY KEY (`contact_id`, `user_id`),
-                                                         CONSTRAINT `fk_order_customer10`
-                                                             FOREIGN KEY (`contact_id`)
-                                                                 REFERENCES `testdb`.`contact` (`id`)
-                                                                 ON DELETE NO ACTION
-                                                                 ON UPDATE NO ACTION,
-                                                         CONSTRAINT `fk_order_client11`
-                                                             FOREIGN KEY (`user_id`)
-                                                                 REFERENCES `testdb`.`user` (`id`)
-                                                                 ON DELETE NO ACTION
-                                                                 ON UPDATE NO ACTION)
+    INDEX `fk_order_client1_idx` (`user_id` ASC) ,
+    PRIMARY KEY (`contact_id`, `user_id`),
+    CONSTRAINT `fk_order_customer10`
+    FOREIGN KEY (`contact_id`)
+    REFERENCES `testdb`.`contact` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+    CONSTRAINT `fk_order_client11`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `testdb`.`user` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
     ENGINE = InnoDB;
 
 
@@ -250,15 +250,15 @@ CREATE TABLE IF NOT EXISTS `testdb`.`token_key` (
                                                     `id` INT NOT NULL AUTO_INCREMENT,
                                                     `user_id` INT NOT NULL,
                                                     `jwt_key` VARCHAR(255) NOT NULL,
-                                                    `expired_time` DATETIME NOT NULL,
-                                                    PRIMARY KEY (`id`),
-                                                    UNIQUE INDEX `idtoken_UNIQUE` (`id` ASC) ,
-                                                    INDEX `fk_token_user1_idx` (`user_id` ASC) ,
-                                                    CONSTRAINT `fk_token_user1`
-                                                        FOREIGN KEY (`user_id`)
-                                                            REFERENCES `testdb`.`user` (`id`)
-                                                            ON DELETE NO ACTION
-                                                            ON UPDATE NO ACTION)
+    `expired_time` DATETIME NOT NULL,
+    PRIMARY KEY (`id`),
+    UNIQUE INDEX `idtoken_UNIQUE` (`id` ASC) ,
+    INDEX `fk_token_user1_idx` (`user_id` ASC) ,
+    CONSTRAINT `fk_token_user1`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `testdb`.`user` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
     ENGINE = InnoDB;
 
 

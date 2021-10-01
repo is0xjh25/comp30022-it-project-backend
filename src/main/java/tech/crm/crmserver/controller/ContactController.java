@@ -12,12 +12,10 @@ import tech.crm.crmserver.dto.ContactCreateDTO;
 import tech.crm.crmserver.dto.ContactDTO;
 import tech.crm.crmserver.dto.ContactUpdateDTO;
 import tech.crm.crmserver.exception.*;
-import tech.crm.crmserver.service.ContactService;
-import tech.crm.crmserver.service.DepartmentService;
-import tech.crm.crmserver.service.PermissionService;
-import tech.crm.crmserver.service.UserService;
+import tech.crm.crmserver.service.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 /**
  * <p>
@@ -38,7 +36,7 @@ public class ContactController {
     private UserService userService;
 
     @Autowired
-    private DepartmentService departmentService;
+    private RecentContactService recentContactService;
 
     @Autowired
     private PermissionService permissionService;
@@ -51,8 +49,18 @@ public class ContactController {
      */
     @GetMapping("/detail")
     public ResponseResult<Object> getContactById(@RequestParam("contact_id") Integer contactId){
+        //check permission
+        Permission myPermission = permissionService.getPermissionByUserIdAndContactId(userService.getId(), contactId);
+        if (myPermission == null || myPermission.getAuthorityLevel().getLevel() < PermissionLevel.DISPLAY.getLevel()) {
+            throw new NotEnoughPermissionException();
+        }
+
+        //get contact detail
         Contact contact = contactService.getById(contactId);
         if (contact != null) {
+            //update recent contact
+            recentContactService.saveOrUpdateRecentContactByUserId(userService.getId(),contactId);
+            //transfer to contactDTO
             ContactDTO contactDTO = contactService.ContactToContactDTO(contact);
             return ResponseResult.suc("success", contactDTO);
         }
@@ -149,6 +157,17 @@ public class ContactController {
         }
         Page<ContactDTO> contactDTOPage = contactService.searchContactDTO(new Page<>(current, size), departmentId, searchKey);
         return ResponseResult.suc("success",contactDTOPage);
+    }
+
+    /**
+     * Search contacts by some details and search all contact of this user
+     * @param searchKey search key
+     * @return ResponseResult about if the search success, or why it fail
+     */
+    @GetMapping("/searchAll")
+    public ResponseResult<Object> searchAllContactOfUser(@RequestParam("search_key") String searchKey){
+        List<Contact> contacts = contactService.searchAllContactOfUser(userService.getId(), searchKey);
+        return ResponseResult.suc("success",contacts);
     }
 }
 

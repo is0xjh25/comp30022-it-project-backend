@@ -321,4 +321,16 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
         }
         return true;
     }
+
+    /**
+     * Get Permission by user id And contact id
+     *
+     * @param userId    the id of user
+     * @param contactId the id of contact
+     * @return the permission or null
+     */
+    @Override
+    public Permission getPermissionByUserIdAndContactId(Integer userId, Integer contactId) {
+        return baseMapper.getPermissionByUserIdAndContactId(userId,contactId);
+    }
 }
