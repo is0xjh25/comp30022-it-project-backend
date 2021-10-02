@@ -58,7 +58,10 @@ public class ToDoListServiceImpl extends ServiceImpl<ToDoListMapper, ToDoList> i
             queryWrapper.eq("user_id", userId);
         }
         if (description != null) {
-            queryWrapper.eq("start_time", dateTime);
+            queryWrapper.eq("description", description);
+        }
+        if (dateTime != null) {
+            queryWrapper.eq("date_time", dateTime);
         }
         if (toDoListStatus != null) {
             queryWrapper.eq("status", toDoListStatus.getStatus());
@@ -97,7 +100,7 @@ public class ToDoListServiceImpl extends ServiceImpl<ToDoListMapper, ToDoList> i
     public boolean createTodoList(Integer userId, TodoListCreateDTO todoListCreateDTO) {
         ToDoList toDoList = new ToDoList();
         toDoList.setUserId(userId);
-        toDoList.setStartTime(todoListCreateDTO.getDateTime());
+        toDoList.setDateTime(todoListCreateDTO.getDateTime());
         toDoList.setDescription(todoListCreateDTO.getDescription());
         toDoList.setStatus(todoListCreateDTO.getStatus());
         return save(toDoList);
@@ -113,15 +116,16 @@ public class ToDoListServiceImpl extends ServiceImpl<ToDoListMapper, ToDoList> i
     @Override
     public boolean updateTodoListByTodoListDTO(TodoListUpdateDTO todoListDTO, Integer userId) {
         ToDoList newTodo = toDoListService.fromTodoListUpdateDTO(todoListDTO);
-        if (!newTodo.getUserId().equals(userId)) {
-            throw new NotEnoughPermissionException();
-        }
+
 
         ToDoList oldTodo = toDoListService.getById(newTodo.getId());
-
         // check if the target todolist exists or not
         if (oldTodo == null){
             throw new ToDoListNotExistException();
+        }
+
+        if (!oldTodo.getUserId().equals(userId)) {
+            throw new NotEnoughPermissionException();
         }
 
         return toDoListService.updateTodoList(newTodo);
@@ -164,13 +168,13 @@ public class ToDoListServiceImpl extends ServiceImpl<ToDoListMapper, ToDoList> i
     @Override
     public boolean deleteTodoListByTodoListId(Integer todoListId, Integer userId) {
         ToDoList todolist = toDoListService.getById(todoListId);
-        if (!todolist.getUserId().equals(userId)) {
-            throw new NotEnoughPermissionException();
-        }
-
         // check if the target todolist exists or not
         if (todolist == null){
             throw new ToDoListNotExistException();
+        }
+
+        if (!todolist.getUserId().equals(userId)) {
+            throw new NotEnoughPermissionException();
         }
 
         return removeById(todoListId);

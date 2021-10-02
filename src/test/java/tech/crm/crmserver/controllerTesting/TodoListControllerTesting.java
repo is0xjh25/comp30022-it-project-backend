@@ -115,10 +115,9 @@ public class TodoListControllerTesting {
         // Try to insert a new to-do list
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post("/toDoList").header(SecurityConstants.TOKEN_HEADER, token)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(
-                        "{\n" +
-                        "   \"date_time\" : \"" + dateTime + "\", \n" +
-                        "   \"description\": \"" + description + "\" \n" +
+                .content("{\n" +
+                        "   \"date_time\" : \"" + startTime + "\", \n" +
+                        "   \"description\": \"" + description + "\", \n" +
                         "   \"status\": \"to do\" \n" +
                         "}"
                 ))
@@ -129,6 +128,7 @@ public class TodoListControllerTesting {
         List<ToDoList> testInsert = toDoListService.queryTodoList(null, null, description, null, null);
         ToDoList test = testInsert.get(0);
         Integer testId = test.getId();
+        System.out.println(test);
         assert (test.getDateTime().equals(dateTime));
         assert (test.getDescription().equals(description));
 
@@ -144,8 +144,8 @@ public class TodoListControllerTesting {
                 .content(
                         "{\n" +
                         "   \"id\" : \"" + String.valueOf(testId) + "\", \n" +
-                        "   \"date_time\" : \"" + dateTimeUpdate + "\", \n" +
-                        "   \"description\": \"" + descriptionUpdate + "\" \n" +
+                        "   \"date_time\" : \"" + startUpdate + "\", \n" +
+                        "   \"description\": \"" + descriptionUpdate + "\", \n" +
                         "   \"status\": \"to do\" \n" +
                         "}"
 
@@ -179,8 +179,8 @@ public class TodoListControllerTesting {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(
                                 "{\n" +
-                                    " \"date_time\" : \"" + dateTime + "\", \n" +
-                                    " \"description\": \"" + description + "\" \n" +
+                                    " \"date_time\" : \"" + startTime + "\", \n" +
+                                    " \"description\": \"" + description + "\", \n" +
                                     " \"status\": \"to do\" \n" +
                                 "}"
                         ))
@@ -195,13 +195,12 @@ public class TodoListControllerTesting {
         assert (test.getDescription().equals(description));
 
         // Try to delete this data
-        MvcResult mvcResultDelete = mvc.perform(MockMvcRequestBuilders.delete("/toDoList").header(SecurityConstants.TOKEN_HEADER, token))
+        MvcResult mvcResultDelete = mvc.perform(MockMvcRequestBuilders.delete("/toDoList").param("todoList_id", String.valueOf(testId)).header(SecurityConstants.TOKEN_HEADER, token))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn();
 
         // Check if the deleting is successful
         List<ToDoList> testDelete = toDoListService.queryTodoList(testId, null, null, null, null);
-        assert (testDelete == null);
+        assert (testDelete.size() == 0);
     }
-
 }
