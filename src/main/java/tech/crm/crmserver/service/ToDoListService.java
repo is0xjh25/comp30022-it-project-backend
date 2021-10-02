@@ -26,16 +26,14 @@ public interface ToDoListService extends IService<ToDoList> {
      * @param id the id of the todoList data
      * @param userId the user id of the todoList data
      * @param description the description of the todoList data
-     * @param startTime the start data of the todoList data
-     * @param finishTime the due data of the todoList data
+     * @param dateTime the start data of the todoList data
      * @param toDoListStatus the status of the todoList data
      * @return a list of match data
      */
     public List<ToDoList> queryTodoList(Integer id,
                                         Integer userId,
                                         String description,
-                                        LocalDateTime startTime,
-                                        LocalDateTime finishTime,
+                                        LocalDateTime dateTime,
                                         ToDoListStatus toDoListStatus);
 
     /**

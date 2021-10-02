@@ -31,10 +31,7 @@ public class TodoListUpdateDTO {
     private Integer id;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm", shape = JsonFormat.Shape.STRING)
-    private LocalDateTime startTime;
-
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm", shape = JsonFormat.Shape.STRING)
-    private LocalDateTime finishTime;
+    private LocalDateTime dateTime;
 
     private String description;
 

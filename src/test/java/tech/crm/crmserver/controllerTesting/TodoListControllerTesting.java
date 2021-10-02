@@ -72,12 +72,10 @@ public class TodoListControllerTesting {
                         "}"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn();
-        String startTime = "2021-01-01 19:00";
+        String str = "2021-01-01 19:00";
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-        LocalDateTime dateTimeStart = LocalDateTime.parse(startTime, formatter);
-        String finishTime = "2021-01-01 20:00";
-        LocalDateTime dateTimeFinish = LocalDateTime.parse(startTime, formatter);
-        List<ToDoList> test = toDoListService.queryTodoList(null, null, "test", dateTimeStart, dateTimeFinish, ToDoListStatus.TO_DO);
+        LocalDateTime dateTime = LocalDateTime.parse(str, formatter);
+        List<ToDoList> test = toDoListService.queryTodoList(null, null, "test", dateTime, ToDoListStatus.TO_DO);
         assert (test.size() == 1);
         // contactId = contactBasedOnSomeConditionFromDB.get(0).getId();
         // assert (contactBasedOnSomeConditionFromDB.size() == 1);
@@ -110,10 +108,7 @@ public class TodoListControllerTesting {
         // Create mock data and check its format
         String startTime = "2021-02-02 20:00";
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-        LocalDateTime dateTimeStart = LocalDateTime.parse(startTime, formatter);
-
-        String finishTime = "2021-02-02 22:00";
-        LocalDateTime dateTimeFinish = LocalDateTime.parse(finishTime, formatter);
+        LocalDateTime dateTime = LocalDateTime.parse(startTime, formatter);
 
         String description = "Watch Moc lecture";
 
@@ -122,28 +117,24 @@ public class TodoListControllerTesting {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(
                         "{\n" +
-                        "   \"start_time\" : \"" + dateTimeStart + "\", \n" +
-                        "   \"finish_time\": \"" + dateTimeFinish + "\", \n" +
+                        "   \"date_time\" : \"" + dateTime + "\", \n" +
                         "   \"description\": \"" + description + "\" \n" +
+                        "   \"status\": \"to do\" \n" +
                         "}"
                 ))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn();
 
         // Check if the insert is successful
-        List<ToDoList> testInsert = toDoListService.queryTodoList(null, null, description, null, null, null);
+        List<ToDoList> testInsert = toDoListService.queryTodoList(null, null, description, null, null);
         ToDoList test = testInsert.get(0);
         Integer testId = test.getId();
-        assert (test.getStartTime().equals(dateTimeStart));
-        assert (test.getFinishTime().equals(dateTimeFinish));
+        assert (test.getDateTime().equals(dateTime));
         assert (test.getDescription().equals(description));
 
         // Create mock update data and check its format
         String startUpdate = "2021-10-02 20:00";
-        LocalDateTime dateTimeStartUpdate = LocalDateTime.parse(startUpdate, formatter);
-
-        String finishUpdate = "2021-10-02 22:00";
-        LocalDateTime dateTimeFinishUpdate = LocalDateTime.parse(finishUpdate, formatter);
+        LocalDateTime dateTimeUpdate = LocalDateTime.parse(startUpdate, formatter);
 
         String descriptionUpdate = "Watch GI lecture";
 
@@ -153,9 +144,9 @@ public class TodoListControllerTesting {
                 .content(
                         "{\n" +
                         "   \"id\" : \"" + String.valueOf(testId) + "\", \n" +
-                        "   \"start_time\" : \"" + dateTimeStartUpdate + "\", \n" +
-                        "   \"finish_time\": \"" + dateTimeFinishUpdate + "\", \n" +
+                        "   \"date_time\" : \"" + dateTimeUpdate + "\", \n" +
                         "   \"description\": \"" + descriptionUpdate + "\" \n" +
+                        "   \"status\": \"to do\" \n" +
                         "}"
 
                 ))
@@ -163,9 +154,8 @@ public class TodoListControllerTesting {
                 .andReturn();
 
         // Check if the update is successful
-        List<ToDoList> testUpdate = toDoListService.queryTodoList(testId, null, null, null, null, null);
-        assert (testUpdate.get(0).getStartTime().equals(startUpdate));
-        assert (testUpdate.get(0).getFinishTime().equals(finishUpdate));
+        List<ToDoList> testUpdate = toDoListService.queryTodoList(testId, null, null, null, null);
+        assert (testUpdate.get(0).getDateTime().equals(dateTimeUpdate));
         assert (testUpdate.get(0).getDescription().equals(descriptionUpdate));
     }
 
@@ -180,10 +170,7 @@ public class TodoListControllerTesting {
         // Create mock data and check its format
         String startTime = "2021-02-02 20:00";
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-        LocalDateTime dateTimeStart = LocalDateTime.parse(startTime, formatter);
-
-        String finishTime = "2021-02-02 22:00";
-        LocalDateTime dateTimeFinish = LocalDateTime.parse(finishTime, formatter);
+        LocalDateTime dateTime = LocalDateTime.parse(startTime, formatter);
 
         String description = "Watch Moc lecture";
 
@@ -192,20 +179,19 @@ public class TodoListControllerTesting {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(
                                 "{\n" +
-                                    " \"start_time\" : \"" + dateTimeStart + "\", \n" +
-                                    " \"finish_time\": \"" + dateTimeFinish + "\", \n" +
+                                    " \"date_time\" : \"" + dateTime + "\", \n" +
                                     " \"description\": \"" + description + "\" \n" +
+                                    " \"status\": \"to do\" \n" +
                                 "}"
                         ))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn();
 
         // Check if the insert is successful
-        List<ToDoList> testInsert = toDoListService.queryTodoList(null, null, description, null, null, null);
+        List<ToDoList> testInsert = toDoListService.queryTodoList(null, null, description, null, null);
         ToDoList test = testInsert.get(0);
         Integer testId = test.getId();
-        assert (test.getStartTime().equals(dateTimeStart));
-        assert (test.getFinishTime().equals(dateTimeFinish));
+        assert (test.getDateTime().equals(dateTime));
         assert (test.getDescription().equals(description));
 
         // Try to delete this data
@@ -214,7 +200,7 @@ public class TodoListControllerTesting {
                 .andReturn();
 
         // Check if the deleting is successful
-        List<ToDoList> testDelete = toDoListService.queryTodoList(testId, null, null, null, null, null);
+        List<ToDoList> testDelete = toDoListService.queryTodoList(testId, null, null, null, null);
         assert (testDelete == null);
     }
 

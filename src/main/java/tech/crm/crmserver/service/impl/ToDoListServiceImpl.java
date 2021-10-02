@@ -40,8 +40,7 @@ public class ToDoListServiceImpl extends ServiceImpl<ToDoListMapper, ToDoList> i
      * @param id the id of the todoList data
      * @param userId the user id of the todoList data
      * @param description the description of the todoList data
-     * @param startTime the start data of the todoList data
-     * @param finishTime the due data of the todoList data
+     * @param dateTime the start data of the todoList data
      * @param toDoListStatus the status of the todoList data
      * @return a list of match data
      */
@@ -49,8 +48,7 @@ public class ToDoListServiceImpl extends ServiceImpl<ToDoListMapper, ToDoList> i
     public List<ToDoList> queryTodoList(Integer id,
                                         Integer userId,
                                         String description,
-                                        LocalDateTime startTime,
-                                        LocalDateTime finishTime,
+                                        LocalDateTime dateTime,
                                         ToDoListStatus toDoListStatus) {
     QueryWrapper<ToDoList> queryWrapper = new QueryWrapper<>();
         if (id != null) {
@@ -60,10 +58,7 @@ public class ToDoListServiceImpl extends ServiceImpl<ToDoListMapper, ToDoList> i
             queryWrapper.eq("user_id", userId);
         }
         if (description != null) {
-            queryWrapper.eq("start_time", startTime);
-        }
-        if (description != null) {
-            queryWrapper.eq("finish_time", finishTime);
+            queryWrapper.eq("start_time", dateTime);
         }
         if (toDoListStatus != null) {
             queryWrapper.eq("status", toDoListStatus.getStatus());
@@ -102,8 +97,7 @@ public class ToDoListServiceImpl extends ServiceImpl<ToDoListMapper, ToDoList> i
     public boolean createTodoList(Integer userId, TodoListCreateDTO todoListCreateDTO) {
         ToDoList toDoList = new ToDoList();
         toDoList.setUserId(userId);
-        toDoList.setStartTime(todoListCreateDTO.getStartTime());
-        toDoList.setFinishTime(todoListCreateDTO.getFinishTime());
+        toDoList.setStartTime(todoListCreateDTO.getDateTime());
         toDoList.setDescription(todoListCreateDTO.getDescription());
         toDoList.setStatus(todoListCreateDTO.getStatus());
         return save(toDoList);
