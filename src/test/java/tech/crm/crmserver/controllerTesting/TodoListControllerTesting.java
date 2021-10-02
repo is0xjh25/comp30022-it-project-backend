@@ -169,4 +169,53 @@ public class TodoListControllerTesting {
         assert (testUpdate.get(0).getDescription().equals(descriptionUpdate));
     }
 
+    /**
+     * Testing delete a to-do list
+     * @throws Exception
+     */
+    @Test
+    @Order(4)
+    @Transactional
+    public void testDDeleteToDoListData() throws Exception {
+        // Create mock data and check its format
+        String startTime = "2021-02-02 20:00";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        LocalDateTime dateTimeStart = LocalDateTime.parse(startTime, formatter);
+
+        String finishTime = "2021-02-02 22:00";
+        LocalDateTime dateTimeFinish = LocalDateTime.parse(finishTime, formatter);
+
+        String description = "Watch Moc lecture";
+
+        // Try to insert a new to-do list
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post("/toDoList").header(SecurityConstants.TOKEN_HEADER, token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(
+                                "{\n" +
+                                    " \"start_time\" : \"" + dateTimeStart + "\", \n" +
+                                    " \"finish_time\": \"" + dateTimeFinish + "\", \n" +
+                                    " \"description\": \"" + description + "\" \n" +
+                                "}"
+                        ))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn();
+
+        // Check if the insert is successful
+        List<ToDoList> testInsert = toDoListService.queryTodoList(null, null, description, null, null, null);
+        ToDoList test = testInsert.get(0);
+        Integer testId = test.getId();
+        assert (test.getStartTime().equals(dateTimeStart));
+        assert (test.getFinishTime().equals(dateTimeFinish));
+        assert (test.getDescription().equals(description));
+
+        // Try to delete this data
+        MvcResult mvcResultDelete = mvc.perform(MockMvcRequestBuilders.delete("/toDoList").header(SecurityConstants.TOKEN_HEADER, token))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn();
+
+        // Check if the deleting is successful
+        List<ToDoList> testDelete = toDoListService.queryTodoList(testId, null, null, null, null, null);
+        assert (testDelete == null);
+    }
+
 }
