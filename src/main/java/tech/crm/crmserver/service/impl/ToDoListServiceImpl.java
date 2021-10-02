@@ -93,7 +93,8 @@ public class ToDoListServiceImpl extends ServiceImpl<ToDoListMapper, ToDoList> i
     public boolean createTodoList(Integer userId, TodoListCreateDTO todoListCreateDTO) {
         ToDoList toDoList = new ToDoList();
         toDoList.setUserId(userId);
-        toDoList.setDateTime(todoListCreateDTO.getDateTime());
+        toDoList.setStartTime(todoListCreateDTO.getStartTime());
+        toDoList.setFinishTime(todoListCreateDTO.getFinishTime());
         toDoList.setDescription(todoListCreateDTO.getDescription());
         toDoList.setStatus(todoListCreateDTO.getStatus());
         return save(toDoList);

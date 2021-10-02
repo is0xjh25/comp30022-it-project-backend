@@ -36,7 +36,9 @@ public class ToDoList implements Serializable {
 
     private Integer userId;
 
-    private LocalDateTime dateTime;
+    private LocalDateTime startTime;
+
+    private LocalDateTime finishTime;
 
     private String description;
 

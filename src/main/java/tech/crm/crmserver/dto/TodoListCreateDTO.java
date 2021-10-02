@@ -22,8 +22,11 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class TodoListCreateDTO {
 
-    @NotNull(message = "Date time could not be null")
-    private LocalDateTime dateTime;
+    @NotNull(message = "Start time could not be null")
+    private LocalDateTime startTime;
+
+    @NotNull(message = "Finish time could not be null")
+    private LocalDateTime finishTime;
 
     @NotNull(message = "Description could not be null")
     private String description;

@@ -131,7 +131,9 @@ public class TodoListControllerTesting {
         List<ToDoList> testInsert = toDoListService.queryTodoList(null, null, description, null, null);
         ToDoList test = testInsert.get(0);
         Integer testId = test.getId();
-        assert(test.get)
+        assert (test.getStartTime().equals(dateTimeStart));
+        assert (test.getFinishTime().equals(dateTimeFinish));
+        assert (test.getDescription().equals(description));
 
 
         // try update
