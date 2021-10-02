@@ -12,6 +12,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.transaction.annotation.Transactional;
 import tech.crm.crmserver.common.constants.SecurityConstants;
 import tech.crm.crmserver.common.enums.ToDoListStatus;
 import tech.crm.crmserver.dao.ToDoList;
@@ -94,6 +95,48 @@ public class TodoListControllerTesting {
                 .andReturn();
         // contactId = contactBasedOnSomeConditionFromDB.get(0).getId();
         // assert (contactBasedOnSomeConditionFromDB.size() == 1);
+    }
+
+    /**
+     * Testing update toDoList data for a user
+     * @throws Exception
+     */
+    @Test
+    @Order(3)
+    @Transactional
+    public void testCUpdateToDoListData() throws Exception {
+        // Create mock data and check its format
+        String startTime = "2021-02-02 20:00";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        LocalDateTime dateTimeStart = LocalDateTime.parse(startTime, formatter);
+
+        String finishTime = "2021-02-02 22:00";
+        LocalDateTime dateTimeFinish = LocalDateTime.parse(finishTime, formatter);
+
+        String description = "Watch Moc lecture";
+
+        // Insert a new to-do list
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.put("/toDoList").header(SecurityConstants.TOKEN_HEADER, token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\n" +
+                        "   \"start_time\" : \"" + dateTimeStart + "\", \n" +
+                        "   \"finish_time\": \"" + dateTimeFinish + "\", \n" +
+                        "   \"description\": \"" + description + "\" \n" +
+                        "}"
+                ))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn();
+
+        // Check if the insert is successful
+        List<ToDoList> testInsert = toDoListService.queryTodoList(null, null, description, null, null);
+        ToDoList test = testInsert.get(0);
+        Integer testId = test.getId();
+        assert(test.get)
+
+
+        // try update
+
+        // check if it's successful
     }
 
 }
