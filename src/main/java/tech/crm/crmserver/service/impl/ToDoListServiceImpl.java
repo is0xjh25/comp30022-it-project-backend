@@ -40,13 +40,19 @@ public class ToDoListServiceImpl extends ServiceImpl<ToDoListMapper, ToDoList> i
      * @param id the id of the todoList data
      * @param userId the user id of the todoList data
      * @param description the description of the todoList data
-     * @param dateTime the due data of the todoList data
+     * @param startTime the start data of the todoList data
+     * @param finishTime the due data of the todoList data
      * @param toDoListStatus the status of the todoList data
      * @return a list of match data
      */
     @Override
-    public List<ToDoList> queryTodoList(Integer id, Integer userId, String description, LocalDateTime dateTime, ToDoListStatus toDoListStatus) {
-        QueryWrapper<ToDoList> queryWrapper = new QueryWrapper<>();
+    public List<ToDoList> queryTodoList(Integer id,
+                                        Integer userId,
+                                        String description,
+                                        LocalDateTime startTime,
+                                        LocalDateTime finishTime,
+                                        ToDoListStatus toDoListStatus) {
+    QueryWrapper<ToDoList> queryWrapper = new QueryWrapper<>();
         if (id != null) {
             queryWrapper.eq("id", id);
         }
@@ -54,7 +60,10 @@ public class ToDoListServiceImpl extends ServiceImpl<ToDoListMapper, ToDoList> i
             queryWrapper.eq("user_id", userId);
         }
         if (description != null) {
-            queryWrapper.eq("date_time", dateTime);
+            queryWrapper.eq("start_time", startTime);
+        }
+        if (description != null) {
+            queryWrapper.eq("finish_time", finishTime);
         }
         if (toDoListStatus != null) {
             queryWrapper.eq("status", toDoListStatus.getStatus());

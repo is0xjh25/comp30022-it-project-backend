@@ -72,10 +72,12 @@ public class TodoListControllerTesting {
                         "}"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn();
-        String str = "2021-01-01 19:00";
+        String startTime = "2021-01-01 19:00";
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-        LocalDateTime dateTime = LocalDateTime.parse(str, formatter);
-        List<ToDoList> test = toDoListService.queryTodoList(null, null, "test", dateTime, ToDoListStatus.TO_DO);
+        LocalDateTime dateTimeStart = LocalDateTime.parse(startTime, formatter);
+        String finishTime = "2021-01-01 20:00";
+        LocalDateTime dateTimeFinish = LocalDateTime.parse(startTime, formatter);
+        List<ToDoList> test = toDoListService.queryTodoList(null, null, "test", dateTimeStart, dateTimeFinish, ToDoListStatus.TO_DO);
         assert (test.size() == 1);
         // contactId = contactBasedOnSomeConditionFromDB.get(0).getId();
         // assert (contactBasedOnSomeConditionFromDB.size() == 1);
@@ -115,10 +117,11 @@ public class TodoListControllerTesting {
 
         String description = "Watch Moc lecture";
 
-        // Insert a new to-do list
-        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.put("/toDoList").header(SecurityConstants.TOKEN_HEADER, token)
+        // Try to insert a new to-do list
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post("/toDoList").header(SecurityConstants.TOKEN_HEADER, token)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\n" +
+                .content(
+                        "{\n" +
                         "   \"start_time\" : \"" + dateTimeStart + "\", \n" +
                         "   \"finish_time\": \"" + dateTimeFinish + "\", \n" +
                         "   \"description\": \"" + description + "\" \n" +
@@ -128,17 +131,42 @@ public class TodoListControllerTesting {
                 .andReturn();
 
         // Check if the insert is successful
-        List<ToDoList> testInsert = toDoListService.queryTodoList(null, null, description, null, null);
+        List<ToDoList> testInsert = toDoListService.queryTodoList(null, null, description, null, null, null);
         ToDoList test = testInsert.get(0);
         Integer testId = test.getId();
         assert (test.getStartTime().equals(dateTimeStart));
         assert (test.getFinishTime().equals(dateTimeFinish));
         assert (test.getDescription().equals(description));
 
+        // Create mock update data and check its format
+        String startUpdate = "2021-10-02 20:00";
+        LocalDateTime dateTimeStartUpdate = LocalDateTime.parse(startUpdate, formatter);
 
-        // try update
+        String finishUpdate = "2021-10-02 22:00";
+        LocalDateTime dateTimeFinishUpdate = LocalDateTime.parse(finishUpdate, formatter);
 
-        // check if it's successful
+        String descriptionUpdate = "Watch GI lecture";
+
+        // Try to update the to-do list
+        MvcResult mvcResultUpdate = mvc.perform(MockMvcRequestBuilders.put("/toDoList").header(SecurityConstants.TOKEN_HEADER, token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(
+                        "{\n" +
+                        "   \"id\" : \"" + String.valueOf(testId) + "\", \n" +
+                        "   \"start_time\" : \"" + dateTimeStartUpdate + "\", \n" +
+                        "   \"finish_time\": \"" + dateTimeFinishUpdate + "\", \n" +
+                        "   \"description\": \"" + descriptionUpdate + "\" \n" +
+                        "}"
+
+                ))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn();
+
+        // Check if the update is successful
+        List<ToDoList> testUpdate = toDoListService.queryTodoList(testId, null, null, null, null, null);
+        assert (testUpdate.get(0).getStartTime().equals(startUpdate));
+        assert (testUpdate.get(0).getFinishTime().equals(finishUpdate));
+        assert (testUpdate.get(0).getDescription().equals(descriptionUpdate));
     }
 
 }

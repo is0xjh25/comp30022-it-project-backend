@@ -28,7 +28,10 @@ import java.time.format.DateTimeFormatter;
 public class TodoListUpdateDTO {
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm", shape = JsonFormat.Shape.STRING)
-    private LocalDateTime dateTime;
+    private LocalDateTime startTime;
+
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm", shape = JsonFormat.Shape.STRING)
+    private LocalDateTime finishTime;
 
     private String description;
 
