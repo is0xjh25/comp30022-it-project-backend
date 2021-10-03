@@ -26,7 +26,7 @@ public interface ToDoListMapper extends BaseMapper<ToDoList> {
     @Select("SELECT * " +
             "FROM to_do_list " +
             "WHERE user_id = #{userId} " +
-            "ORDER BY FIELD(status,'in progress','to do','done')")
+            "ORDER BY FIELD(status,'in progress','to do','done', date_time)")
     public List<ToDoList> getTodoListDataByUserId(@Param("userId") Integer userId);
 
     @Select("SELECT COUNT(if(status='to do', 1, null)) to_do, COUNT(if(status='in progress', 1, null)) in_progress, COUNT(if(status='done', 1, null)) done\n" +
