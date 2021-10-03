@@ -28,7 +28,10 @@ import tech.crm.crmserver.service.ContactService;
 import tech.crm.crmserver.service.EventService;
 import tech.crm.crmserver.service.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -297,5 +300,36 @@ public class EventServiceImpl extends ServiceImpl<EventMapper, Event> implements
     @Override
     public TaskStatDTO getStat(Integer userId, LocalDateTime startTime, LocalDateTime finishTime) {
         return baseMapper.getStat(userId,startTime,finishTime);
+    }
+
+    /**
+     * Get events amount for a user among given month
+     * @param userId the id of user
+     * @param yearMonth the year and month for the event data
+     * @return the list of event
+     */
+    public Map<LocalDate, Integer> getEventAmountByMonthYear(Integer userId, YearMonth yearMonth) {
+        LocalDate startDate = yearMonth.atDay(1);
+        LocalDate endDate = yearMonth.plusMonths(1).atDay(1);
+        List<Event> eventList = baseMapper.getEventsBetween(userId,startDate.atStartOfDay(),endDate.atStartOfDay());
+        Map<LocalDate, Integer> map = new HashMap<>();
+        Integer totalNumberofDate = yearMonth.lengthOfMonth();
+        for (int i = 1; i< totalNumberofDate; i++) {
+            LocalDate currentDate = yearMonth.atDay(i);
+            LocalDateTime startOfDay = LocalDateTime.of(currentDate, LocalTime.MIDNIGHT);
+            LocalDateTime EndOfDay = LocalDateTime.of(currentDate, LocalTime.MAX);
+            int amount = 0;
+            for (Event event: eventList) {
+                LocalDateTime eventStartTime = event.getStartTime();
+                LocalDateTime eventEndTime = event.getFinishTime();
+                if ((eventStartTime.isAfter(startOfDay) && eventStartTime.isBefore(EndOfDay)) || (eventEndTime.isAfter(startOfDay) && eventEndTime.isBefore(EndOfDay)) || (eventStartTime.isBefore(startOfDay) && eventEndTime.isAfter(EndOfDay))) {
+                    amount++;
+                }
+            }
+            if (amount > 0) {
+                map.put(currentDate, amount);
+            }
+        }
+        return map;
     }
 }

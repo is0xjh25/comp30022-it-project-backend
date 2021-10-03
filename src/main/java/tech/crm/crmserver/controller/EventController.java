@@ -12,8 +12,11 @@ import tech.crm.crmserver.service.EventService;
 import tech.crm.crmserver.service.UserService;
 
 import javax.validation.Valid;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.YearMonth;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -64,6 +67,18 @@ public class EventController {
                                                           @RequestParam("finish_time")LocalDateTime finishTime) {
         List<Event> events = eventService.getEventBetweenTime(userService.getId(),startTime,finishTime);
         return ResponseResult.suc("Query user's events success", events);
+    }
+
+    /**
+     * Get events amount for a user among given year and month
+     *
+     * @return ResponseResult contain all the data about user's events
+     */
+    @GetMapping("/amount")
+    public ResponseResult<Object> getEventByUserIdYearAndMonth(@RequestParam("year") Integer year, @RequestParam("month") Integer month) {
+        YearMonth yearMonth = YearMonth.of(year, month);
+        Map<LocalDate, Integer> eventsMap = eventService.getEventAmountByMonthYear(userService.getId(), yearMonth);
+        return ResponseResult.suc("Query user's events success", eventsMap);
     }
 
     /**

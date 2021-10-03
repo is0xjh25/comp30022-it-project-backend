@@ -10,8 +10,11 @@ import tech.crm.crmserver.dto.EventsDTO;
 import tech.crm.crmserver.dto.EventsUpdateDTO;
 import tech.crm.crmserver.dto.TaskStatDTO;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.YearMonth;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -112,4 +115,12 @@ public interface EventService extends IService<Event> {
      * @return the statistic information
      */
     public TaskStatDTO getStat(@Param("userId") Integer userId, LocalDateTime startTime, LocalDateTime finishTime);
+
+    /**
+     * Get events amount for a user among given month
+     * @param userId the id of user
+     * @param yearMonth the year and month for the event data
+     * @return the list of event
+     */
+    public Map<LocalDate, Integer> getEventAmountByMonthYear(Integer userId, YearMonth yearMonth);
 }
