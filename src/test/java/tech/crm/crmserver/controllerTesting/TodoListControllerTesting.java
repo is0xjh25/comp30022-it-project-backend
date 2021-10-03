@@ -12,6 +12,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.transaction.annotation.Transactional;
 import tech.crm.crmserver.common.constants.SecurityConstants;
 import tech.crm.crmserver.common.enums.ToDoListStatus;
 import tech.crm.crmserver.dao.ToDoList;
@@ -96,4 +97,110 @@ public class TodoListControllerTesting {
         // assert (contactBasedOnSomeConditionFromDB.size() == 1);
     }
 
+    /**
+     * Testing update toDoList data for a user
+     * @throws Exception
+     */
+    @Test
+    @Order(3)
+    @Transactional
+    public void testCUpdateToDoListData() throws Exception {
+        // Create mock data and check its format
+        String startTime = "2021-02-02 20:00";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        LocalDateTime dateTime = LocalDateTime.parse(startTime, formatter);
+
+        String description = "Watch Moc lecture";
+
+        // Try to insert a new to-do list
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post("/toDoList").header(SecurityConstants.TOKEN_HEADER, token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\n" +
+                        "   \"date_time\" : \"" + startTime + "\", \n" +
+                        "   \"description\": \"" + description + "\", \n" +
+                        "   \"status\": \"to do\" \n" +
+                        "}"
+                ))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn();
+
+        // Check if the insert is successful
+        List<ToDoList> testInsert = toDoListService.queryTodoList(null, null, description, null, null);
+        ToDoList test = testInsert.get(0);
+        Integer testId = test.getId();
+        System.out.println(test);
+        assert (test.getDateTime().equals(dateTime));
+        assert (test.getDescription().equals(description));
+
+        // Create mock update data and check its format
+        String startUpdate = "2021-10-02 20:00";
+        LocalDateTime dateTimeUpdate = LocalDateTime.parse(startUpdate, formatter);
+
+        String descriptionUpdate = "Watch GI lecture";
+
+        // Try to update the to-do list
+        MvcResult mvcResultUpdate = mvc.perform(MockMvcRequestBuilders.put("/toDoList").header(SecurityConstants.TOKEN_HEADER, token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(
+                        "{\n" +
+                        "   \"id\" : \"" + String.valueOf(testId) + "\", \n" +
+                        "   \"date_time\" : \"" + startUpdate + "\", \n" +
+                        "   \"description\": \"" + descriptionUpdate + "\", \n" +
+                        "   \"status\": \"to do\" \n" +
+                        "}"
+
+                ))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn();
+
+        // Check if the update is successful
+        List<ToDoList> testUpdate = toDoListService.queryTodoList(testId, null, null, null, null);
+        assert (testUpdate.get(0).getDateTime().equals(dateTimeUpdate));
+        assert (testUpdate.get(0).getDescription().equals(descriptionUpdate));
+    }
+
+    /**
+     * Testing delete a to-do list
+     * @throws Exception
+     */
+    @Test
+    @Order(4)
+    @Transactional
+    public void testDDeleteToDoListData() throws Exception {
+        // Create mock data and check its format
+        String startTime = "2021-02-02 20:00";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        LocalDateTime dateTime = LocalDateTime.parse(startTime, formatter);
+
+        String description = "Watch Moc lecture";
+
+        // Try to insert a new to-do list
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post("/toDoList").header(SecurityConstants.TOKEN_HEADER, token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(
+                                "{\n" +
+                                    " \"date_time\" : \"" + startTime + "\", \n" +
+                                    " \"description\": \"" + description + "\", \n" +
+                                    " \"status\": \"to do\" \n" +
+                                "}"
+                        ))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn();
+
+        // Check if the insert is successful
+        List<ToDoList> testInsert = toDoListService.queryTodoList(null, null, description, null, null);
+        ToDoList test = testInsert.get(0);
+        Integer testId = test.getId();
+        assert (test.getDateTime().equals(dateTime));
+        assert (test.getDescription().equals(description));
+
+        // Try to delete this data
+        MvcResult mvcResultDelete = mvc.perform(MockMvcRequestBuilders.delete("/toDoList").param("todoList_id", String.valueOf(testId)).header(SecurityConstants.TOKEN_HEADER, token))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn();
+
+        // Check if the deleting is successful
+        List<ToDoList> testDelete = toDoListService.queryTodoList(testId, null, null, null, null);
+        assert (testDelete.size() == 0);
+    }
 }
