@@ -47,7 +47,7 @@ public class ToDoListController {
     public ResponseResult<Object> getAllTodoListData(@RequestParam("topNTodoListData") Integer topNTodoListData) {
         Integer userId = userService.getId();
         List<ToDoList> toDoList = toDoListService.queryToDoListByUserId(userId);
-        if (topNTodoListData == -1 && toDoList.size() > topNTodoListData) {
+        if (topNTodoListData != -1 && toDoList.size() > topNTodoListData) {
             toDoList.subList(0, topNTodoListData);
         }
         return ResponseResult.suc("Query user's todoList", toDoList);
