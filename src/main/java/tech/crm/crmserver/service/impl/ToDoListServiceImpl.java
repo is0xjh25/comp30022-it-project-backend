@@ -117,7 +117,6 @@ public class ToDoListServiceImpl extends ServiceImpl<ToDoListMapper, ToDoList> i
     public boolean updateTodoListByTodoListDTO(TodoListUpdateDTO todoListDTO, Integer userId) {
         ToDoList newTodo = toDoListService.fromTodoListUpdateDTO(todoListDTO);
 
-
         ToDoList oldTodo = toDoListService.getById(newTodo.getId());
         // check if the target todolist exists or not
         if (oldTodo == null){
@@ -183,8 +182,8 @@ public class ToDoListServiceImpl extends ServiceImpl<ToDoListMapper, ToDoList> i
     /**
      * return the statistic information
      *
-     * @param userId     the id of user
-     * @param startTime  start of given time
+     * @param userId the id of user
+     * @param startTime start of given time
      * @param finishTime end of given time
      * @return the statistic information
      */
