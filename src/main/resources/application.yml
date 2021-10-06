@@ -1,7 +1,7 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://mydb.mysql.database.azure.com:3306/mydb?reconnect=true&serverTimezone=Australia/Victoria
+    url: jdbc:mysql://mydb.mysql.database.azure.com:3306/mydb?reconnect=true&serverTimezone=GMT
     username: yyds
     password: comp30022-
   mvc:
@@ -14,7 +14,7 @@ spring:
   jackson:
     property-naming-strategy: SNAKE_CASE
     date-format: yyyy-MM-dd HH:mm
-    time-zone: GMT+10
+    time-zone: GMT
 
   #mail config
   mail:
