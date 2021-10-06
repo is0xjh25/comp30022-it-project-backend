@@ -11,6 +11,6 @@ import java.time.ZoneId;
  */
 public final class TimeZoneConstants {
 
-    public static final String TIME_ZONE_VALUE = "Australia/Sydney";
+    public static final String TIME_ZONE_VALUE = "GMT";
     public static final ZoneId ZONE = ZoneId.of(TIME_ZONE_VALUE);
 }
