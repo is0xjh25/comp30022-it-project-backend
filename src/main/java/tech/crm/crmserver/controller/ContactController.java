@@ -11,6 +11,7 @@ import tech.crm.crmserver.dao.Permission;
 import tech.crm.crmserver.dto.ContactCreateDTO;
 import tech.crm.crmserver.dto.ContactDTO;
 import tech.crm.crmserver.dto.ContactUpdateDTO;
+import tech.crm.crmserver.dto.PageDTO;
 import tech.crm.crmserver.exception.*;
 import tech.crm.crmserver.service.ContactService;
 import tech.crm.crmserver.service.PermissionService;
@@ -82,14 +83,13 @@ public class ContactController {
     @GetMapping()
     public ResponseResult<Object> getContactByOrganizationIdAndDepartmentId(@RequestParam("organization_id") Integer organizationId,
                                                                             @RequestParam(value = "department_id", required = false) Integer departmentId,
-                                                                            @RequestParam("size") Integer size,
-                                                                            @RequestParam("current") Integer current) {
+                                                                            @Valid PageDTO pageDTO) {
         Integer userId = userService.getId();
         if (organizationId == null) {
             throw new OrganizationNotExistException();
         }
 
-        Page<ContactDTO> contactDTOs = contactService.getContactByOrgIdAndDepartmentId(new Page<>(current, size), organizationId, departmentId, userId);
+        Page<ContactDTO> contactDTOs = contactService.getContactByOrgIdAndDepartmentId(new Page<>(pageDTO.getCurrent(), pageDTO.getSize()), organizationId, departmentId, userId);
         //transfer into ContactDTO
         return ResponseResult.suc("success", contactDTOs);
     }
@@ -152,13 +152,12 @@ public class ContactController {
     @GetMapping("/search")
     public ResponseResult<Object> searchContact(@RequestParam("department_id") Integer departmentId,
                                                 @RequestParam("search_key") String searchKey,
-                                                @RequestParam("size") Integer size,
-                                                @RequestParam("current") Integer current){
+                                                @Valid PageDTO pageDTO){
         Permission myPermission = permissionService.findPermission(departmentId, userService.getId());
         if (myPermission == null || myPermission.getAuthorityLevel().getLevel() < PermissionLevel.DISPLAY.getLevel()) {
             throw new NotEnoughPermissionException();
         }
-        Page<ContactDTO> contactDTOPage = contactService.searchContactDTO(new Page<>(current, size), departmentId, searchKey);
+        Page<ContactDTO> contactDTOPage = contactService.searchContactDTO(new Page<>(pageDTO.getCurrent(), pageDTO.getSize()), departmentId, searchKey);
         return ResponseResult.suc("success",contactDTOPage);
     }
 
