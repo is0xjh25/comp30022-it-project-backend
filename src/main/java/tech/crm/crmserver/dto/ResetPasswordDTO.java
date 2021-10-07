@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.Email;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotBlank;
 
 /**
  * <p>
@@ -20,7 +20,7 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 public class ResetPasswordDTO {
 
-    @NotNull(message = "email cannot be null")
+    @NotBlank(message = "email cannot be null")
     @Email(message = "invalid email")
     private String email;
 }

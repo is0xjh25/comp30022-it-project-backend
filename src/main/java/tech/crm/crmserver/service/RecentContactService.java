@@ -1,7 +1,6 @@
 package tech.crm.crmserver.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import tech.crm.crmserver.dao.Contact;
 import tech.crm.crmserver.dao.RecentContact;
 import tech.crm.crmserver.dto.RecentContactDTO;
 

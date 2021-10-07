@@ -1,13 +1,14 @@
 package tech.crm.crmserver.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tech.crm.crmserver.common.enums.PermissionLevel;
-import tech.crm.crmserver.dao.*;
+import tech.crm.crmserver.dao.Organization;
+import tech.crm.crmserver.dao.Permission;
+import tech.crm.crmserver.dao.User;
 import tech.crm.crmserver.dto.UserPermissionDTO;
 import tech.crm.crmserver.exception.NotEnoughPermissionException;
 import tech.crm.crmserver.exception.OrganizationNotExistException;

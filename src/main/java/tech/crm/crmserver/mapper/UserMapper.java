@@ -7,9 +7,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
-import tech.crm.crmserver.dao.Contact;
 import tech.crm.crmserver.dao.User;
-import tech.crm.crmserver.dto.UserBelongToDTO;
 import tech.crm.crmserver.dto.UserPermissionDTO;
 
 /**

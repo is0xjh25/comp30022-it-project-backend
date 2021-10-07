@@ -113,7 +113,7 @@ public class UserController {
      * @return response with msg
      */
     @PutMapping
-    public ResponseResult<Object> updateUserDetail(@RequestBody UserUpdateDTO userUpdateDTO){
+    public ResponseResult<Object> updateUserDetail(@Validated @RequestBody UserUpdateDTO userUpdateDTO){
         userService.updateUser(userUpdateDTO);
         return ResponseResult.suc("Successfully update user detail");
     }

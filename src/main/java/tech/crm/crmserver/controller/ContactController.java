@@ -12,7 +12,10 @@ import tech.crm.crmserver.dto.ContactCreateDTO;
 import tech.crm.crmserver.dto.ContactDTO;
 import tech.crm.crmserver.dto.ContactUpdateDTO;
 import tech.crm.crmserver.exception.*;
-import tech.crm.crmserver.service.*;
+import tech.crm.crmserver.service.ContactService;
+import tech.crm.crmserver.service.PermissionService;
+import tech.crm.crmserver.service.RecentContactService;
+import tech.crm.crmserver.service.UserService;
 
 import javax.validation.Valid;
 import java.util.List;

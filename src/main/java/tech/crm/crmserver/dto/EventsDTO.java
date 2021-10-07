@@ -1,11 +1,11 @@
 package tech.crm.crmserver.dto;
 
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
@@ -28,6 +28,6 @@ public class EventsDTO {
     @NotNull(message = "Finish time of the event can not be null")
     private LocalDateTime finishTime;
 
-    @NotNull(message = "The description of the event can not be null")
+    @NotBlank(message = "The description of the event can not be null")
     private String description;
 }

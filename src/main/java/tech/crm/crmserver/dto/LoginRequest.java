@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import javax.validation.constraints.Email;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotBlank;
 
 /**
  * <p>
@@ -18,10 +18,10 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 public class LoginRequest {
 
-    @NotNull(message = "email cannot be null")
+    @NotBlank(message = "email cannot be null")
     @Email(message = "invalid email")
     private String email;
 
-    @NotNull(message = "password cannot be null")
+    @NotBlank(message = "password cannot be null")
     private String password;
 }

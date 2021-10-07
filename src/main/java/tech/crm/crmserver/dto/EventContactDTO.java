@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 
 /**
  * <p>
@@ -20,8 +21,10 @@ import javax.validation.constraints.NotNull;
 public class EventContactDTO {
 
     @NotNull(message = "Contact id cannot be null!")
+    @Positive(message = "Contact id should be positive")
     private Integer contactId;
 
     @NotNull(message = "Event id cannot be null!")
+    @Positive(message = "Event id should be positive")
     private Integer eventId;
 }
