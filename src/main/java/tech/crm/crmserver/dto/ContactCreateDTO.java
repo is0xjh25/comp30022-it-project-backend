@@ -23,7 +23,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class ContactCreateDTO {
 
-    @Null
+    @Null(message = "Can not specify id before creation!")
     private Integer id;
 
     @NotNull(message = "department_id cannot be null")
