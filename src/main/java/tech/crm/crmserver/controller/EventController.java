@@ -77,8 +77,8 @@ public class EventController {
     @GetMapping("/amount")
     public ResponseResult<Object> getEventByUserIdYearAndMonth(@RequestParam("year") Integer year, @RequestParam("month") Integer month) {
         YearMonth yearMonth = YearMonth.of(year, month);
-        Map<LocalDate, Integer> eventsMap = eventService.getEventAmountByMonthYear(userService.getId(), yearMonth);
-        return ResponseResult.suc("Query user's events success", eventsMap);
+        List<Integer> dateHasEvent = eventService.getEventDateByMonthYear(userService.getId(), yearMonth);
+        return ResponseResult.suc("Query date has events success", dateHasEvent);
     }
 
     /**
