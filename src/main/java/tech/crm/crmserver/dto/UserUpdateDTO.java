@@ -24,8 +24,7 @@ public class UserUpdateDTO {
 
     @NullOrNotBlank
     private String firstName;
-
-    @NullOrNotBlank
+    
     private String middleName;
 
     @NullOrNotBlank
@@ -34,10 +33,8 @@ public class UserUpdateDTO {
     @NullOrNotBlank
     private String phone;
 
-    @NullOrNotBlank
     private String website;
 
-    @NullOrNotBlank
     private String description;
 
 }

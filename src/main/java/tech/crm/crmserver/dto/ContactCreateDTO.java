@@ -38,30 +38,23 @@ public class ContactCreateDTO {
     @NotBlank(message = "first_name cannot be null")
     private String firstName;
 
-    @NullOrNotBlank
     private String middleName;
 
     @NotBlank(message = "last_name cannot be null")
     private String lastName;
 
-    @NullOrNotBlank
     private String phone;
 
-    @NullOrNotBlank
     private String description;
 
-    @NullOrNotBlank
     private String gender;
 
     private LocalDate birthday;
 
-    @NullOrNotBlank
     private String address;
 
-    @NullOrNotBlank
     private String organization;
 
-    @NullOrNotBlank
     private String customerType;
 
 }

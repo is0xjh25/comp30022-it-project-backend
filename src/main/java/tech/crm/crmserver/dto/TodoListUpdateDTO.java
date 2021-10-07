@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import tech.crm.crmserver.common.enums.ToDoListStatus;
+import tech.crm.crmserver.common.validator.NullOrNotBlank;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -31,7 +32,7 @@ public class TodoListUpdateDTO {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm", shape = JsonFormat.Shape.STRING)
     private LocalDateTime dateTime;
 
-    @NotBlank(message = "Description could not be null or empty")
+    @NullOrNotBlank(message = "Description could not be null or empty")
     private String description;
 
     private ToDoListStatus status;

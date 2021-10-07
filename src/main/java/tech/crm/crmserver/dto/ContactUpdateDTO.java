@@ -35,29 +35,22 @@ public class ContactUpdateDTO {
     @NullOrNotBlank
     private String firstName;
 
-    @NullOrNotBlank
     private String middleName;
 
     @NullOrNotBlank
     private String lastName;
 
-    @NullOrNotBlank
     private String phone;
 
-    @NullOrNotBlank
     private String description;
 
-    @NullOrNotBlank
     private String gender;
 
     private LocalDate birthday;
 
-    @NullOrNotBlank
     private String address;
 
-    @NullOrNotBlank
     private String organization;
 
-    @NullOrNotBlank
     private String customerType;
 }

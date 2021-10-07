@@ -3,7 +3,6 @@ package tech.crm.crmserver.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import tech.crm.crmserver.common.validator.NullOrNotBlank;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -31,7 +30,6 @@ public class UserRegisterDTO {
     @NotBlank(message = "first_name cannot be null")
     private String firstName;
 
-    @NullOrNotBlank
     private String middleName;
 
     @NotBlank(message = "last_name cannot be null")
@@ -40,10 +38,8 @@ public class UserRegisterDTO {
     @NotBlank(message = "phone cannot be null")
     private String phone;
 
-    @NullOrNotBlank
     private String website;
 
-    @NullOrNotBlank
     private String description;
 
 }
