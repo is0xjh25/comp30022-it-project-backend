@@ -327,4 +327,19 @@ public class EventServiceImpl extends ServiceImpl<EventMapper, Event> implements
         }
         return map;
     }
+
+    /**
+     * Get the date which has events
+     * @param userId the id of user
+     * @param yearMonth the year and month for the event data
+     * @return the list of date which has event
+     */
+    public List<Integer> getEventDateByMonthYear(Integer userId, YearMonth yearMonth) {
+        Map<LocalDate, Integer> eventsMap = getEventAmountByMonthYear(userId, yearMonth);
+        List<Integer> dateHasEvents = new ArrayList<>();
+        for (LocalDate localDate : eventsMap.keySet()) {
+            dateHasEvents.add(localDate.getDayOfMonth());
+        }
+        return dateHasEvents;
+    }
 }
