@@ -19,18 +19,18 @@ import tech.crm.crmserver.common.validator.NullOrNotBlank;
 public class UserUpdateDTO {
 
     //raw password
-    @NullOrNotBlank(message = "password should be null or not blank!")
+    @NullOrNotBlank(message = "password can not be null or blank!")
     private String password;
 
-    @NullOrNotBlank(message = "first name should be null or not blank!")
+    @NullOrNotBlank(message = "first name can not be null or blank!")
     private String firstName;
 
     private String middleName;
 
-    @NullOrNotBlank(message = "last name should be null or not blank!")
+    @NullOrNotBlank(message = "last name can not be null or blank!")
     private String lastName;
 
-    @NullOrNotBlank(message = "phone should be null or not blank!")
+    @NullOrNotBlank(message = "phone can not be null or blank!")
     private String phone;
 
     private String website;
