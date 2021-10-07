@@ -32,7 +32,7 @@ public class TodoListUpdateDTO {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm", shape = JsonFormat.Shape.STRING)
     private LocalDateTime dateTime;
 
-    @NullOrNotBlank(message = "Description should be null or not blank")
+    @NullOrNotBlank(message = "Description can not be null or blank")
     private String description;
 
     private ToDoListStatus status;
