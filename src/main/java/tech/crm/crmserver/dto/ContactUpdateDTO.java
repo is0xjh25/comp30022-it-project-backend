@@ -28,36 +28,29 @@ public class ContactUpdateDTO {
     @Positive(message = "id should be positive")
     private Integer id;
 
-    @NullOrNotBlank
+    @NullOrNotBlank(message = "email should be null or not blank")
     @Email(message = "invalid email for contact")
     private String email;
 
-    @NullOrNotBlank
+    @NullOrNotBlank(message = "first name should be null or not blank")
     private String firstName;
 
-    @NullOrNotBlank
     private String middleName;
 
-    @NullOrNotBlank
+    @NullOrNotBlank(message = "last name should be null or not blank")
     private String lastName;
 
-    @NullOrNotBlank
     private String phone;
 
-    @NullOrNotBlank
     private String description;
 
-    @NullOrNotBlank
     private String gender;
 
     private LocalDate birthday;
 
-    @NullOrNotBlank
     private String address;
 
-    @NullOrNotBlank
     private String organization;
 
-    @NullOrNotBlank
     private String customerType;
 }

@@ -32,7 +32,7 @@ public class EventsUpdateDTO {
 
     private LocalDateTime finishTime;
 
-    @NullOrNotBlank
+    @NullOrNotBlank(message = "Description should be null or not blank")
     private String description;
 
     private ToDoListStatus status;
