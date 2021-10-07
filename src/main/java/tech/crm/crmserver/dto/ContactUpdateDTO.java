@@ -11,6 +11,14 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import java.time.LocalDate;
 
+/**
+ * <p>
+ *  DTO for update contact
+ * </p>
+ *
+ * @author Lingxiao
+ * @since 2021-10-08
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

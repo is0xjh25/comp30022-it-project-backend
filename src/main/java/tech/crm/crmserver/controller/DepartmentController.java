@@ -8,12 +8,15 @@ import org.springframework.web.bind.annotation.*;
 import tech.crm.crmserver.common.enums.PermissionLevel;
 import tech.crm.crmserver.common.response.ResponseResult;
 import tech.crm.crmserver.dao.Permission;
+import tech.crm.crmserver.dto.PageDTO;
 import tech.crm.crmserver.dto.UserPermissionDTO;
 import tech.crm.crmserver.exception.NotEnoughPermissionException;
 import tech.crm.crmserver.exception.UserNotInDepartmentException;
 import tech.crm.crmserver.service.DepartmentService;
 import tech.crm.crmserver.service.PermissionService;
 import tech.crm.crmserver.service.UserService;
+
+import javax.validation.Valid;
 
 /**
  * <p>
@@ -100,13 +103,12 @@ public class DepartmentController {
     @GetMapping("/searchMember")
     public ResponseResult<Object> searchMemberInOrganization(@RequestParam("department_id") Integer departmentId,
                                                              @RequestParam("search_key") String searchKey,
-                                                             @RequestParam("size") Integer size,
-                                                             @RequestParam("current") Integer current){
+                                                             @Valid PageDTO pageDTO){
         //check permission
         if(!permissionService.ifPermissionLevelSatisfied(userService.getId(),PermissionLevel.DISPLAY,departmentId)){
             throw new NotEnoughPermissionException();
         }
-        Page<UserPermissionDTO> userPermissionDTOPage = departmentService.searchMember(new Page<>(current, size), departmentId, searchKey);
+        Page<UserPermissionDTO> userPermissionDTOPage = departmentService.searchMember(new Page<>(pageDTO.getCurrent(), pageDTO.getSize()), departmentId, searchKey);
         return ResponseResult.suc("success",userPermissionDTOPage);
     }
 

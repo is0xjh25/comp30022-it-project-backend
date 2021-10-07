@@ -6,6 +6,15 @@ import lombok.NoArgsConstructor;
 import tech.crm.crmserver.common.enums.Status;
 
 import java.time.LocalDate;
+
+/**
+ * <p>
+ *  DTO for Contact with attend id
+ * </p>
+ *
+ * @author Yongfeng Qing
+ * @since 2021-10-08
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

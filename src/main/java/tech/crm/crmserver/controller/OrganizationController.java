@@ -14,10 +14,12 @@ import tech.crm.crmserver.dao.Organization;
 import tech.crm.crmserver.dao.Permission;
 import tech.crm.crmserver.dto.DepartmentDTO;
 import tech.crm.crmserver.dto.OrganizationDTO;
+import tech.crm.crmserver.dto.PageDTO;
 import tech.crm.crmserver.dto.UserPermissionDTO;
 import tech.crm.crmserver.exception.*;
 import tech.crm.crmserver.service.*;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -249,8 +251,7 @@ public class OrganizationController {
     @GetMapping("/searchMember")
     public ResponseResult<Object> searchMemberInOrganization(@RequestParam("organization_id") Integer organizationId,
                                                              @RequestParam("search_key") String searchKey,
-                                                             @RequestParam("size") Integer size,
-                                                             @RequestParam("current") Integer current){
+                                                             @Valid PageDTO pageDTO){
         Organization organization = organizationService.getById(organizationId);
         //check permission
         if (organization == null){
@@ -259,7 +260,7 @@ public class OrganizationController {
         if(!organization.getOwner().equals(userService.getId())) {
             throw new NotEnoughPermissionException();
         }
-        Page<UserPermissionDTO> userPermissionDTOPage = organizationService.searchMember(new Page<>(current, size), organizationId, searchKey);
+        Page<UserPermissionDTO> userPermissionDTOPage = organizationService.searchMember(new Page<>(pageDTO.getCurrent(), pageDTO.getSize()), organizationId, searchKey);
         return ResponseResult.suc("success",userPermissionDTOPage);
     }
 

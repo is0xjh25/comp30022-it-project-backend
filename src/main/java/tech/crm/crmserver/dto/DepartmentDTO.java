@@ -11,7 +11,7 @@ import java.io.Serializable;
 
 /**
  * <p>
- *  entity
+ *  department DTO
  * </p>
  *
  * @author Lingxiao

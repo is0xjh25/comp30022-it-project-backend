@@ -6,6 +6,14 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
+/**
+ * <p>
+ *  DTO for contact
+ * </p>
+ *
+ * @author Lingxiao
+ * @since 2021-10-08
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

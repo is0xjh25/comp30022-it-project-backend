@@ -10,6 +10,14 @@ import tech.crm.crmserver.common.validator.NullOrNotBlank;
 import javax.validation.constraints.*;
 import java.time.LocalDate;
 
+/**
+ * <p>
+ *  DTO for create Organization
+ * </p>
+ *
+ * @author Lingxiao
+ * @since 2021-10-08
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
