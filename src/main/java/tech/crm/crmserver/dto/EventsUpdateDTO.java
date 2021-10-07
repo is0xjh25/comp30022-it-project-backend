@@ -6,8 +6,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import tech.crm.crmserver.common.enums.ToDoListStatus;
+import tech.crm.crmserver.common.validator.NullOrNotBlank;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 import java.time.LocalDateTime;
 
 /**
@@ -24,12 +27,14 @@ import java.time.LocalDateTime;
 public class EventsUpdateDTO {
 
     @NotNull(message = "Id cannot be null")
+    @Positive(message = "id should be positive")
     private Integer id;
-    
+
     private LocalDateTime startTime;
 
     private LocalDateTime finishTime;
 
+    @NullOrNotBlank
     private String description;
 
     private ToDoListStatus status;

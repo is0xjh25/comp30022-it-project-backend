@@ -4,19 +4,17 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
+import tech.crm.crmserver.common.validator.NullOrNotBlank;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class OrganizationDTO {
 
-    @NonNull
     private Integer id;
 
-    @NonNull
     private String name;
 
-    @NonNull
     private Integer ownerId;
 
     private boolean isOwner;

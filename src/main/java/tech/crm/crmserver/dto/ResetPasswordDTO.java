@@ -3,8 +3,10 @@ package tech.crm.crmserver.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import tech.crm.crmserver.common.validator.NullOrNotBlank;
 
 import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -20,7 +22,7 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 public class ResetPasswordDTO {
 
-    @NotNull(message = "email cannot be null")
+    @NotBlank(message = "email cannot be null")
     @Email(message = "invalid email")
     private String email;
 }

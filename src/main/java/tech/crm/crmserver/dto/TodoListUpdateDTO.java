@@ -10,7 +10,9 @@ import org.springframework.format.annotation.DateTimeFormat;
 import tech.crm.crmserver.common.enums.Status;
 import tech.crm.crmserver.common.enums.ToDoListStatus;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -28,11 +30,13 @@ import java.time.format.DateTimeFormatter;
 public class TodoListUpdateDTO {
 
     @NotNull(message="The target to-do list id is empty.")
+    @Positive(message = "id should be positive")
     private Integer id;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm", shape = JsonFormat.Shape.STRING)
     private LocalDateTime dateTime;
 
+    @NotBlank(message = "Description could not be null or empty")
     private String description;
 
     private ToDoListStatus status;
