@@ -1,32 +1,27 @@
 package tech.crm.crmserver.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import tech.crm.crmserver.common.constants.EmailConstants;
 import tech.crm.crmserver.common.enums.PermissionLevel;
-import tech.crm.crmserver.dao.*;
 import tech.crm.crmserver.common.enums.ToDoListStatus;
 import tech.crm.crmserver.common.utils.NullAwareBeanUtilsBean;
 import tech.crm.crmserver.dao.Attend;
 import tech.crm.crmserver.dao.Contact;
 import tech.crm.crmserver.dao.Event;
-import tech.crm.crmserver.dao.User;
+import tech.crm.crmserver.dao.Permission;
 import tech.crm.crmserver.dto.*;
+import tech.crm.crmserver.exception.EventsNotExistException;
 import tech.crm.crmserver.exception.FailToAddContactToEventException;
 import tech.crm.crmserver.exception.FailToDeleteContactToEventException;
 import tech.crm.crmserver.exception.NotEnoughPermissionException;
 import tech.crm.crmserver.mapper.ContactMapper;
-import tech.crm.crmserver.exception.*;
 import tech.crm.crmserver.mapper.EventMapper;
 import tech.crm.crmserver.service.AttendService;
-import tech.crm.crmserver.service.ContactService;
+import tech.crm.crmserver.service.DepartmentService;
 import tech.crm.crmserver.service.EventService;
-import tech.crm.crmserver.service.*;
+import tech.crm.crmserver.service.PermissionService;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

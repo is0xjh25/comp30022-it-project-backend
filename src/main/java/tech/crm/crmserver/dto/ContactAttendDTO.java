@@ -1,17 +1,11 @@
 package tech.crm.crmserver.dto;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import tech.crm.crmserver.common.enums.Status;
-import tech.crm.crmserver.dao.Contact;
 
 import java.time.LocalDate;
-import java.util.Objects;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

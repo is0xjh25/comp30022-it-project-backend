@@ -2,7 +2,6 @@ package tech.crm.crmserver.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
-import org.apache.ibatis.annotations.Param;
 import tech.crm.crmserver.common.enums.PermissionLevel;
 import tech.crm.crmserver.dao.Permission;
 import tech.crm.crmserver.dto.DepartmentDTO;

@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import org.apache.ibatis.annotations.Param;
 import tech.crm.crmserver.common.enums.ToDoListStatus;
 import tech.crm.crmserver.dao.Event;
-import tech.crm.crmserver.dao.ToDoList;
 import tech.crm.crmserver.dto.EventAttendDTO;
 import tech.crm.crmserver.dto.EventsDTO;
 import tech.crm.crmserver.dto.EventsUpdateDTO;

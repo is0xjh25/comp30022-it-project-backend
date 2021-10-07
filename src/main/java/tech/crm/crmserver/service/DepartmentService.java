@@ -3,7 +3,6 @@ package tech.crm.crmserver.service;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import tech.crm.crmserver.dao.Department;
-import tech.crm.crmserver.dto.ContactDTO;
 import tech.crm.crmserver.dto.UserPermissionDTO;
 
 import java.util.List;

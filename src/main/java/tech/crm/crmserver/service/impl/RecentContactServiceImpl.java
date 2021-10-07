@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 import tech.crm.crmserver.common.constants.TimeZoneConstants;
-import tech.crm.crmserver.dao.Contact;
 import tech.crm.crmserver.dao.RecentContact;
 import tech.crm.crmserver.dto.RecentContactDTO;
 import tech.crm.crmserver.mapper.RecentContactMapper;

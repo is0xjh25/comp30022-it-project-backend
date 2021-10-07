@@ -3,8 +3,6 @@ package tech.crm.crmserver.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import tech.crm.crmserver.common.validator.NullOrNotBlank;
 
 @Data
 @AllArgsConstructor

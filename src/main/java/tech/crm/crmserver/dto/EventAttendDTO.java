@@ -2,12 +2,10 @@ package tech.crm.crmserver.dto;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import tech.crm.crmserver.common.enums.ToDoListStatus;
-import tech.crm.crmserver.dao.Contact;
 
 import java.time.LocalDateTime;
 import java.util.List;
