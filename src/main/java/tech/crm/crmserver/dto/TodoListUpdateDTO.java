@@ -29,7 +29,6 @@ public class TodoListUpdateDTO {
     @Positive(message = "id should be positive")
     private Integer id;
 
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm", shape = JsonFormat.Shape.STRING)
     private LocalDateTime dateTime;
 
     @NullOrNotBlank(message = "Description can not be null or blank")

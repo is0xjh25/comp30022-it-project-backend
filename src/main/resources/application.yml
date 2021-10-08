@@ -7,13 +7,13 @@ spring:
   mvc:
     log-resolved-exception: true
     format:
-      date-time: yyyy-MM-dd HH:mm
+      date-time: ${spring.jackson.date-format}
 
 
   #jackson
   jackson:
     property-naming-strategy: SNAKE_CASE
-    date-format: yyyy-MM-dd HH:mm
+    date-format: yyyy-MM-dd'T'HH:mm:ss.SSS'Z'
     time-zone: GMT
 
   #mail config
