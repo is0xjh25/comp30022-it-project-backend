@@ -5,9 +5,11 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import tech.crm.crmserver.common.constants.TimeZoneConstants;
 import tech.crm.crmserver.common.enums.PermissionLevel;
 import tech.crm.crmserver.common.enums.Status;
+import tech.crm.crmserver.common.utils.ImageUtil;
 import tech.crm.crmserver.common.utils.NullAwareBeanUtilsBean;
 import tech.crm.crmserver.dao.Contact;
 import tech.crm.crmserver.dao.Permission;
@@ -19,6 +21,8 @@ import tech.crm.crmserver.exception.*;
 import tech.crm.crmserver.mapper.ContactMapper;
 import tech.crm.crmserver.service.*;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -430,10 +434,10 @@ public class ContactServiceImpl extends ServiceImpl<ContactMapper, Contact> impl
      *
      * @param contactId the id of contact
      * @param userId    the id of user
-     * @param originalPhoto binary photo
+     * @param originalPhoto MultipartFile photo
      */
     @Override
-    public void updatePhoto(Integer contactId, Integer userId, byte[] originalPhoto) {
+    public void updatePhoto(Integer contactId, Integer userId, MultipartFile originalPhoto) throws IOException {
         Contact contact = contactService.getById(contactId);
 
         if (contact == null || contact.getStatus().equals(Status.DELETED)) {
@@ -447,9 +451,12 @@ public class ContactServiceImpl extends ServiceImpl<ContactMapper, Contact> impl
         //store
         contact = new Contact();
         contact.setId(contactId);
-        contact.setPhoto(Base64.getEncoder().encodeToString(originalPhoto));
-        baseMapper.updateById(contact);
 
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        ImageUtil.imgThumb(originalPhoto.getInputStream(),outputStream);
+        contact.setPhoto(Base64.getEncoder().encodeToString(outputStream.toByteArray()));
+
+        baseMapper.updateById(contact);
     }
 
 }

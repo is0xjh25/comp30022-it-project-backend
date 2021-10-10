@@ -347,11 +347,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     public void updatePhoto(Integer userId, MultipartFile originalPhoto) throws IOException {
         User user = new User();
         user.setId(userId);
+
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         ImageUtil.imgThumb(originalPhoto.getInputStream(),outputStream);
-
-        System.out.println(outputStream.size());
         user.setPhoto(Base64.getEncoder().encodeToString(outputStream.toByteArray()));
+
         baseMapper.updateById(user);
 
     }
