@@ -180,7 +180,7 @@ public class ContactController {
         if(photo == null){
             throw new BadPhotoException();
         }
-        contactService.updatePhoto(contactId,userService.getId(), photo.getBytes());
+        contactService.updatePhoto(contactId,userService.getId(), photo);
         return ResponseResult.suc("Successfully upload the file");
     }
 }

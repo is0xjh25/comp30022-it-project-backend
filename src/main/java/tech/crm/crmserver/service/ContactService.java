@@ -2,11 +2,13 @@ package tech.crm.crmserver.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
+import org.springframework.web.multipart.MultipartFile;
 import tech.crm.crmserver.dao.Contact;
 import tech.crm.crmserver.dto.ContactCreateDTO;
 import tech.crm.crmserver.dto.ContactDTO;
 import tech.crm.crmserver.dto.ContactUpdateDTO;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -150,7 +152,7 @@ public interface ContactService extends IService<Contact> {
      * convert binary photo into base64 and store
      * @param contactId the id of user
      * @param userId    the id of user
-     * @param originalPhoto binary photo
+     * @param originalPhoto MultipartFile photo
      */
-    public void updatePhoto(Integer contactId, Integer userId, byte[] originalPhoto);
+    public void updatePhoto(Integer contactId, Integer userId, MultipartFile originalPhoto) throws IOException;
 }
