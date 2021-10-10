@@ -10,8 +10,8 @@ package tech.crm.crmserver.common.constants;
  */
 public class ImageConstant {
 
-    public static final int WIDTH =256;
-    public static final int HEIGHT =256;
+    public static final int WIDTH =128;
+    public static final int HEIGHT =128;
 
     private ImageConstant(){
     }
