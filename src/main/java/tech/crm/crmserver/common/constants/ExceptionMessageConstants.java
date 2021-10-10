@@ -49,6 +49,8 @@ public final class ExceptionMessageConstants {
     public static final String EVENT_FAIL_ADDED_EXCEPTION = "Fail to add a event data";
     public static final String EVENT_NOT_EXIST_EXCEPTION = "Event not exist!";
 
+    public static final String BAD_PHOTO_EXCEPTION = "There are something missing in the photo!";
+
     private ExceptionMessageConstants() {
     }
 }

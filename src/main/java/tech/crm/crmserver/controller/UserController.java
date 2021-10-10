@@ -1,10 +1,12 @@
 package tech.crm.crmserver.controller;
 
 
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import tech.crm.crmserver.common.constants.SecurityConstants;
 import tech.crm.crmserver.common.response.ResponseResult;
 import tech.crm.crmserver.dao.User;
@@ -14,6 +16,8 @@ import tech.crm.crmserver.dto.UserRegisterDTO;
 import tech.crm.crmserver.dto.UserUpdateDTO;
 import tech.crm.crmserver.service.TokenKeyService;
 import tech.crm.crmserver.service.UserService;
+
+import java.io.IOException;
 
 
 /**
