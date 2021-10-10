@@ -145,4 +145,12 @@ public interface ContactService extends IService<Contact> {
     * @return if the updating success
     */
     public boolean updateContact(Contact contact);
+
+    /**
+     * convert binary photo into base64 and store
+     * @param contactId the id of user
+     * @param userId    the id of user
+     * @param originalPhoto binary photo
+     */
+    public void updatePhoto(Integer contactId, Integer userId, byte[] originalPhoto);
 }

@@ -4,6 +4,7 @@ package tech.crm.crmserver.controller;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import tech.crm.crmserver.common.enums.PermissionLevel;
 import tech.crm.crmserver.common.response.ResponseResult;
 import tech.crm.crmserver.dao.Contact;
@@ -19,6 +20,7 @@ import tech.crm.crmserver.service.RecentContactService;
 import tech.crm.crmserver.service.UserService;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -170,6 +172,16 @@ public class ContactController {
     public ResponseResult<Object> searchAllContactOfUser(@RequestParam("search_key") String searchKey){
         List<Contact> contacts = contactService.searchAllContactOfUser(userService.getId(), searchKey);
         return ResponseResult.suc("success",contacts);
+    }
+
+    @PostMapping("/uploadPhoto")
+    public ResponseResult<Object> uploadPhoto(@RequestParam("contact_id") Integer contactId,
+                                              @RequestParam("photo") MultipartFile photo) throws IOException {
+        if(photo == null){
+            throw new BadPhotoException();
+        }
+        contactService.updatePhoto(contactId,userService.getId(), photo.getBytes());
+        return ResponseResult.suc("Successfully upload the file");
     }
 }
 

@@ -59,6 +59,8 @@ public class Contact implements Serializable {
 
     private Status status;
 
+    private String photo;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

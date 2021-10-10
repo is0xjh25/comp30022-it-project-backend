@@ -47,4 +47,6 @@ public class ContactDTO {
 
     private String customerType;
 
+    private String photo;
+
 }
