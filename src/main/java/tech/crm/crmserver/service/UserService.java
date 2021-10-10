@@ -3,12 +3,14 @@ package tech.crm.crmserver.service;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
+import org.springframework.web.multipart.MultipartFile;
 import tech.crm.crmserver.dao.User;
 import tech.crm.crmserver.dto.LoginRequest;
 import tech.crm.crmserver.dto.UserPermissionDTO;
 import tech.crm.crmserver.dto.UserRegisterDTO;
 import tech.crm.crmserver.dto.UserUpdateDTO;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -141,5 +143,5 @@ public interface UserService extends IService<User> {
      * @param userId the id of user
      * @param originalPhoto binary photo
      */
-    public void updatePhoto(Integer userId, byte[] originalPhoto);
+    public void updatePhoto(Integer userId, MultipartFile originalPhoto) throws IOException;
 }

@@ -19,10 +19,13 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Base64Utils;
+import org.springframework.web.multipart.MultipartFile;
 import tech.crm.crmserver.common.constants.EmailConstants;
 import tech.crm.crmserver.common.constants.SecurityConstants;
 import tech.crm.crmserver.common.constants.TimeZoneConstants;
 import tech.crm.crmserver.common.enums.Status;
+import tech.crm.crmserver.common.utils.ImageUtil;
 import tech.crm.crmserver.common.utils.NullAwareBeanUtilsBean;
 import tech.crm.crmserver.dao.User;
 import tech.crm.crmserver.dto.LoginRequest;
@@ -35,6 +38,10 @@ import tech.crm.crmserver.service.MailService;
 import tech.crm.crmserver.service.TokenKeyService;
 import tech.crm.crmserver.service.UserService;
 
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.List;
@@ -337,10 +344,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      * @param originalPhoto binary photo
      */
     @Override
-    public void updatePhoto(Integer userId, byte[] originalPhoto) {
+    public void updatePhoto(Integer userId, MultipartFile originalPhoto) throws IOException {
         User user = new User();
         user.setId(userId);
-        user.setPhoto(Base64.getEncoder().encodeToString(originalPhoto));
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        ImageUtil.imgThumb(originalPhoto.getInputStream(),outputStream);
+
+        System.out.println(outputStream.size());
+        user.setPhoto(Base64.getEncoder().encodeToString(outputStream.toByteArray()));
         baseMapper.updateById(user);
 
     }

@@ -129,11 +129,11 @@ public class UserController {
     }
 
     @PostMapping("/uploadPhoto")
-    public ResponseResult<Object> uploadPhoto(@RequestBody MultipartFile photo) throws IOException {
+    public ResponseResult<Object> uploadPhoto(@RequestParam("photo") MultipartFile photo) throws IOException {
         if(photo == null){
             throw new BadPhotoException();
         }
-        userService.updatePhoto(userService.getId(), photo.getBytes());
+        userService.updatePhoto(userService.getId(), photo);
         return ResponseResult.suc("Successfully upload the file");
     }
 
