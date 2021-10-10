@@ -2,6 +2,7 @@ package tech.crm.crmserver.controllerTesting;
 
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -130,6 +131,40 @@ public class ContactControllerTests {
         List<Contact> contactBasedOnSomeConditionFromDB2 = contactService.getContactBasedOnSomeConditionFromDB(departmentId, updateEmail, null, null, null, null, null, null, null);
         assert (contactBasedOnSomeConditionFromDB2.get(0).getFirstName().equals("updateFirstName"));
         assert (contactBasedOnSomeConditionFromDB2.size() == 1);
+
+        contactId = 0;
+        MvcResult mvcResult2 = mvc.perform(MockMvcRequestBuilders.put("/contact").header(SecurityConstants.TOKEN_HEADER,token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\n" +
+                        "    \"id\": \"" +String.valueOf(contactId) + "\", \n" +
+                        "    \"department_id\": \"2\", \n" +
+                        "    \"email\": \"updateEmail@gamil.com\", \n" +
+                        "    \"first_name\": \"updateFirstName\", \n" +
+                        "    \"last_name\": \"testLast\", \n" +
+                        "    \"gender\": \"male\", \n" +
+                        "    \"birthday\": \"2020-01-01\", \n" +
+                        "    \"status\": \"active\" \n" +
+                        "}"))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.msg").value("id should be positive"))
+                .andReturn();
+
+        contactId = 100;
+        MvcResult mvcResult3 = mvc.perform(MockMvcRequestBuilders.put("/contact").header(SecurityConstants.TOKEN_HEADER,token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\n" +
+                        "    \"id\": \"" +String.valueOf(contactId) + "\", \n" +
+                        "    \"department_id\": \"2\", \n" +
+                        "    \"email\": \"updateEmail@gamil.com\", \n" +
+                        "    \"first_name\": \"updateFirstName\", \n" +
+                        "    \"last_name\": \"testLast\", \n" +
+                        "    \"gender\": \"male\", \n" +
+                        "    \"birthday\": \"2020-01-01\", \n" +
+                        "    \"status\": \"active\" \n" +
+                        "}"))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.msg").value("Contact do not exist!"))
+                .andReturn();
     }
 
 
@@ -169,6 +204,12 @@ public class ContactControllerTests {
                 .andReturn();
         Contact contact = contactService.getById(contactId);
         assert (contact == null);
+
+        contactId = 100;
+        MvcResult mvcResult2 = mvc.perform(MockMvcRequestBuilders.delete("/contact").param("contact_id", String.valueOf(contactId)).header(SecurityConstants.TOKEN_HEADER,token))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.msg").value("Contact do not exist!"))
+                .andReturn();
     }
 
     /**
