@@ -135,4 +135,11 @@ public interface UserService extends IService<User> {
      * @return return page of UserPermissionDTO by wrapper
      */
     public Page<UserPermissionDTO> getUserPermissionDTOInOrganization(Page<?> page, Wrapper<User> queryWrapper);
+
+    /**
+     * convert binary photo into base64 and store
+     * @param userId the id of user
+     * @param originalPhoto binary photo
+     */
+    public void updatePhoto(Integer userId, byte[] originalPhoto);
 }
