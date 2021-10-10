@@ -52,4 +52,6 @@ public class User implements Serializable {
 
     private Status status;
 
+    private String photo;
+
 }

@@ -29,16 +29,14 @@ import tech.crm.crmserver.dto.LoginRequest;
 import tech.crm.crmserver.dto.UserPermissionDTO;
 import tech.crm.crmserver.dto.UserRegisterDTO;
 import tech.crm.crmserver.dto.UserUpdateDTO;
-import tech.crm.crmserver.exception.LoginBadCredentialsException;
-import tech.crm.crmserver.exception.UserAlreadyExistException;
-import tech.crm.crmserver.exception.UserNotActiveException;
-import tech.crm.crmserver.exception.UserNotExistException;
+import tech.crm.crmserver.exception.*;
 import tech.crm.crmserver.mapper.UserMapper;
 import tech.crm.crmserver.service.MailService;
 import tech.crm.crmserver.service.TokenKeyService;
 import tech.crm.crmserver.service.UserService;
 
 import java.time.LocalDateTime;
+import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -330,5 +328,20 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     public Page<UserPermissionDTO> getUserPermissionDTOInOrganization(Page<?> page, Wrapper<User> queryWrapper) {
         return baseMapper.getUserPermissionDTOInOrganization(page,queryWrapper);
+    }
+
+    /**
+     * convert binary photo into base64 and store
+     *
+     * @param userId the id of user
+     * @param originalPhoto binary photo
+     */
+    @Override
+    public void updatePhoto(Integer userId, byte[] originalPhoto) {
+        User user = new User();
+        user.setId(userId);
+        user.setPhoto(Base64.getEncoder().encodeToString(originalPhoto));
+        baseMapper.updateById(user);
+
     }
 }

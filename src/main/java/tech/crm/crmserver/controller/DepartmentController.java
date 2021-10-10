@@ -96,8 +96,6 @@ public class DepartmentController {
      * search member in department
      * @param departmentId the id of department
      * @param searchKey search key
-     * @param size the size of the page
-     * @param current the value of current page
      * @return ResponseResult with msg
      */
     @GetMapping("/searchMember")

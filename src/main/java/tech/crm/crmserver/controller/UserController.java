@@ -1,7 +1,6 @@
 package tech.crm.crmserver.controller;
 
 
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.validation.annotation.Validated;
@@ -9,11 +8,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import tech.crm.crmserver.common.constants.SecurityConstants;
 import tech.crm.crmserver.common.response.ResponseResult;
+import tech.crm.crmserver.common.utils.NullAwareBeanUtilsBean;
 import tech.crm.crmserver.dao.User;
-import tech.crm.crmserver.dto.LoginRequest;
-import tech.crm.crmserver.dto.ResetPasswordDTO;
-import tech.crm.crmserver.dto.UserRegisterDTO;
-import tech.crm.crmserver.dto.UserUpdateDTO;
+import tech.crm.crmserver.dto.*;
+import tech.crm.crmserver.exception.BadPhotoException;
 import tech.crm.crmserver.service.TokenKeyService;
 import tech.crm.crmserver.service.UserService;
 
@@ -92,7 +90,9 @@ public class UserController {
         if (id != null) {
             User user = userService.getById(id);
             user.setPassword(null);
-            return ResponseResult.suc("successfully get user", user);
+            UserDTO userDTO = new UserDTO();
+            NullAwareBeanUtilsBean.copyProperties(user,userDTO);
+            return ResponseResult.suc("successfully get user", userDTO);
         }
         return ResponseResult.fail("Error");
     }
@@ -126,6 +126,15 @@ public class UserController {
     public ResponseResult<Object> verifyEmail(){
         userService.activePendingUser(userService.getId());
         return ResponseResult.suc("Successfully active user account");
+    }
+
+    @PostMapping("/uploadPhoto")
+    public ResponseResult<Object> uploadPhoto(@RequestBody MultipartFile photo) throws IOException {
+        if(photo == null){
+            throw new BadPhotoException();
+        }
+        userService.updatePhoto(userService.getId(), photo.getBytes());
+        return ResponseResult.suc("Successfully upload the file");
     }
 
 }
