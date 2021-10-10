@@ -11,6 +11,7 @@ import tech.crm.crmserver.common.enums.Status;
 import tech.crm.crmserver.common.utils.NullAwareBeanUtilsBean;
 import tech.crm.crmserver.dao.Contact;
 import tech.crm.crmserver.dao.Permission;
+import tech.crm.crmserver.dao.User;
 import tech.crm.crmserver.dto.ContactCreateDTO;
 import tech.crm.crmserver.dto.ContactDTO;
 import tech.crm.crmserver.dto.ContactUpdateDTO;
@@ -19,10 +20,7 @@ import tech.crm.crmserver.mapper.ContactMapper;
 import tech.crm.crmserver.service.*;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * <p>
@@ -280,6 +278,9 @@ public class ContactServiceImpl extends ServiceImpl<ContactMapper, Contact> impl
             }
         });
         List<Contact> contactList = baseMapper.selectList(wrapper);
+        for(Contact c:contactList){
+            c.setPhone(null);
+        }
         return contactList;
     }
 
@@ -423,4 +424,32 @@ public class ContactServiceImpl extends ServiceImpl<ContactMapper, Contact> impl
         return removeById(contactId);
 
     }
+
+    /**
+     * convert binary photo into base64 and store
+     *
+     * @param contactId the id of contact
+     * @param userId    the id of user
+     * @param originalPhoto binary photo
+     */
+    @Override
+    public void updatePhoto(Integer contactId, Integer userId, byte[] originalPhoto) {
+        Contact contact = contactService.getById(contactId);
+
+        if (contact == null || contact.getStatus().equals(Status.DELETED)) {
+            throw new ContactNotExistException();
+        }
+        // Verify permissionLevel, the permissionLevel here is delete
+        if (!permissionService.ifPermissionLevelSatisfied(userId, PermissionLevel.UPDATE, contact.getDepartmentId())) {
+            throw new NotEnoughPermissionException();
+        }
+
+        //store
+        contact = new Contact();
+        contact.setId(contactId);
+        contact.setPhoto(Base64.getEncoder().encodeToString(originalPhoto));
+        baseMapper.updateById(contact);
+
+    }
+
 }
