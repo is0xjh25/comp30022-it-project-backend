@@ -1,5 +1,6 @@
 package tech.crm.crmserver.controllerTesting;
 
+import org.hamcrest.Matcher;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -202,5 +203,73 @@ public class TodoListControllerTesting {
         // Check if the deleting is successful
         List<ToDoList> testDelete = toDoListService.queryTodoList(testId, null, null, null, null);
         assert (testDelete.size() == 0);
+    }
+
+    /**
+     * Testing updating a invalid todoList data
+     * @throws Exception
+     */
+    @Test
+    @Order(5)
+    @Transactional
+    public void testEUpdateNotExitToDoListData() throws Exception {
+        // Update a not exit todoListData
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        Integer testId = 0;
+
+        String startUpdate = "2021-10-02 20:00";
+        LocalDateTime dateTimeUpdate = LocalDateTime.parse(startUpdate, formatter);
+
+        String descriptionUpdate = "Watch GI lecture";
+
+        // Try to update the to-do list
+        MvcResult mvcResultUpdate = mvc.perform(MockMvcRequestBuilders.put("/toDoList").header(SecurityConstants.TOKEN_HEADER, token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(
+                        "{\n" +
+                                "   \"id\" : \"" + String.valueOf(testId) + "\", \n" +
+                                "   \"date_time\" : \"" + startUpdate + "\", \n" +
+                                "   \"description\": \"" + descriptionUpdate + "\", \n" +
+                                "   \"status\": \"to do\" \n" +
+                                "}"
+
+                ))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.msg").value("id should be positive"))
+                .andReturn();
+
+        testId = 1;
+        MvcResult mvcResultUpdate2 = mvc.perform(MockMvcRequestBuilders.put("/toDoList").header(SecurityConstants.TOKEN_HEADER, token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(
+                        "{\n" +
+                                "   \"id\" : \"" + String.valueOf(testId) + "\", \n" +
+                                "   \"date_time\" : \"" + startUpdate + "\", \n" +
+                                "   \"description\": \"" + descriptionUpdate + "\", \n" +
+                                "   \"status\": \"to do\" \n" +
+                                "}"
+
+                ))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.msg").value("Fail to perform the operation, todolist not exist"))
+                .andReturn();
+    }
+
+    /**
+     * Testing delete a not exit to-do list
+     * @throws Exception
+     */
+    @Test
+    @Order(6)
+    @Transactional
+    public void testFDeleteNotExitToDoListData() throws Exception {
+        // Create mock data and check its format
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        Integer testId = 0;
+        // Try to delete this data
+        MvcResult mvcResultDelete = mvc.perform(MockMvcRequestBuilders.delete("/toDoList").param("todoList_id", String.valueOf(testId)).header(SecurityConstants.TOKEN_HEADER, token))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.msg").value("Fail to perform the operation, todolist not exist"))
+                .andReturn();
     }
 }

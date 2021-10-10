@@ -219,4 +219,82 @@ public class EventControllerTesting {
         List<Event> testEvent = eventService.queryEvent(eventId, null, null, null, null, null);
         assert (testEvent.size() == 0);
     }
+
+    /**
+     * Testing update an invalid event
+     * @throws Exception
+     */
+    @Test
+    @Order(5)
+    @Transactional
+    public void testEUpdateInvalidEventsData() throws Exception {
+        // Insert a new event
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        Integer eventId = 0;
+
+        // Update event, update startTime, finishTime, description and status
+        String startTimeUpdate = "2021-09-29 19:20";
+        DateTimeFormatter formatterUpdate = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        LocalDateTime dateTimeStartUpdate = LocalDateTime.parse(startTimeUpdate, formatter);
+
+        String finishTimeUpdate = "2021-10-04 19:20";
+        LocalDateTime dateTimeFinishUpdate = LocalDateTime.parse(finishTimeUpdate, formatter);
+
+        String descriptionUpdate = "zoom meeting, processing";
+        ToDoListStatus status = ToDoListStatus.IN_PROGRESS;
+        MvcResult mvcResultUpdate = mvc.perform(MockMvcRequestBuilders.put("/event").header(SecurityConstants.TOKEN_HEADER,token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\n" +
+                        "    \"start_time\": \"" + startTimeUpdate + "\", \n" +
+                        "    \"finish_time\": \"" + finishTimeUpdate + "\", \n" +
+                        "    \"description\": \"" + descriptionUpdate + "\", \n" +
+                        "    \"id\": \"" + String.valueOf(eventId) + "\", \n" +
+                        "    \"status\": \"" + status.getStatus() + "\" \n" +
+                        "}"))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.msg").value("id should be positive"))
+                .andReturn();
+
+        eventId = 1;
+        MvcResult mvcResultUpdate2 = mvc.perform(MockMvcRequestBuilders.put("/event").header(SecurityConstants.TOKEN_HEADER,token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\n" +
+                        "    \"start_time\": \"" + startTimeUpdate + "\", \n" +
+                        "    \"finish_time\": \"" + finishTimeUpdate + "\", \n" +
+                        "    \"description\": \"" + descriptionUpdate + "\", \n" +
+                        "    \"id\": \"" + String.valueOf(eventId) + "\", \n" +
+                        "    \"status\": \"" + status.getStatus() + "\" \n" +
+                        "}"))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.msg").value("Event not exist!"))
+                .andReturn();
+    }
+
+    /**
+     * Testing delete an invalid events
+     * @throws Exception
+     */
+    @Test
+    @Order(6)
+    @Transactional
+    public void testFDeleteInvalidEventsData() throws Exception {
+        // Insert a new event
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+
+        Integer eventId = 0;
+
+        MvcResult mvcResult2 = mvc.perform(MockMvcRequestBuilders.delete("/event").param("event_id", String.valueOf(eventId)).header(SecurityConstants.TOKEN_HEADER,token))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.msg").value("Event not exist!"))
+                .andReturn();
+
+        eventId = 1;
+        MvcResult mvcResult3 = mvc.perform(MockMvcRequestBuilders.delete("/event").param("event_id", String.valueOf(eventId)).header(SecurityConstants.TOKEN_HEADER,token))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.msg").value("Event not exist!"))
+                .andReturn();
+
+        List<Event> testEvent = eventService.queryEvent(eventId, null, null, null, null, null);
+        assert (testEvent.size() == 0);
+    }
 }
