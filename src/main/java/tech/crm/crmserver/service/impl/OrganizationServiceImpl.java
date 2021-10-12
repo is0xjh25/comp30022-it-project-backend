@@ -10,10 +10,10 @@ import tech.crm.crmserver.dao.Organization;
 import tech.crm.crmserver.dao.Permission;
 import tech.crm.crmserver.dao.User;
 import tech.crm.crmserver.dto.UserPermissionDTO;
-import tech.crm.crmserver.exception.NotEnoughPermissionException;
-import tech.crm.crmserver.exception.OrganizationNotExistException;
-import tech.crm.crmserver.exception.UserAlreadyOwnOrganizationException;
-import tech.crm.crmserver.exception.UserNotExistException;
+import tech.crm.crmserver.common.exception.NotEnoughPermissionException;
+import tech.crm.crmserver.common.exception.OrganizationNotExistException;
+import tech.crm.crmserver.common.exception.UserAlreadyOwnOrganizationException;
+import tech.crm.crmserver.common.exception.UserNotExistException;
 import tech.crm.crmserver.mapper.OrganizationMapper;
 import tech.crm.crmserver.service.*;
 

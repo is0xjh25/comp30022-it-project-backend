@@ -10,8 +10,7 @@ import tech.crm.crmserver.common.constants.SecurityConstants;
 import tech.crm.crmserver.common.response.ResponseResult;
 import tech.crm.crmserver.common.utils.NullAwareBeanUtilsBean;
 import tech.crm.crmserver.dao.User;
-import tech.crm.crmserver.dto.*;
-import tech.crm.crmserver.exception.BadPhotoException;
+import tech.crm.crmserver.common.exception.BadPhotoException;
 import tech.crm.crmserver.service.TokenKeyService;
 import tech.crm.crmserver.service.UserService;
 

@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import tech.crm.crmserver.common.response.ResponseResult;
 import tech.crm.crmserver.dao.Organization;
 import tech.crm.crmserver.dao.Permission;
-import tech.crm.crmserver.exception.UserNotInDepartmentException;
+import tech.crm.crmserver.common.exception.UserNotInDepartmentException;
 import tech.crm.crmserver.service.OrganizationService;
 import tech.crm.crmserver.service.PermissionService;
 import tech.crm.crmserver.service.UserService;

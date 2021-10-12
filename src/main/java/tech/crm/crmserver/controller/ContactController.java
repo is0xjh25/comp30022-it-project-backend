@@ -13,7 +13,7 @@ import tech.crm.crmserver.dto.ContactCreateDTO;
 import tech.crm.crmserver.dto.ContactDTO;
 import tech.crm.crmserver.dto.ContactUpdateDTO;
 import tech.crm.crmserver.dto.PageDTO;
-import tech.crm.crmserver.exception.*;
+import tech.crm.crmserver.common.exception.*;
 import tech.crm.crmserver.service.ContactService;
 import tech.crm.crmserver.service.PermissionService;
 import tech.crm.crmserver.service.RecentContactService;

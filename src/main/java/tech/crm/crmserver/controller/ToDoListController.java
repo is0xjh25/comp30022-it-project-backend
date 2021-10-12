@@ -8,9 +8,9 @@ import tech.crm.crmserver.dao.ToDoList;
 import tech.crm.crmserver.dto.TaskStatDTO;
 import tech.crm.crmserver.dto.TodoListCreateDTO;
 import tech.crm.crmserver.dto.TodoListUpdateDTO;
-import tech.crm.crmserver.exception.TodoListDeleteFailException;
-import tech.crm.crmserver.exception.TodoListFailAddedException;
-import tech.crm.crmserver.exception.TodoListUpdateFailException;
+import tech.crm.crmserver.common.exception.TodoListDeleteFailException;
+import tech.crm.crmserver.common.exception.TodoListFailAddedException;
+import tech.crm.crmserver.common.exception.TodoListUpdateFailException;
 import tech.crm.crmserver.service.ToDoListService;
 import tech.crm.crmserver.service.UserService;
 

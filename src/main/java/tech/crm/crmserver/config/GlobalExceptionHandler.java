@@ -8,7 +8,7 @@ import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import tech.crm.crmserver.common.response.ResponseResult;
-import tech.crm.crmserver.exception.BaseException;
+import tech.crm.crmserver.common.exception.BaseException;
 
 /**
  * <p>

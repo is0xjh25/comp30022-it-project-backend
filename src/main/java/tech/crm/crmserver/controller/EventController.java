@@ -5,18 +5,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import tech.crm.crmserver.common.response.ResponseResult;
 import tech.crm.crmserver.dao.Event;
-import tech.crm.crmserver.dto.*;
-import tech.crm.crmserver.exception.EventsFailAddedException;
+import tech.crm.crmserver.common.exception.EventsFailAddedException;
 import tech.crm.crmserver.service.AttendService;
 import tech.crm.crmserver.service.EventService;
 import tech.crm.crmserver.service.UserService;
 
 import javax.validation.Valid;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.util.List;
-import java.util.Map;
 
 /**
  * <p>

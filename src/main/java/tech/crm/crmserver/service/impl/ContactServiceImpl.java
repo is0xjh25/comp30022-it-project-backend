@@ -17,7 +17,7 @@ import tech.crm.crmserver.dao.User;
 import tech.crm.crmserver.dto.ContactCreateDTO;
 import tech.crm.crmserver.dto.ContactDTO;
 import tech.crm.crmserver.dto.ContactUpdateDTO;
-import tech.crm.crmserver.exception.*;
+import tech.crm.crmserver.common.exception.*;
 import tech.crm.crmserver.mapper.ContactMapper;
 import tech.crm.crmserver.service.*;
 
