@@ -7,10 +7,11 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import tech.crm.crmserver.common.constants.SecurityConstants;
+import tech.crm.crmserver.common.exception.BadPhotoException;
 import tech.crm.crmserver.common.response.ResponseResult;
 import tech.crm.crmserver.common.utils.NullAwareBeanUtilsBean;
 import tech.crm.crmserver.dao.User;
-import tech.crm.crmserver.common.exception.BadPhotoException;
+import tech.crm.crmserver.dto.*;
 import tech.crm.crmserver.service.TokenKeyService;
 import tech.crm.crmserver.service.UserService;
 

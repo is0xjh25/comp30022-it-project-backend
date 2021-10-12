@@ -3,9 +3,10 @@ package tech.crm.crmserver.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import tech.crm.crmserver.common.exception.EventsFailAddedException;
 import tech.crm.crmserver.common.response.ResponseResult;
 import tech.crm.crmserver.dao.Event;
-import tech.crm.crmserver.common.exception.EventsFailAddedException;
+import tech.crm.crmserver.dto.*;
 import tech.crm.crmserver.service.AttendService;
 import tech.crm.crmserver.service.EventService;
 import tech.crm.crmserver.service.UserService;

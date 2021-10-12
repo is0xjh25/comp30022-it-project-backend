@@ -9,15 +9,14 @@ import org.springframework.web.multipart.MultipartFile;
 import tech.crm.crmserver.common.constants.TimeZoneConstants;
 import tech.crm.crmserver.common.enums.PermissionLevel;
 import tech.crm.crmserver.common.enums.Status;
+import tech.crm.crmserver.common.exception.*;
 import tech.crm.crmserver.common.utils.ImageUtil;
 import tech.crm.crmserver.common.utils.NullAwareBeanUtilsBean;
 import tech.crm.crmserver.dao.Contact;
 import tech.crm.crmserver.dao.Permission;
-import tech.crm.crmserver.dao.User;
 import tech.crm.crmserver.dto.ContactCreateDTO;
 import tech.crm.crmserver.dto.ContactDTO;
 import tech.crm.crmserver.dto.ContactUpdateDTO;
-import tech.crm.crmserver.common.exception.*;
 import tech.crm.crmserver.mapper.ContactMapper;
 import tech.crm.crmserver.service.*;
 

@@ -1,6 +1,5 @@
 package tech.crm.crmserver.controllerTesting;
 
-import org.hamcrest.Matcher;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,6 +61,7 @@ public class TodoListControllerTesting {
      */
     @Test
     @Order(1)
+    @Transactional
     public void testAAddNewTodoListData() throws Exception {
 
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post("/toDoList").header(SecurityConstants.TOKEN_HEADER,token)
@@ -88,6 +88,7 @@ public class TodoListControllerTesting {
      */
     @Test
     @Order(2)
+    @Transactional
     public void testBQueryNewTodoListData() throws Exception {
 
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get("/toDoList").param("topNTodoListData", String.valueOf(2)).header(SecurityConstants.TOKEN_HEADER,token))

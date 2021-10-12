@@ -7,14 +7,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tech.crm.crmserver.common.enums.PermissionLevel;
 import tech.crm.crmserver.common.enums.Status;
+import tech.crm.crmserver.common.exception.DepartmentAlreadyExistException;
+import tech.crm.crmserver.common.exception.NotEnoughPermissionException;
+import tech.crm.crmserver.common.exception.OrganizationNotExistException;
 import tech.crm.crmserver.dao.Department;
 import tech.crm.crmserver.dao.Organization;
 import tech.crm.crmserver.dao.Permission;
 import tech.crm.crmserver.dao.User;
 import tech.crm.crmserver.dto.UserPermissionDTO;
-import tech.crm.crmserver.common.exception.DepartmentAlreadyExistException;
-import tech.crm.crmserver.common.exception.NotEnoughPermissionException;
-import tech.crm.crmserver.common.exception.OrganizationNotExistException;
 import tech.crm.crmserver.mapper.DepartmentMapper;
 import tech.crm.crmserver.service.*;
 

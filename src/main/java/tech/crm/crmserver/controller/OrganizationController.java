@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import tech.crm.crmserver.common.enums.Status;
+import tech.crm.crmserver.common.exception.*;
 import tech.crm.crmserver.common.response.ResponseResult;
 import tech.crm.crmserver.common.utils.NullAwareBeanUtilsBean;
 import tech.crm.crmserver.dao.BelongTo;
@@ -16,7 +17,6 @@ import tech.crm.crmserver.dto.DepartmentDTO;
 import tech.crm.crmserver.dto.OrganizationDTO;
 import tech.crm.crmserver.dto.PageDTO;
 import tech.crm.crmserver.dto.UserPermissionDTO;
-import tech.crm.crmserver.common.exception.*;
 import tech.crm.crmserver.service.*;
 
 import javax.validation.Valid;

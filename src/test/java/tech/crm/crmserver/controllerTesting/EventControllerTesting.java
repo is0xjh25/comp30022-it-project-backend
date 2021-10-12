@@ -16,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 import tech.crm.crmserver.common.constants.SecurityConstants;
 import tech.crm.crmserver.common.enums.ToDoListStatus;
 import tech.crm.crmserver.dao.Event;
-import tech.crm.crmserver.dao.ToDoList;
 import tech.crm.crmserver.service.EventService;
 
 import java.time.LocalDateTime;

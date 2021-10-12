@@ -1,13 +1,11 @@
 package tech.crm.crmserver.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import tech.crm.crmserver.common.enums.ToDoListStatus;
 import tech.crm.crmserver.common.validator.NullOrNotBlank;
 
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import java.time.LocalDateTime;
