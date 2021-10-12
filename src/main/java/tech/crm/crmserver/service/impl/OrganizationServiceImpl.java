@@ -12,6 +12,7 @@ import tech.crm.crmserver.dao.User;
 import tech.crm.crmserver.dto.UserPermissionDTO;
 import tech.crm.crmserver.exception.NotEnoughPermissionException;
 import tech.crm.crmserver.exception.OrganizationNotExistException;
+import tech.crm.crmserver.exception.UserAlreadyOwnOrganizationException;
 import tech.crm.crmserver.exception.UserNotExistException;
 import tech.crm.crmserver.mapper.OrganizationMapper;
 import tech.crm.crmserver.service.*;
@@ -147,6 +148,10 @@ public class OrganizationServiceImpl extends ServiceImpl<OrganizationMapper, Org
         if(!organization.getOwner().equals(from)){
             throw new NotEnoughPermissionException();
         }
+        //check transfer to same owner
+        if(from.equals(to)){
+            throw new UserAlreadyOwnOrganizationException();
+        }
         //check whether the new owner exist
         if(userService.getById(to) == null){
             throw new UserNotExistException();
@@ -205,6 +210,7 @@ public class OrganizationServiceImpl extends ServiceImpl<OrganizationMapper, Org
                 i.or().like(entry.getKey(),entry.getValue());
             }
         });
+        wrapper.ne("user_id",userService.getId());
         page = userService.getUserPermissionDTOInOrganization(page,wrapper);
         return page;
     }
