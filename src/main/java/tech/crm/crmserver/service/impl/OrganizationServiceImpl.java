@@ -151,39 +151,42 @@ public class OrganizationServiceImpl extends ServiceImpl<OrganizationMapper, Org
         if(userService.getById(to) == null){
             throw new UserNotExistException();
         }
-        //add belongTo relationship for new owner
-        belongToService.insertNewBelongTo(organizationId,to);
 
-        //transfer the ownership
-        organization.setOwner(to);
-        baseMapper.updateById(organization);
+        if (!from.equals(to)) {
+            //add belongTo relationship for new owner
+            belongToService.insertNewBelongTo(organizationId, to);
 
-        //update permissions of previous owner
-        List<Integer> departmentIdList = departmentService.getDepartmentIdByOrganization(organizationId);
+            //transfer the ownership
+            organization.setOwner(to);
+            baseMapper.updateById(organization);
 
-        //delete permission first
-        QueryWrapper<Permission> permissionDeleteWrapper = new QueryWrapper<>();
-        permissionDeleteWrapper.in("user_id",from,to)
-                .in("department_id",departmentIdList);
-        permissionService.remove(permissionDeleteWrapper);
+            //update permissions of previous owner
+            List<Integer> departmentIdList = departmentService.getDepartmentIdByOrganization(organizationId);
 
-        //add permission
-        List<Permission> permissionList = new ArrayList<>();
-        for (Integer departmentId: departmentIdList) {
-            //old owner
-            Permission permission = new Permission();
-            permission.setUserId(from);
-            permission.setDepartmentId(departmentId);
-            permission.setAuthorityLevel(PermissionLevel.MANAGE);
-            permissionList.add(permission);
-            //new owner
-            permission = new Permission();
-            permission.setUserId(to);
-            permission.setDepartmentId(departmentId);
-            permission.setAuthorityLevel(PermissionLevel.OWNER);
-            permissionList.add(permission);
+            //delete permission first
+            QueryWrapper<Permission> permissionDeleteWrapper = new QueryWrapper<>();
+            permissionDeleteWrapper.in("user_id", from, to)
+                    .in("department_id", departmentIdList);
+            permissionService.remove(permissionDeleteWrapper);
+
+            //add permission
+            List<Permission> permissionList = new ArrayList<>();
+            for (Integer departmentId : departmentIdList) {
+                //old owner
+                Permission permission = new Permission();
+                permission.setUserId(from);
+                permission.setDepartmentId(departmentId);
+                permission.setAuthorityLevel(PermissionLevel.MANAGE);
+                permissionList.add(permission);
+                //new owner
+                permission = new Permission();
+                permission.setUserId(to);
+                permission.setDepartmentId(departmentId);
+                permission.setAuthorityLevel(PermissionLevel.OWNER);
+                permissionList.add(permission);
+            }
+            permissionService.saveBatch(permissionList);
         }
-        permissionService.saveBatch(permissionList);
     }
 
     /**
