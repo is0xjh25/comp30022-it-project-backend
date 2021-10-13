@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import tech.crm.crmserver.common.validator.NullOrNotBlank;
 
 import javax.validation.constraints.*;
 import java.time.LocalDate;

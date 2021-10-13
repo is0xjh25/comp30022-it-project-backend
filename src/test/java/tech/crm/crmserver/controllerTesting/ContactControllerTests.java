@@ -2,7 +2,6 @@ package tech.crm.crmserver.controllerTesting;
 
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,8 +15,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import tech.crm.crmserver.common.constants.SecurityConstants;
 import tech.crm.crmserver.dao.Contact;
 import tech.crm.crmserver.service.ContactService;
-import tech.crm.crmserver.service.DepartmentService;
-import tech.crm.crmserver.service.PermissionService;
+
 import java.util.List;
 
 @ExtendWith(SpringExtension.class)
