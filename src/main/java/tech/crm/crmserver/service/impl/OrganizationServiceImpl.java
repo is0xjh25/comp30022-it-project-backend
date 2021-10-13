@@ -167,10 +167,12 @@ public class OrganizationServiceImpl extends ServiceImpl<OrganizationMapper, Org
         List<Integer> departmentIdList = departmentService.getDepartmentIdByOrganization(organizationId);
 
         //delete permission first
-        QueryWrapper<Permission> permissionDeleteWrapper = new QueryWrapper<>();
-        permissionDeleteWrapper.in("user_id",from,to)
-                .in("department_id",departmentIdList);
-        permissionService.remove(permissionDeleteWrapper);
+        if(!departmentIdList.isEmpty()) {
+            QueryWrapper<Permission> permissionDeleteWrapper = new QueryWrapper<>();
+            permissionDeleteWrapper.in("user_id", from, to)
+                    .in("department_id", departmentIdList);
+            permissionService.remove(permissionDeleteWrapper);
+        }
 
         //add permission
         List<Permission> permissionList = new ArrayList<>();
