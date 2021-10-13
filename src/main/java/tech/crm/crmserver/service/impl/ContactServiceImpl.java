@@ -163,6 +163,12 @@ public class ContactServiceImpl extends ServiceImpl<ContactMapper, Contact> impl
     public Contact fromContactCreateDTO(ContactCreateDTO contactCreateDTO) {
         Contact contact = new Contact();
         NullAwareBeanUtilsBean.copyProperties(contactCreateDTO, contact);
+        if(contact.getGender() != null && contact.getGender().equals("")){
+            contact.setGender(null);
+        }
+        if(contact.getCustomerType() != null && contact.getCustomerType().equals("")){
+            contact.setCustomerType(null);
+        }
         return contact;
     }
 
@@ -176,6 +182,12 @@ public class ContactServiceImpl extends ServiceImpl<ContactMapper, Contact> impl
     public Contact fromContactUpdateDTO(ContactUpdateDTO contactUpdateDTO) {
         Contact contact = new Contact();
         NullAwareBeanUtilsBean.copyProperties(contactUpdateDTO, contact);
+        if(contact.getGender() != null && contact.getGender().equals("")){
+            contact.setGender(null);
+        }
+        if(contact.getCustomerType() != null && contact.getCustomerType().equals("")){
+            contact.setCustomerType(null);
+        }
         return contact;
     }
 
