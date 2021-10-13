@@ -49,4 +49,6 @@ public class ContactAttendDTO {
     private Status status;
 
     private Integer attendId;
+
+    private String photo;
 }
