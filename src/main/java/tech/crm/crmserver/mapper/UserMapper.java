@@ -21,7 +21,7 @@ import tech.crm.crmserver.dto.UserPermissionDTO;
 @Repository
 public interface UserMapper extends BaseMapper<User> {
 
-    @Select("SELECT p.user_id, p.department_id, p.id permission_id, p.authority_level, u.email, u.first_name, u.middle_name, u.last_name, u.recent_activity " +
+    @Select("SELECT p.user_id, p.department_id, p.id permission_id, p.authority_level, u.email, u.first_name, u.middle_name, u.last_name, u.recent_activity, u.photo " +
             "FROM (permission p LEFT JOIN user u ON p.user_id = u.id) " +
             "${ew.customSqlSegment}")
     public Page<UserPermissionDTO> getUserPermissionDTO(Page<?> page, @Param(Constants.WRAPPER) Wrapper<User> queryWrapper);
