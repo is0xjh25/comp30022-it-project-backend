@@ -301,9 +301,10 @@ public class EventServiceImpl extends ServiceImpl<EventMapper, Event> implements
      * Get events amount for a user among given month
      * @param userId the id of user
      * @param yearMonth the year and month for the event data
+     * @param timeZoneOffset timezone offset in minutes
      * @return the list of event
      */
-    public Map<LocalDate, Integer> getEventAmountByMonthYear(Integer userId, YearMonth yearMonth, Integer timeZoneOffSet) {
+    public Map<LocalDate, Integer> getEventAmountByMonthYear(Integer userId, YearMonth yearMonth, Integer timeZoneOffset) {
         LocalDate startDate = yearMonth.atDay(1);
         LocalDate endDate = yearMonth.plusMonths(1).atDay(1);
         List<Event> eventList = baseMapper.getEventsBetween(userId,startDate.atStartOfDay(),endDate.atStartOfDay());
@@ -313,8 +314,8 @@ public class EventServiceImpl extends ServiceImpl<EventMapper, Event> implements
             LocalDate currentDate = yearMonth.atDay(i);
             LocalDateTime startOfDay = LocalDateTime.of(currentDate, LocalTime.MIDNIGHT);
             LocalDateTime endOfDay = LocalDateTime.of(currentDate, LocalTime.MAX);
-            startOfDay = startOfDay.plusMinutes(timeZoneOffSet);
-            endOfDay = endOfDay.plusMinutes(timeZoneOffSet);
+            startOfDay = startOfDay.plusMinutes(timeZoneOffset);
+            endOfDay = endOfDay.plusMinutes(timeZoneOffset);
             int amount = 0;
             for (Event event: eventList) {
                 LocalDateTime eventStartTime = event.getStartTime();
@@ -334,10 +335,11 @@ public class EventServiceImpl extends ServiceImpl<EventMapper, Event> implements
      * Get the date which has events
      * @param userId the id of user
      * @param yearMonth the year and month for the event data
+     * @param timeZoneOffset timezone offset in minutes
      * @return the list of date which has event
      */
-    public List<Integer> getEventDateByMonthYear(Integer userId, YearMonth yearMonth, Integer timeZoneOffSet) {
-        Map<LocalDate, Integer> eventsMap = getEventAmountByMonthYear(userId, yearMonth, timeZoneOffSet);
+    public List<Integer> getEventDateByMonthYear(Integer userId, YearMonth yearMonth, Integer timeZoneOffset) {
+        Map<LocalDate, Integer> eventsMap = getEventAmountByMonthYear(userId, yearMonth, timeZoneOffset);
         List<Integer> dateHasEvents = new ArrayList<>();
         for (LocalDate localDate : eventsMap.keySet()) {
             dateHasEvents.add(localDate.getDayOfMonth());
