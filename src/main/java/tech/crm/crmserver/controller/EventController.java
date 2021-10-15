@@ -73,9 +73,11 @@ public class EventController {
      * @return ResponseResult contain all the data about user's events
      */
     @GetMapping("/amount")
-    public ResponseResult<Object> getEventByUserIdYearAndMonth(@RequestParam("year") Integer year, @RequestParam("month") Integer month) {
+    public ResponseResult<Object> getEventByUserIdYearAndMonth(@RequestParam("year") Integer year,
+                                                               @RequestParam("month") Integer month,
+                                                               @RequestParam("time_zone") Integer timeZoneOffSet) {
         YearMonth yearMonth = YearMonth.of(year, month);
-        List<Integer> dateHasEvent = eventService.getEventDateByMonthYear(userService.getId(), yearMonth);
+        List<Integer> dateHasEvent = eventService.getEventDateByMonthYear(userService.getId(), yearMonth, timeZoneOffSet);
         return ResponseResult.suc("Query date has events success", dateHasEvent);
     }
 

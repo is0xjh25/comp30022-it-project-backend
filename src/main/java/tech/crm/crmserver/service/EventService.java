@@ -121,7 +121,7 @@ public interface EventService extends IService<Event> {
      * @param yearMonth the year and month for the event data
      * @return the list of event
      */
-    public Map<LocalDate, Integer> getEventAmountByMonthYear(Integer userId, YearMonth yearMonth);
+    public Map<LocalDate, Integer> getEventAmountByMonthYear(Integer userId, YearMonth yearMonth, Integer timeZoneOffSet);
 
     /**
      * Get the date which has events
@@ -129,5 +129,5 @@ public interface EventService extends IService<Event> {
      * @param yearMonth the year and month for the event data
      * @return the list of date which has event
      */
-    public List<Integer> getEventDateByMonthYear(Integer userId, YearMonth yearMonth);
+    public List<Integer> getEventDateByMonthYear(Integer userId, YearMonth yearMonth, Integer timeZoneOffSet);
 }
