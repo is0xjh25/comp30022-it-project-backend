@@ -75,9 +75,9 @@ public class EventController {
     @GetMapping("/amount")
     public ResponseResult<Object> getEventByUserIdYearAndMonth(@RequestParam("year") Integer year,
                                                                @RequestParam("month") Integer month,
-                                                               @RequestParam("time_zone") Integer timeZoneOffSet) {
+                                                               @RequestParam("time_zone_offset") Integer timeZoneOffset) {
         YearMonth yearMonth = YearMonth.of(year, month);
-        List<Integer> dateHasEvent = eventService.getEventDateByMonthYear(userService.getId(), yearMonth, timeZoneOffSet);
+        List<Integer> dateHasEvent = eventService.getEventDateByMonthYear(userService.getId(), yearMonth, timeZoneOffset);
         return ResponseResult.suc("Query date has events success", dateHasEvent);
     }
 

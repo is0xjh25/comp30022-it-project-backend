@@ -119,15 +119,17 @@ public interface EventService extends IService<Event> {
      * Get events amount for a user among given month
      * @param userId the id of user
      * @param yearMonth the year and month for the event data
+     * @param timeZoneOffset timezone offset in minutes
      * @return the list of event
      */
-    public Map<LocalDate, Integer> getEventAmountByMonthYear(Integer userId, YearMonth yearMonth, Integer timeZoneOffSet);
+    public Map<LocalDate, Integer> getEventAmountByMonthYear(Integer userId, YearMonth yearMonth, Integer timeZoneOffset);
 
     /**
      * Get the date which has events
      * @param userId the id of user
      * @param yearMonth the year and month for the event data
+     * @param timeZoneOffset timezone offset in minutes
      * @return the list of date which has event
      */
-    public List<Integer> getEventDateByMonthYear(Integer userId, YearMonth yearMonth, Integer timeZoneOffSet);
+    public List<Integer> getEventDateByMonthYear(Integer userId, YearMonth yearMonth, Integer timeZoneOffset);
 }
