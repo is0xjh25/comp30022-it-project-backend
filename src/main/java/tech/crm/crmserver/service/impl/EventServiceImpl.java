@@ -303,7 +303,7 @@ public class EventServiceImpl extends ServiceImpl<EventMapper, Event> implements
      * @param yearMonth the year and month for the event data
      * @return the list of event
      */
-    public Map<LocalDate, Integer> getEventAmountByMonthYear(Integer userId, YearMonth yearMonth) {
+    public Map<LocalDate, Integer> getEventAmountByMonthYear(Integer userId, YearMonth yearMonth, Integer timeZoneOffSet) {
         LocalDate startDate = yearMonth.atDay(1);
         LocalDate endDate = yearMonth.plusMonths(1).atDay(1);
         List<Event> eventList = baseMapper.getEventsBetween(userId,startDate.atStartOfDay(),endDate.atStartOfDay());
@@ -312,12 +312,14 @@ public class EventServiceImpl extends ServiceImpl<EventMapper, Event> implements
         for (int i = 1; i< totalNumberofDate; i++) {
             LocalDate currentDate = yearMonth.atDay(i);
             LocalDateTime startOfDay = LocalDateTime.of(currentDate, LocalTime.MIDNIGHT);
-            LocalDateTime EndOfDay = LocalDateTime.of(currentDate, LocalTime.MAX);
+            LocalDateTime endOfDay = LocalDateTime.of(currentDate, LocalTime.MAX);
+            startOfDay = startOfDay.plusMinutes(timeZoneOffSet);
+            endOfDay = endOfDay.plusMinutes(timeZoneOffSet);
             int amount = 0;
             for (Event event: eventList) {
                 LocalDateTime eventStartTime = event.getStartTime();
                 LocalDateTime eventEndTime = event.getFinishTime();
-                if ((eventStartTime.isAfter(startOfDay) && eventStartTime.isBefore(EndOfDay)) || (eventEndTime.isAfter(startOfDay) && eventEndTime.isBefore(EndOfDay)) || (eventStartTime.isBefore(startOfDay) && eventEndTime.isAfter(EndOfDay))) {
+                if ((eventStartTime.isAfter(startOfDay) && eventStartTime.isBefore(endOfDay)) || (eventEndTime.isAfter(startOfDay) && eventEndTime.isBefore(endOfDay)) || (eventStartTime.isBefore(startOfDay) && eventEndTime.isAfter(endOfDay))) {
                     amount++;
                 }
             }
@@ -334,8 +336,8 @@ public class EventServiceImpl extends ServiceImpl<EventMapper, Event> implements
      * @param yearMonth the year and month for the event data
      * @return the list of date which has event
      */
-    public List<Integer> getEventDateByMonthYear(Integer userId, YearMonth yearMonth) {
-        Map<LocalDate, Integer> eventsMap = getEventAmountByMonthYear(userId, yearMonth);
+    public List<Integer> getEventDateByMonthYear(Integer userId, YearMonth yearMonth, Integer timeZoneOffSet) {
+        Map<LocalDate, Integer> eventsMap = getEventAmountByMonthYear(userId, yearMonth, timeZoneOffSet);
         List<Integer> dateHasEvents = new ArrayList<>();
         for (LocalDate localDate : eventsMap.keySet()) {
             dateHasEvents.add(localDate.getDayOfMonth());
