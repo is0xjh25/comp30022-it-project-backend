@@ -152,12 +152,12 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
             }
         }
 
-
+        // queryWrapper.eq("authority_level", 0);
         for (Integer department : departmentIdList) {
-            queryWrapper.or().eq("department_id", department);
+            queryWrapper.or().eq("department_id", department).eq("authority_level", 0);
         }
-        queryWrapper.eq("authority_level", PermissionLevel.PENDING);
-        return permissionMapper.selectList(queryWrapper).size() > 0;
+        List<Permission> permissions = permissionMapper.selectList(queryWrapper);
+        return permissions.size() > 0;
     }
 
     /**
