@@ -156,7 +156,10 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
         for (Integer department : departmentIdList) {
             queryWrapper.or().eq("department_id", department).eq("authority_level", PermissionLevel.PENDING);
         }
-        List<Permission> permissions = permissionMapper.selectList(queryWrapper);
+        List<Permission> permissions = new ArrayList<>();
+        if (departmentIdList.size() > 0) {
+            permissions = permissionMapper.selectList(queryWrapper);
+        }
         return permissions.size() > 0;
     }
 
