@@ -101,7 +101,9 @@ public class DepartmentServiceImpl extends ServiceImpl<DepartmentMapper, Departm
         //delete
         permissionService.deletePermissionByDepartmentIdList(departmentIdList);
         contactService.deleteContactByDepartmentIdList(departmentIdList);
-        baseMapper.delete(wrapper);
+        if (!departmentIdList.isEmpty()) {
+            baseMapper.delete(wrapper);
+        }
     }
 
     /**
