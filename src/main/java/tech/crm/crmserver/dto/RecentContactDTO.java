@@ -39,4 +39,6 @@ public class RecentContactDTO {
 
     private LocalDateTime lastContact;
 
+    private String photo;
+
 }
