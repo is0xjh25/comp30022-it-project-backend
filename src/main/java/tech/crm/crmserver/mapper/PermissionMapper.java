@@ -35,7 +35,7 @@ public interface PermissionMapper extends BaseMapper<Permission> {
 
     @Delete("DELETE \n" +
             "FROM permission\n" +
-            "WHERE user_id = #{userId} and department_id in (SELECT department_id FROM department where organization_id = #{organizationId}) ")
+            "WHERE user_id = #{userId} and department_id in (SELECT id FROM department where organization_id = #{organizationId}) ")
     public void deletePermissionByUserIdAndOrganizationId(@Param("userId")Integer userId,
                                                           @Param("organizationId")Integer organizationId);
 
