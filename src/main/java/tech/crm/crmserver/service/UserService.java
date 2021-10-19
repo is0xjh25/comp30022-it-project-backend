@@ -94,8 +94,9 @@ public interface UserService extends IService<User> {
      * then send the password to the email<br/>
      * and delete all the token of this user in database
      * @param email the email of user who needs reset password
+     * @return user who reset password
      */
-    public void resetPassword(String email);
+    public User resetPassword(String email);
 
     /**
      * update the recent activity time of user
@@ -144,4 +145,5 @@ public interface UserService extends IService<User> {
      * @param originalPhoto binary photo
      */
     public void updatePhoto(Integer userId, MultipartFile originalPhoto) throws IOException;
+
 }

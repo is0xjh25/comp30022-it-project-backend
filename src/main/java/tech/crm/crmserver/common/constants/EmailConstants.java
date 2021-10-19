@@ -18,4 +18,6 @@ public class EmailConstants {
 
     public static final String ACTIVE_ACCOUNT_TITLE = "Active your account of ConnecTi";
 
+    public static final String NEW_LOGIN_TITLE = "Safety Notice: Login from new place";
+
 }

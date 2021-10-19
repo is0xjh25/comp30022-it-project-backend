@@ -196,9 +196,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      * and delete all the token of this user in database
      *
      * @param email the email of user who needs reset password
+     * @return user who reset password
      */
     @Override
-    public void resetPassword(String email) {
+    public User resetPassword(String email) {
         UpdateWrapper<User> wrapper = new UpdateWrapper<>();
         wrapper.eq("email",email);
         User user = this.getOne(wrapper);
@@ -217,6 +218,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         update(wrapper);
         //send email
         mailService.sendSimpleMail(email, EmailConstants.EMAIL_RESET_PASSWORD_TITLE, rawPassword);
+        return user;
     }
 
     /**
