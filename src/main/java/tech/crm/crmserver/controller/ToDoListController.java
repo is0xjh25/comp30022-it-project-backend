@@ -16,6 +16,7 @@ import tech.crm.crmserver.service.UserService;
 
 import javax.validation.Valid;
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -46,6 +47,16 @@ public class ToDoListController {
     public ResponseResult<Object> getAllTodoListData(@RequestParam("topNTodoListData") Integer topNTodoListData) {
         Integer userId = userService.getId();
         List<ToDoList> toDoList = toDoListService.queryToDoListByUserId(userId);
+        toDoList.sort(new Comparator<ToDoList>() {
+            @Override
+            public int compare(ToDoList o1, ToDoList o2) {
+                if (o1.getDateTime().isBefore(o2.getDateTime())) {
+                    return -1;
+                } else {
+                    return 1;
+                }
+            }
+        });
         if (topNTodoListData != -1 && toDoList.size() > topNTodoListData) {
             toDoList.subList(0, topNTodoListData);
         }
