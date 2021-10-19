@@ -9,12 +9,15 @@ import org.springframework.web.multipart.MultipartFile;
 import tech.crm.crmserver.common.constants.SecurityConstants;
 import tech.crm.crmserver.common.exception.BadPhotoException;
 import tech.crm.crmserver.common.response.ResponseResult;
+import tech.crm.crmserver.common.utils.IpUtil;
 import tech.crm.crmserver.common.utils.NullAwareBeanUtilsBean;
 import tech.crm.crmserver.dao.User;
 import tech.crm.crmserver.dto.*;
+import tech.crm.crmserver.service.IpAddressService;
 import tech.crm.crmserver.service.TokenKeyService;
 import tech.crm.crmserver.service.UserService;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
 
@@ -36,6 +39,9 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private IpAddressService ipAddressService;
+
     /**
      * The login  API
      *
@@ -43,9 +49,16 @@ public class UserController {
      * @return return 200 when login successfully, return 400 and reason in the msg
      */
     @PostMapping("/login")
-    public ResponseResult<Object> login(@Validated @RequestBody LoginRequest loginRequest){
+    public ResponseResult<Object> login(@Validated @RequestBody LoginRequest loginRequest,
+                                        HttpServletRequest httpServletRequest){
         //login and return the token
-        String token = userService.login(loginRequest);
+        User user = userService.verify(loginRequest);
+        userService.dealPendingUser(user);
+        //check ip
+        String ip = IpUtil.getIpAddr(httpServletRequest);
+        ipAddressService.checkIpAddress(user.getId(), ip);
+        //return the token
+        String token = tokenKeyService.createToken(user);
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.set(SecurityConstants.TOKEN_HEADER, token);
         return ResponseResult.suc("successfully login!","",httpHeaders);
@@ -70,10 +83,14 @@ public class UserController {
      * @return 200 when successfully register and set Authorization in response header
      */
     @PostMapping
-    public ResponseResult<Object> register(@Validated @RequestBody UserRegisterDTO userRegisterDTO){
+    public ResponseResult<Object> register(@Validated @RequestBody UserRegisterDTO userRegisterDTO,
+                                           HttpServletRequest httpServletRequest){
         User user = userService.fromUserRegisterDTO(userRegisterDTO);
         //check whether there is same email already exist
-        userService.register(user);
+        User register = userService.register(user);
+        //save ip
+        String ip = IpUtil.getIpAddr(httpServletRequest);
+        ipAddressService.saveNewIp(register.getId(),ip);
         return ResponseResult.suc("successfully sign up!");
     }
 
@@ -105,8 +122,13 @@ public class UserController {
      * @return response with msg
      */
     @PostMapping("/resetPassword")
-    public ResponseResult<Object> resetPassword(@Validated @RequestBody ResetPasswordDTO resetPasswordDTO){
-        userService.resetPassword(resetPasswordDTO.getEmail());
+    public ResponseResult<Object> resetPassword(@Validated @RequestBody ResetPasswordDTO resetPasswordDTO,
+                                                HttpServletRequest httpServletRequest){
+        User user = userService.resetPassword(resetPasswordDTO.getEmail());
+        //remove all ip and save new ip
+        String ip = IpUtil.getIpAddr(httpServletRequest);
+        ipAddressService.cleanIpByUserId(user.getId());
+        ipAddressService.saveNewIp(user.getId(),ip);
         return ResponseResult.suc("Check your email for new password!");
     }
 
@@ -123,8 +145,12 @@ public class UserController {
     }
 
     @PostMapping("/verify")
-    public ResponseResult<Object> verifyEmail(){
-        userService.activePendingUser(userService.getId());
+    public ResponseResult<Object> verifyEmail(HttpServletRequest httpServletRequest){
+        Integer userId = userService.getId();
+        userService.activePendingUser(userId);
+        //check ip
+        String ip = IpUtil.getIpAddr(httpServletRequest);
+        ipAddressService.checkIpAddress(userId, ip);
         return ResponseResult.suc("Successfully active user account");
     }
 
