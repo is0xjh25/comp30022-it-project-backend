@@ -21,16 +21,18 @@ import java.util.List;
 public interface RecentContactMapper extends BaseMapper<RecentContact> {
 
 
-    @Select("SELECT contact.*, recent_contact.last_contact\n" +
+    @Select("SELECT contact.*, recent_contact.last_contact, department.organization_id \n" +
             "FROM (SELECT contact_id, last_contact FROM recent_contact WHERE user_id = #{userId} ORDER BY last_contact DESC LIMIT #{limit}) recent_contact\n" +
             "LEFT JOIN contact on recent_contact.contact_id = contact.id \n" +
+            "LEFT JOIN department on department.id = contact.department_id \n" +
             "ORDER BY last_contact DESC ")
     public List<RecentContactDTO> getRecentContactDTOByUserIdLimit(@Param("userId") Integer userId,
                                                               @Param("limit") Integer limit);
 
-    @Select("SELECT contact.*, recent_contact.last_contact\n" +
+    @Select("SELECT contact.*, recent_contact.last_contact, department.organization_id \n" +
             "FROM (SELECT contact_id, last_contact FROM recent_contact WHERE user_id = #{userId} ) recent_contact\n" +
             "LEFT JOIN contact on recent_contact.contact_id = contact.id\n" +
+            "LEFT JOIN department on department.id = contact.department_id \n" +
             "ORDER BY last_contact DESC ")
     public List<RecentContactDTO> getRecentContactDTOByUserId(@Param("userId") Integer userId);
 }

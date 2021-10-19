@@ -25,6 +25,8 @@ public class RecentContactDTO {
 
     private Integer departmentId;
 
+    private Integer organizationId;
+
     private String email;
 
     private String firstName;
