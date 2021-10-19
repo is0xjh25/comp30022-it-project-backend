@@ -7,9 +7,12 @@ import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.*;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+import tech.crm.crmserver.config.GlobalExceptionHandler;
 import tech.crm.crmserver.dao.IpAddress;
 
 /**
@@ -21,6 +24,8 @@ import tech.crm.crmserver.dao.IpAddress;
 public class IpUtil {
 
     private final static String URL = "http://ip-api.com/json/";
+
+    private static final Logger logger = LoggerFactory.getLogger(IpUtil.class);
 
     /**
      * get ip by httpServletRequest<br/>
@@ -71,13 +76,15 @@ public class IpUtil {
             if (ipAddress == null || ipAddress.length() == 0 || "unknown".equalsIgnoreCase(ipAddress)) {
                 ipAddress = request.getHeader("X-Real-IP");
             }
+            logger.info(ipAddress);
             if (ipAddress == null || ipAddress.length() == 0 || "unknown".equalsIgnoreCase(ipAddress)) {
+                logger.info("remoteAddr:" + request.getRemoteAddr());
                 ipAddress = request.getRemoteAddr();
                 if (ipAddress.equals("127.0.0.1") || ipAddress.equals("0:0:0:0:0:0:0:1")) {
                     return null;
                 }
             }
-            System.out.println(ipAddress);
+            logger.info(ipAddress);
             if (ipAddress != null && ipAddress.length() > 15) { // "***.***.***.***".length()
                 // = 15
                 if (ipAddress.indexOf(",") > 0) {
