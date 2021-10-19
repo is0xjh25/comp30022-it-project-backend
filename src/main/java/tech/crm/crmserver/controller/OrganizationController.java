@@ -244,8 +244,6 @@ public class OrganizationController {
      * only the owner has the permission to do this action
      * @param organizationId the id of organization
      * @param searchKey search key
-     * @param size the size of each page
-     * @param current the current page
      * @return ResponseResult with msg
      */
     @GetMapping("/searchMember")
@@ -264,5 +262,18 @@ public class OrganizationController {
         return ResponseResult.suc("success",userPermissionDTOPage);
     }
 
+    @DeleteMapping("/leave")
+    public ResponseResult<Object> leaveOrganization(@RequestParam("organization_id") Integer organizationId){
+        Integer userId = userService.getId();
+        Organization organization = organizationService.getById(organizationId);
+        if(organization == null){
+            throw new OrganizationNotExistException();
+        }
+        if(organization.getOwner().equals(userId)){
+            throw new UserAlreadyOwnOrganizationException();
+        }
+        organizationService.leaveOrganization(userId,organizationId);
+        return ResponseResult.suc("success");
+    }
 }
 

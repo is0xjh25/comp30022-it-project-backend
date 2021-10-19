@@ -143,4 +143,11 @@ public interface PermissionService extends IService<Permission> {
      * @return the permission or null
      */
     public Permission getPermissionByUserIdAndContactId(Integer userId, Integer contactId);
+
+    /**
+     * delete all permission of oneself in departments of one organization
+     * @param userId the id of user
+     * @param organizationId the id of organization
+     */
+    public void deletePermissionByUserIdAndOrganizationId(Integer userId, Integer organizationId);
 }

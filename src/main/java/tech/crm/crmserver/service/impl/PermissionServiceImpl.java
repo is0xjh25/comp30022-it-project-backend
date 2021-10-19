@@ -280,9 +280,10 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
         if(executed == null){
             throw new UserNotInDepartmentException();
         }
-        //check the authority
-        if(executor.getAuthorityLevel().getLevel() >= PermissionLevel.MANAGE.getLevel() &&
-                executor.getAuthorityLevel().getLevel() > executed.getAuthorityLevel().getLevel()){
+        //check the authority or delete oneself
+        if((executor.getAuthorityLevel().getLevel() >= PermissionLevel.MANAGE.getLevel() &&
+                executor.getAuthorityLevel().getLevel() > executed.getAuthorityLevel().getLevel()) ||
+                userId == userService.getId()){
             removeById(executed.getId());
         }
         else {
@@ -335,5 +336,16 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
     @Override
     public Permission getPermissionByUserIdAndContactId(Integer userId, Integer contactId) {
         return baseMapper.getPermissionByUserIdAndContactId(userId,contactId);
+    }
+
+    /**
+     * delete all permission of oneself in departments of one organization
+     *
+     * @param userId         the id of user
+     * @param organizationId the id of organization
+     */
+    @Override
+    public void deletePermissionByUserIdAndOrganizationId(Integer userId, Integer organizationId) {
+        this.baseMapper.deletePermissionByUserIdAndOrganizationId(userId,organizationId);
     }
 }
