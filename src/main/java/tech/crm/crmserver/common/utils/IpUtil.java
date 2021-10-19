@@ -43,10 +43,11 @@ public class IpUtil {
             }
             if (ipAddress == null || ipAddress.length() == 0 || "unknown".equalsIgnoreCase(ipAddress)) {
                 ipAddress = request.getRemoteAddr();
-                if (ipAddress.equals("127.0.0.1")) {
+                if (ipAddress.equals("127.0.0.1") || ipAddress.equals("0:0:0:0:0:0:0:1")) {
                     return null;
                 }
             }
+            System.out.println(ipAddress);
             if (ipAddress != null && ipAddress.length() > 15) { // "***.***.***.***".length()
                 // = 15
                 if (ipAddress.indexOf(",") > 0) {
