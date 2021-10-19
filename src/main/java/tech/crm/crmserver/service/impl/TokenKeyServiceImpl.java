@@ -52,6 +52,11 @@ public class TokenKeyServiceImpl extends ServiceImpl<TokenKeyMapper, TokenKey> i
         Integer user_id = user.getId();
         String email = user.getEmail();
 
+        //delete other token of this user for Single Sign On(SSO)
+        QueryWrapper<TokenKey> deleteWrapper = new QueryWrapper<>();
+        deleteWrapper.eq("user_id",user_id);
+        this.baseMapper.delete(deleteWrapper);
+
         //set expiration Date
         final Date createdDate = new Date();
         long expiration = SecurityConstants.EXPIRATION;
