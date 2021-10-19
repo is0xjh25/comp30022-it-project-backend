@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import tech.crm.crmserver.common.enums.EventStatus;
 import tech.crm.crmserver.common.enums.ToDoListStatus;
 
 import java.time.LocalDateTime;
@@ -33,7 +34,7 @@ public class EventAttendDTO {
 
     private String description;
 
-    private ToDoListStatus status;
+    private EventStatus status;
 
     private List<ContactAttendDTO> contactList;
 }

@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import tech.crm.crmserver.common.enums.EventStatus;
 import tech.crm.crmserver.common.enums.ToDoListStatus;
 
 import java.io.Serializable;
@@ -40,5 +41,5 @@ public class Event implements Serializable {
 
     private String description;
 
-    private ToDoListStatus status;
+    private EventStatus status;
 }
