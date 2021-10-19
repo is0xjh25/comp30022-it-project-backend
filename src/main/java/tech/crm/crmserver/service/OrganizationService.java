@@ -75,4 +75,11 @@ public interface OrganizationService extends IService<Organization> {
      * @return certain page of ContactDTO
      */
     public Page<UserPermissionDTO> searchMember(Page<UserPermissionDTO> page, Integer organizationId, String searchKey);
+
+    /**
+     * leave the organization
+     * @param userId the id of user
+     * @param organizationId the id of organization to leave
+     */
+    public void leaveOrganization(Integer userId, Integer organizationId);
 }

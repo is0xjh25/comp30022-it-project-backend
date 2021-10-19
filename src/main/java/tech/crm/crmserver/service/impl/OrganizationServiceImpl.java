@@ -6,13 +6,8 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tech.crm.crmserver.common.enums.PermissionLevel;
-import tech.crm.crmserver.common.exception.NotEnoughPermissionException;
-import tech.crm.crmserver.common.exception.OrganizationNotExistException;
-import tech.crm.crmserver.common.exception.UserAlreadyOwnOrganizationException;
-import tech.crm.crmserver.common.exception.UserNotExistException;
-import tech.crm.crmserver.dao.Organization;
-import tech.crm.crmserver.dao.Permission;
-import tech.crm.crmserver.dao.User;
+import tech.crm.crmserver.common.exception.*;
+import tech.crm.crmserver.dao.*;
 import tech.crm.crmserver.dto.UserPermissionDTO;
 import tech.crm.crmserver.mapper.OrganizationMapper;
 import tech.crm.crmserver.service.*;
@@ -215,5 +210,28 @@ public class OrganizationServiceImpl extends ServiceImpl<OrganizationMapper, Org
         wrapper.ne("user_id",userService.getId());
         page = userService.getUserPermissionDTOInOrganization(page,wrapper);
         return page;
+    }
+
+    /**
+     * leave the organization
+     *
+     * @param userId         the id of user
+     * @param organizationId the id of organization to leave
+     */
+    @Override
+    public void leaveOrganization(Integer userId, Integer organizationId) {
+        List<BelongTo> belongTos = belongToService.queryBelongToRelation(null, userId, organizationId, null);
+        if(belongTos.size() != 1){
+            log.error("size of belongTo for user id: " + userId + " organization id :" + organizationId + " is bigger than one!");
+        }
+        if(belongTos.isEmpty()){
+            throw new UserNotInOrganizationException();
+        }
+        BelongTo belongTo = belongTos.get(0);
+        //delete the permission of departments
+        permissionService.deletePermissionByUserIdAndOrganizationId(userId,organizationId);
+        //delete the belong to
+        belongToService.removeById(belongTo.getId());
+
     }
 }

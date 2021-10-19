@@ -2,6 +2,7 @@ package tech.crm.crmserver.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
@@ -31,5 +32,11 @@ public interface PermissionMapper extends BaseMapper<Permission> {
             "WHERE `user_id` = #{userId} and `department_id` = (SELECT `department_id` FROM `contact` where id = #{contactId})")
     public Permission getPermissionByUserIdAndContactId(@Param("userId") Integer userId,
                                                         @Param("contactId") Integer contactId);
+
+    @Delete("DELETE \n" +
+            "FROM permission\n" +
+            "WHERE user_id in #{userId} and department_id in (SELECT department_id FROM department where organization_id = #{organizationId}) ")
+    public void deletePermissionByUserIdAndOrganizationId(@Param("userId")Integer userId,
+                                                          @Param("organizationId")Integer organizationId);
 
 }

@@ -337,4 +337,15 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
     public Permission getPermissionByUserIdAndContactId(Integer userId, Integer contactId) {
         return baseMapper.getPermissionByUserIdAndContactId(userId,contactId);
     }
+
+    /**
+     * delete all permission of oneself in departments of one organization
+     *
+     * @param userId         the id of user
+     * @param organizationId the id of organization
+     */
+    @Override
+    public void deletePermissionByUserIdAndOrganizationId(Integer userId, Integer organizationId) {
+        this.baseMapper.deletePermissionByUserIdAndOrganizationId(userId,organizationId);
+    }
 }
