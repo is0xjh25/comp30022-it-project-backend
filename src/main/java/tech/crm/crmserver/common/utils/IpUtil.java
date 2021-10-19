@@ -114,7 +114,7 @@ public class IpUtil {
         HttpHeaders headers = new HttpHeaders();
         HttpMethod method = HttpMethod.POST;
         String url = URL + ip;
-
+        logger.info(url);
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
         HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(null, headers);
