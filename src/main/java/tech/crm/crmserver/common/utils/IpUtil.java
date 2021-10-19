@@ -119,7 +119,7 @@ public class IpUtil {
 
         HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(null, headers);
 
-        ResponseEntity<IpAddress> response = client.exchange(URL, method, requestEntity, IpAddress.class);
+        ResponseEntity<IpAddress> response = client.exchange(url, method, requestEntity, IpAddress.class);
         if(response.getStatusCode() != HttpStatus.OK){
             return null;
         }
