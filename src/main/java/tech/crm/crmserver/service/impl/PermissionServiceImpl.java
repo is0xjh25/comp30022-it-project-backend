@@ -280,9 +280,10 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
         if(executed == null){
             throw new UserNotInDepartmentException();
         }
-        //check the authority
-        if(executor.getAuthorityLevel().getLevel() >= PermissionLevel.MANAGE.getLevel() &&
-                executor.getAuthorityLevel().getLevel() > executed.getAuthorityLevel().getLevel()){
+        //check the authority or delete oneself
+        if((executor.getAuthorityLevel().getLevel() >= PermissionLevel.MANAGE.getLevel() &&
+                executor.getAuthorityLevel().getLevel() > executed.getAuthorityLevel().getLevel()) ||
+                userId == userService.getId()){
             removeById(executed.getId());
         }
         else {
