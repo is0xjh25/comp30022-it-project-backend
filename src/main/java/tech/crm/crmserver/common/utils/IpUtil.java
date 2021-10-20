@@ -76,9 +76,7 @@ public class IpUtil {
             if (ipAddress == null || ipAddress.length() == 0 || "unknown".equalsIgnoreCase(ipAddress)) {
                 ipAddress = request.getHeader("X-Real-IP");
             }
-            logger.info(ipAddress);
             if (ipAddress == null || ipAddress.length() == 0 || "unknown".equalsIgnoreCase(ipAddress)) {
-                logger.info("remoteAddr:" + request.getRemoteAddr());
                 ipAddress = request.getRemoteAddr();
                 if (ipAddress.equals("127.0.0.1") || ipAddress.equals("0:0:0:0:0:0:0:1")) {
                     return null;
@@ -115,6 +113,7 @@ public class IpUtil {
         HttpMethod method = HttpMethod.POST;
         String url = URL + ip;
         logger.info(url);
+
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
         HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(null, headers);

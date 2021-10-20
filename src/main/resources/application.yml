@@ -42,7 +42,6 @@ spring:
     active: https://comp30022-yyds.herokuapp.com/verify
     default-encoding: utf-8
 
-debug: true
 mybatis-plus:
   typeEnumsPackage: tech.crm.crmserver.common.enums
 #  configuration:
