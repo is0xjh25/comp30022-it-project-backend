@@ -4,6 +4,7 @@ package tech.crm.crmserver.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import tech.crm.crmserver.common.enums.EventStatus;
 import tech.crm.crmserver.common.enums.ToDoListStatus;
 import tech.crm.crmserver.common.validator.NullOrNotBlank;
 
@@ -35,5 +36,5 @@ public class EventsUpdateDTO {
     @NullOrNotBlank(message = "Description can not be null or blank")
     private String description;
 
-    private ToDoListStatus status;
+    private EventStatus status;
 }
