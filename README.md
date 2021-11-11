@@ -25,6 +25,34 @@ This is the backend for team yyds of comp30022 It Project, a personal CRM websit
 * Insert customer detail into db
 * Update customer detail into db
 * Delete customer in db
+* Record recent activity of use
+* Able to update user details
+* Change password will clean token and send email for safety
+* Verify email when user register
+* Resend verify email when pending user try to login or reset password
+* TodoList backend API, query TodoList and create TodoList
+* Move all constants about email to a constant class
+* Transfer ownership of organization
+* Basic CRUD for Event
+* Get recent contact
+* Automatically record recent contact when get contact details
+* Update&delete todo list
+* Search member in department and organization
+* Get Event based on time period 
+* Get start time of all the events of this user
+* Get statistic information of events & to do lists for this user
+* Get user’s event amount in a month by given year and month
+* Implemented to-do list Get-Create-Update-Delete tests
+* Change time zone to GMT
+* Add NullOrNotBlank annotation
+* Add DTO for page 
+* update date-format(LocalDateTime) to yyyy-MM-dd'T'HH:mm:ss.SSS'Z'
+* Modify: upload and download User photo
+* Add: upload contact photo and return base64 photo
+* Modify: move exception to common package
+* Add: Leave department and organization
+* Add: achieve single sign on(SSO)
+* Add: check whether login from new place 
 
 ## Installation and Getting Started
 
@@ -54,22 +82,27 @@ if you want to set the configuration, create a file name ``` application.yml ```
 example ``` application.yml ```
 ```yml
 spring:
-  #datasource: mysql
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    #url of mysql
-    url: jdbc:mysql://localhost:3306/mydb
-    #user name
-    username: root
-    #password
-    password: 415623
+    url: jdbc:mysql://mydb.mysql.database.azure.com:3306/mydb?reconnect=true&serverTimezone=GMT
+    username: yyds
+    password: comp30022-
   mvc:
     log-resolved-exception: true
+    format:
+      date-time: ${spring.jackson.date-format}
+
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 1000MB
 
   #jackson
   jackson:
     property-naming-strategy: SNAKE_CASE
-  
+    date-format: yyyy-MM-dd'T'HH:mm:ss.SSS'Z'
+    time-zone: GMT
+
   #mail config
   mail:
     host: smtp.gmail.com
@@ -86,17 +119,17 @@ spring:
           starttls:
             enable: true
             required: true
-    #send from where
+    #send email from which mail
     from: connecti.yyds@gmail.com
+    #url for active account
+    active: https://comp30022-yyds.herokuapp.com/verify
     default-encoding: utf-8
-#debug mode
-#debug: true
 
 mybatis-plus:
   typeEnumsPackage: tech.crm.crmserver.common.enums
-  configuration:
-    #print sql excuted to stdout
-    #log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+#  configuration:
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
 ```
 
 ## Getting Help
